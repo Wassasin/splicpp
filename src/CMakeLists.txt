@@ -10,6 +10,6 @@ add_executable(splicpp
 
 add_definitions("-Wall -Wextra -Weffc++ -std=c++0x")
 
-find_package(Boost COMPONENTS system REQUIRED)
+find_package(Boost COMPONENTS system program_options REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
-target_link_libraries(splicpp ${Boost_SYSTEM_LIBRARY})
+target_link_libraries(splicpp ${Boost_SYSTEM_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY})
