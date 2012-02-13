@@ -8,8 +8,8 @@ add_executable(splicpp
 	main.cpp
 )
 
-add_definitions("-Wall -Wextra -Weffc++ -std=c++0x")
+add_definitions("-Wall -Wextra -Weffc++ -std=c++0x -g")
 
-find_package(Boost COMPONENTS system program_options REQUIRED)
+find_package(Boost COMPONENTS system program_options regex REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
-target_link_libraries(splicpp ${Boost_SYSTEM_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY})
+target_link_libraries(splicpp ${Boost_SYSTEM_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY} ${Boost_REGEX_LIBRARY})

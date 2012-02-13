@@ -6,6 +6,8 @@ namespace splicpp
 	typedef unsigned char byte;
 	typedef unsigned int uint;
 	typedef unsigned long ulong;
+	
+	typedef uint stid; //Symbol Type Identifier
 }
 
 #endif

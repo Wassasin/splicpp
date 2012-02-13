@@ -4,6 +4,11 @@
 #include "common/typedefs.h"
 #include "common/token.h"
 
+#include "common/ptable.h"
+
+#include "parser/bnf.h"
+#include "parser/lexer.h"
+
 int main(int argc, char **argv)
 {
 	uint phase = 1;
@@ -33,7 +38,21 @@ int main(int argc, char **argv)
 		return -1;
 	}
 	
-	std::cout << phase << std::endl;
+	// ---
+	splicpp::ptable p(10, 10);
+	
+	// ---
+	std::string lang = 
+		"syntax		:== rule | syntax newline rule\n"
+		"rule		:== rule-name assignment expr\n"
+		"expr		:== list | expr expr-sep list\n"
+		"list		:== rule-name | list rule-name";
+
+	splicpp::bnf b;
+	splicpp::lexer l(b, lang);
+
+	while(!l.at_end())
+		b.print_token(l.next(), lang);
 
 	return 0;
 }

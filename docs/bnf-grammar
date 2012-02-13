@@ -1,0 +1,4 @@
+syntax		:== rule | syntax newline rule
+rule		:== rule-name ":==" expr
+expr		:== list | expression "|" list
+list		:== rule-name | list rule-name
