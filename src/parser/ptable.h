@@ -4,9 +4,10 @@
 #include <vector>
 #include <stack>
 
-#include "typedefs.h"
-#include "grammar.h"
-#include "../parser/lexer.h"
+#include "../common/typedefs.h"
+#include "../common/grammar.h"
+
+#include "lexer.h"
 
 namespace splicpp
 {
