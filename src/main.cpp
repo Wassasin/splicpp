@@ -9,6 +9,8 @@
 #include "parser/bnf.h"
 #include "parser/lexer.h"
 
+#include "parser/item.h"
+
 int main(int argc, char **argv)
 {
 	uint phase = 1;

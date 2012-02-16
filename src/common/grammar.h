@@ -81,6 +81,16 @@ namespace splicpp
 		{
 			std::cout << symbols[t.type]->name << " [" << source.substr(t.pos, t.length) << ']' << std::endl;
 		}
+
+		rule fetch_rule(rid i)
+		{
+			return rules[i];
+		}
+
+		std::shared_ptr<symbol> fetch_symbol(stid i)
+		{
+			return symbols[i];
+		}
 	};
 }
 

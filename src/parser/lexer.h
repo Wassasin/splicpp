@@ -19,10 +19,8 @@ namespace splicpp
 		void consume_garbage()
 		{
 			for(; i < str.size(); i++)
-			{
 				if(!g.should_ignore(str[i]))
 					return;
-			}
 		}
 		
 	public:
@@ -32,6 +30,12 @@ namespace splicpp
 		, i(0)
 		, line(0)
 		{}
+		
+		void reset()
+		{
+			i = 0;
+			line = 0;
+		}
 		
 		token next()
 		{
@@ -57,6 +61,11 @@ namespace splicpp
 		bool at_end()
 		{
 			return(i >= str.size());
+		}
+		
+		grammar get_grammar()
+		{
+			return g;
 		}
 	};
 }
