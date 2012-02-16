@@ -4,7 +4,7 @@
 #include "common/typedefs.h"
 #include "common/token.h"
 
-#include "common/ptable.h"
+#include "parser/ptable.h"
 
 #include "parser/bnf.h"
 #include "parser/lexer.h"
