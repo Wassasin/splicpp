@@ -22,16 +22,18 @@ namespace splicpp
 		: symbols()
 		, rules()
 		, ignore_list()
-		{}
+		{
+			//add_symbol(new end_literal());
+		}
 		
 		virtual ~grammar() {}
 
-		void ignore(char c)
+		void ignore(const char c)
 		{
 			ignore_list.push_back(c);
 		}
 
-		bool should_ignore(char c)
+		bool should_ignore(const char c)
 		{
 			for(uint i = 0; i < ignore_list.size(); i++)
 				if(ignore_list[i] == c)
@@ -87,9 +89,19 @@ namespace splicpp
 			return rules[i];
 		}
 
-		std::shared_ptr<symbol> fetch_symbol(stid i)
+		std::shared_ptr<symbol> fetch_symbol(const stid i)
 		{
 			return symbols[i];
+		}
+
+		size_t rules_size()
+		{
+			return rules.size();
+		}
+
+		size_t symbols_size()
+		{
+			return symbols.size();
 		}
 	};
 }

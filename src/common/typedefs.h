@@ -7,8 +7,8 @@ namespace splicpp
 	typedef unsigned int uint;
 	typedef unsigned long ulong;
 	
-	typedef uint stid; //Symbol Type Identifier
-	typedef uint rid; //Rule Identifier
+	typedef size_t stid; //Symbol Type Identifier
+	typedef size_t rid; //Rule Identifier
 }
 
 #endif

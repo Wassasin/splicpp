@@ -88,6 +88,19 @@ namespace splicpp
 		}
 	};
 
+	class end_literal : public literal
+	{
+	public:
+		end_literal()
+		: literal("$")
+		{}
+		
+		virtual boost::optional<uint> match(const std::string source, const uint pos)
+		{
+			return(source.size() == pos);
+		}
+	};
+
 	class non_literal : public symbol
 	{
 	public:

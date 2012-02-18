@@ -39,7 +39,7 @@ namespace splicpp
 		std::vector<std::vector<stid>> gototable;
 
 	public:
-		ptable(uint terminals, uint nonterminals)
+		ptable(size_t terminals, size_t nonterminals)
 		: terminals(terminals)
 		, nonterminals(nonterminals)
 		, acttable()
