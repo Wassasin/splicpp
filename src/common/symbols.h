@@ -25,7 +25,7 @@ namespace splicpp
 		: name(name)
 		{}
 		
-		virtual stype type() = 0;
+		virtual stype type() const = 0;
 	
 		virtual ~symbol() {}
 	};
@@ -37,12 +37,12 @@ namespace splicpp
 		: symbol(name)
 		{}
 
-		virtual stype type()
+		virtual stype type() const
 		{
 			return s_lit;
 		}
 
-		virtual boost::optional<uint> match(const std::string source, const uint pos) = 0;
+		virtual boost::optional<uint> match(const std::string source, const uint pos) const = 0;
 	};
 
 	class static_literal : public literal
@@ -54,7 +54,7 @@ namespace splicpp
 		, str(str)
 		{}
 
-		virtual boost::optional<uint> match(const std::string source, const uint pos)
+		virtual boost::optional<uint> match(const std::string source, const uint pos) const
 		{
 			if(source.length() < pos + str.length())
 				return boost::optional<uint>();
@@ -77,7 +77,7 @@ namespace splicpp
 		, expr(std::string("^").append(expr).append(".*$"), boost::regex::perl)
 		{}
 		
-		virtual boost::optional<uint> match(const std::string source, const uint pos)
+		virtual boost::optional<uint> match(const std::string source, const uint pos) const
 		{
 			boost::cmatch match;
 			
@@ -95,9 +95,12 @@ namespace splicpp
 		: literal("$")
 		{}
 		
-		virtual boost::optional<uint> match(const std::string source, const uint pos)
+		virtual boost::optional<uint> match(const std::string source, const uint pos) const
 		{
-			return(source.size() == pos);
+			if(source.size() == pos)
+				return boost::optional<uint>(0);
+
+			return boost::optional<uint>();
 		}
 	};
 
@@ -108,7 +111,7 @@ namespace splicpp
 		: symbol(name)
 		{}
 		
-		virtual stype type()
+		virtual stype type() const
 		{
 			return s_nlit;
 		}

@@ -46,7 +46,7 @@ namespace splicpp
 		, gototable()
 		{}
 		
-		std::vector<rid> parse(lexer& l)
+		std::vector<rid> parse(lexer& l) const
 		{
 			std::vector<rid> output;
 			std::stack<stid> stack;

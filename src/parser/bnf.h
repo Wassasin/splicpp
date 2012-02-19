@@ -24,7 +24,9 @@ namespace splicpp
 		, NL_RULE(add_symbol(		new non_literal("rule")))
 		, NL_EXPR(add_symbol(		new non_literal("expr")))
 		, NL_LIST(add_symbol(		new non_literal("list")))
-		{			
+		{
+			add_rule(rule(NL_START) + NL_SYNTAX);
+
 			add_rule(rule(NL_SYNTAX) + NL_RULE);
 			add_rule(rule(NL_SYNTAX) + NL_SYNTAX + L_NEWLINE + NL_RULE);
 			add_rule(rule(NL_RULE) + L_RULE_NAME + L_ASS + NL_EXPR);

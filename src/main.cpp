@@ -9,7 +9,7 @@
 #include "parser/bnf.h"
 #include "parser/lexer.h"
 
-#include "parser/item.h"
+#include "parser/slr_parser_gen.h"
 
 int main(int argc, char **argv)
 {

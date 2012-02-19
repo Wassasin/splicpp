@@ -18,13 +18,20 @@ namespace splicpp
 		std::vector<char> ignore_list;
 
 	public:
+		const stid NL_REAL_START, NL_START, L_END;
+		const rid R_START;
+
 		grammar()
 		: symbols()
 		, rules()
 		, ignore_list()
-		{
-			//add_symbol(new end_literal());
-		}
+
+		, NL_REAL_START(add_symbol(new non_literal("S'")))
+		, NL_START(add_symbol(new non_literal("S")))
+		, L_END(add_symbol(new end_literal()))
+
+		, R_START(add_rule(rule(NL_REAL_START) + NL_START))
+		{}
 		
 		virtual ~grammar() {}
 
@@ -33,7 +40,7 @@ namespace splicpp
 			ignore_list.push_back(c);
 		}
 
-		bool should_ignore(const char c)
+		bool should_ignore(const char c) const
 		{
 			for(uint i = 0; i < ignore_list.size(); i++)
 				if(ignore_list[i] == c)
@@ -49,18 +56,20 @@ namespace splicpp
 			return sid;
 		}
 		
-		void add_rule(const rule r)
+		rid add_rule(const rule r)
 		{
+			rid i = rules.size();
 			rules.push_back(r);
+			return i;
 		}
 		
-		void print()
+		void print() const
 		{
 			for(uint i = 0; i < rules.size(); i++)
 				rules[i].print();
 		}
 		
-		boost::optional<token> try_match(const std::string source, const uint pos, const uint line)
+		boost::optional<token> try_match(const std::string source, const uint pos, const uint line) const
 		{
 			for(uint j = 0; j < symbols.size(); j++)
 			{
@@ -79,27 +88,27 @@ namespace splicpp
 			return boost::optional<token>();
 		}
 		
-		void print_token(const token t, const std::string source)
+		void print_token(const token t, const std::string source) const
 		{
 			std::cout << symbols[t.type]->name << " [" << source.substr(t.pos, t.length) << ']' << std::endl;
 		}
 
-		rule fetch_rule(rid i)
+		rule fetch_rule(const rid i) const
 		{
 			return rules[i];
 		}
 
-		std::shared_ptr<symbol> fetch_symbol(const stid i)
+		std::shared_ptr<symbol> fetch_symbol(const stid i) const
 		{
 			return symbols[i];
 		}
 
-		size_t rules_size()
+		size_t rules_size() const
 		{
 			return rules.size();
 		}
 
-		size_t symbols_size()
+		size_t symbols_size() const
 		{
 			return symbols.size();
 		}

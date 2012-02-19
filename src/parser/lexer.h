@@ -58,12 +58,12 @@ namespace splicpp
 			return t;
 		}
 		
-		bool at_end()
+		bool at_end() const
 		{
 			return(i >= str.size());
 		}
 		
-		grammar get_grammar()
+		grammar get_grammar() const
 		{
 			return g;
 		}

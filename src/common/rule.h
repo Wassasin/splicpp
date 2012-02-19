@@ -28,12 +28,12 @@ namespace splicpp
 			return *this;
 		}
 		
-		bool is_epsilon()
+		bool is_epsilon() const
 		{
 			return body.empty();
 		}
 		
-		void print()
+		void print() const
 		{
 			std::cout << start << " :== ";
 				
