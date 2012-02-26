@@ -13,7 +13,8 @@ namespace splicpp
 	enum stype
 	{
 		s_lit,
-		s_nlit
+		s_nlit,
+		s_epsilon
 	};
 
 	class symbol
@@ -28,6 +29,24 @@ namespace splicpp
 		virtual stype type() const = 0;
 	
 		virtual ~symbol() {}
+	};
+	
+	class epsilon : public symbol
+	{
+	public:
+		epsilon()
+		: symbol("epsilon")
+		{}
+			
+		virtual stype type() const
+		{
+			return s_epsilon;
+		}
+		
+		virtual boost::optional<uint> match(const std::string, const uint) const
+		{
+			return boost::optional<uint>();
+		}
 	};
 
 	class literal : public symbol

@@ -18,7 +18,7 @@ namespace splicpp
 		std::vector<char> ignore_list;
 
 	public:
-		const stid NL_REAL_START, NL_START, L_END;
+		const stid S_EPSILON, NL_REAL_START, NL_START, L_END;
 		const rid R_START;
 
 		grammar()
@@ -26,6 +26,7 @@ namespace splicpp
 		, rules()
 		, ignore_list()
 
+		, S_EPSILON(add_symbol(new epsilon()))
 		, NL_REAL_START(add_symbol(new non_literal("S'")))
 		, NL_START(add_symbol(new non_literal("S")))
 		, L_END(add_symbol(new end_literal()))
@@ -56,11 +57,22 @@ namespace splicpp
 			return sid;
 		}
 		
-		rid add_rule(const rule r)
+		rid add_rule(rule r)
 		{
+			remove_epsilons(r);
 			rid i = rules.size();
 			rules.push_back(r);
 			return i;
+		}
+		
+		void remove_epsilons(rule& r)
+		{
+			std::vector<stid> new_body;
+			for(size_t i = 0; i < r.body.size(); i++)
+				if(r.body[i] != S_EPSILON)
+					new_body.push_back(r.body[i]);
+			
+			r.body = new_body;
 		}
 		
 		void print() const
@@ -111,6 +123,26 @@ namespace splicpp
 		size_t symbols_size() const
 		{
 			return symbols.size();
+		}
+
+		size_t nterminals_size() const
+		{
+			size_t result = 0;
+			for(size_t i = 0; i < symbols.size(); i++)
+				if(symbols[i]->type() == s_nlit)
+					result++;
+
+			return result;
+		}
+
+		size_t terminals_size() const
+		{
+			size_t result = 0;
+			for(size_t i = 0; i < symbols.size(); i++)
+				if(symbols[i]->type() == s_lit)
+					result++;
+
+			return result;
 		}
 	};
 }

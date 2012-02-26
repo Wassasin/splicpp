@@ -9,6 +9,7 @@ namespace splicpp
 	
 	typedef size_t stid; //Symbol Type Identifier
 	typedef size_t rid; //Rule Identifier
+	typedef size_t stateid; //State Identifier
 }
 
 #endif

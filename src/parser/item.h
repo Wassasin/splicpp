@@ -63,15 +63,6 @@ namespace splicpp
 
 			return item(rule, dot+1, lookahead);
 		}
-
-		bool is_in(std::vector<item<L>> i_set) const
-		{
-			for(size_t i = 0; i < i_set.size(); i++)
-				if((*this) == i_set[i])
-					return true;
-
-			return false;
-		}
 	};
 }
 

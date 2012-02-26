@@ -13,6 +13,7 @@ namespace splicpp
 {
 	class ptable
 	{
+	public:
 		enum transtype
 		{
 			error,
@@ -20,20 +21,49 @@ namespace splicpp
 			shift,
 			reduce
 		};
-		
-		typedef uint stid; //State Identifier
 
 		struct transition
 		{
 			transtype t;
 			
 			union {
-				stid state;
+				stateid state;
 				rid rule;
 			};
+			
+			static transition error()
+			{
+				transition x;
+				x.t = transtype::error;
+				return x;
+			}
+			
+			static transition accept()
+			{
+				transition x;
+				x.t = transtype::accept;
+				return x;
+			}
+			
+			static transition shift(stateid state)
+			{
+				transition x;
+				x.t = transtype::shift;
+				x.state = state;
+				return x;
+			}
+			
+			static transition reduce(rid rule)
+			{
+				transition x;
+				x.t = transtype::reduce;
+				x.rule = rule;
+				return x;
+			}	
 		};
 
-		uint terminals, nonterminals;
+	private:
+		size_t terminals, nonterminals;
 
 		std::vector<std::vector<transition>> acttable;
 		std::vector<std::vector<stid>> gototable;
@@ -46,10 +76,19 @@ namespace splicpp
 		, gototable()
 		{}
 		
+		void add_state(const std::vector<transition> actrow, const std::vector<stid> gotorow)
+		{
+			if(actrow.size() != terminals || gotorow.size() != nonterminals)
+				throw std::exception();
+			
+			acttable.push_back(actrow);
+			gototable.push_back(gotorow);
+		}
+
 		std::vector<rid> parse(lexer& l) const
 		{
 			std::vector<rid> output;
-			std::stack<stid> stack;
+			std::stack<stateid> stack;
 			stack.push(0); //Push s0
 		
 			l.reset();
@@ -57,7 +96,7 @@ namespace splicpp
 			token a = l.next();
 			while(true)
 			{
-				stid s = stack.top();
+				stateid s = stack.top();
 				stack.pop();
 			
 				transition t = acttable[s][a.type];
@@ -72,7 +111,7 @@ namespace splicpp
 					for(uint i = 0; i < r.body.size(); i++)
 						stack.pop();
 					
-					stid st = stack.top();
+					stateid st = stack.top();
 					stack.push(gototable[st][r.start]);
 					output.push_back(t.rule);
 				}
