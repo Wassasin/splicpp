@@ -30,6 +30,8 @@ namespace splicpp
 					actrow.push_back(generate_act(c[i], c, a, g));
 					
 				result.add_state(actrow, gotorow);
+				
+				//TODO: goto
 			}
 			
 			return result;
@@ -54,7 +56,7 @@ namespace splicpp
 			for(size_t i = 0; i < i_set.size(); i++)
 			{
 				stid start = g.fetch_rule(i_set[i].rule).start;
-				if(start != g.NL_REAL_START && i_set[i].at_end(g) && is_in<stid>(a, follow(start)))
+				if(start != g.NL_REAL_START && i_set[i].at_end(g) && is_in<stid>(a, follow(start, g)))
 					result.push_back(ptable::transition::reduce(i_set[i].rule));
 			}
 			
@@ -127,7 +129,7 @@ namespace splicpp
 			size_t until = 1;
 			for(size_t i = 0; i < as.size() && i < until; i++)
 			{
-				const auto first_set = first(as[i]);
+				const auto first_set = first(as[i], g);
 				for(size_t j = 0; j < first_set.size(); j++)
 				{
 					const stid x = first_set[j];
@@ -148,9 +150,45 @@ namespace splicpp
 			return result;
 		}
 		
-		static std::vector<stid> follow(const stid a) //dragon book, page 221
+		static std::vector<stid> follow(const stid a, const grammar g) //dragon book, page 221
 		{
-			//
+			assert(g.fetch_symbol(a)->type() == s_nlit);
+			
+			std::vector<stid> result;
+			
+			if(a == g.NL_START) //case 1
+				result.push_back(g.L_END);
+			
+			for(rid i = 0; i < g.symbols_size(); i++)
+			{
+				const rule r = g.fetch_rule(i);
+				for(size_t j = 0; j < r.body.size(); j++)
+					if(r.body[j] == a)
+					{
+						bool last_case = false;
+						if(j < r.body.size()-1) //case 2
+						{
+							auto first_set = first(subvector<stid>(r.body, j+1), g);
+							for(size_t k = 0; k < first_set.size(); k++)
+								if(first_set[k] != g.S_EPSILON)
+									result.push_back(first_set[k]);
+								else
+									last_case = true;
+						}
+						else
+							last_case = true;
+						
+						if(last_case) //case 3
+						{
+							auto follow_set = follow(r.start, g);
+							for(size_t k = 0; k < follow_set.size(); k++)
+								result.push_back(follow_set[k]);
+						}
+					}
+			}
+			
+			remove_duplicates<stid>(result);
+			return result;
 		}
 	
 		template <size_t L>
