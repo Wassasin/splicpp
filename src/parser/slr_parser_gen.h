@@ -21,7 +21,7 @@ namespace splicpp
 			auto c = items(g);
 			ptable result(terminals, nterminals);
 			
-			for(size_t i = 0; i < c.size(); i++)
+		/*	for(size_t i = 0; i < c.size(); i++)
 			{
 				std::vector<ptable::acttransition> actrow(terminals);
 				std::vector<ptable::gototransition> gotorow(nterminals);
@@ -33,7 +33,7 @@ namespace splicpp
 						gotorow.push_back(generate_goto(c[i], c, a, g));
 					
 				result.add_state(actrow, gotorow);
-			}
+			}*/
 			
 			return result;
 		}
@@ -253,7 +253,7 @@ namespace splicpp
 			init_set.push_back(item<0>(g.R_START, 0));
 
 			c.push_back(closure<0>(init_set, g));
-
+			
 			bool changed;
 			do
 			{
@@ -270,6 +270,17 @@ namespace splicpp
 							continue;
 						
 						c.push_back(goto_set);
+						
+						//TODO REMOVE
+						for(size_t j = 0; j < goto_set.size(); j++)
+						{
+							goto_set[j].print(g);
+							std::cout << "\t";
+						}
+							
+						std::cout << std::endl;
+						//END TODO REMOVE
+						
 						changed = true;
 					}
 				}

@@ -59,7 +59,26 @@ namespace splicpp
 				x.t = acttranstype::t_reduce;
 				x.rule = rule;
 				return x;
-			}	
+			}
+			
+			void print() const
+			{
+				switch(t)
+				{
+					case t_error:
+						std::cout << "err";
+					break;
+					case t_accept:
+						std::cout << "acc";
+					break;
+					case t_shift:
+						std::cout << "s" << state;
+					break;
+					case t_reduce:
+						std::cout << "r" << rule;
+					break;
+				}
+			}
 		};
 		
 		struct gototransition
@@ -86,6 +105,19 @@ namespace splicpp
 				x.t = gototranstype::t_jump;
 				x.state = state;
 				return x;
+			}
+			
+			void print() const
+			{
+				switch(t)
+				{
+					case t_error:
+						std::cout << "err";
+					break;
+					case t_jump:
+						std::cout << state;
+					break;
+				}
 			}
 		};
 
@@ -151,6 +183,50 @@ namespace splicpp
 					break;
 				else
 					throw std::exception(); //TODO
+			}
+		}
+		
+		void print(const grammar g) const
+		{
+			std::cout << "\t|";
+			
+			for(size_t i = 0; i < g.symbols_size(); i++)
+			{
+				const auto s = g.fetch_symbol(i);
+				if(s->type() == s_lit)
+					std::cout << " " << s->name << "\t";
+			}
+			
+			std::cout << "|";
+			
+			for(size_t i = 0; i < g.symbols_size(); i++)
+			{
+				const auto s = g.fetch_symbol(i);
+				if(s->type() == s_nlit)
+					std::cout << " " << s->name << "\t";
+			}
+			
+			std::cout << std::endl << std::endl;
+			
+			for(size_t i = 0; i < acttable.size(); i++)
+			{
+				std::cout << i << "\t|";
+				
+				for(size_t j = 0; j < acttable[i].size(); j++)
+				{
+					acttable[i][j].print();
+					std::cout << "\t";
+				}
+				
+				std::cout << "|";
+				
+				for(size_t j = 0; j < gototable[i].size(); j++)
+				{
+					gototable[i][j].print();
+					std::cout << "\t";
+				}
+				
+				std::cout << std::endl;
 			}
 		}
 	};

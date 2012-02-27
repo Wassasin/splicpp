@@ -11,6 +11,8 @@
 
 #include "parser/slr_parser_gen.h"
 
+#include "parser/tests/slr_test0.h"
+
 int main(int argc, char **argv)
 {
 	uint phase = 1;
@@ -55,6 +57,9 @@ int main(int argc, char **argv)
 
 	while(!l.at_end())
 		b.print_token(l.next(), lang);
+		
+	splicpp::slr_test0 test;
+	splicpp::slr_parser_gen::generate(test).print(test);
 
 	return 0;
 }

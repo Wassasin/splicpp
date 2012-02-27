@@ -63,6 +63,38 @@ namespace splicpp
 
 			return item(rule, dot+1, lookahead);
 		}
+		
+		void print(const grammar g) const
+		{
+			const splicpp::rule r = g.fetch_rule(rule);
+		
+			std::cout << g.fetch_symbol(r.start)->name << " -> ";
+			
+			for(size_t i = 0; i < r.body.size(); i++)
+			{
+				if(dot == i)
+					std::cout << '.';
+				
+				std::cout << g.fetch_symbol(r.body[i]) << ' ';
+			}
+			
+			if(dot == r.body.size())
+				std::cout << ". ";
+			
+			size_t i_size = L;
+			if(i_size > 0)
+			{
+				std::cout << '[';
+				for(size_t i = 0; i < i_size; i++)
+				{
+					if(i != 0)
+						std::cout << ' ';
+				
+					std::cout << g.fetch_symbol(lookahead[i])->name;
+				}
+				std::cout << ']';
+			}
+		}
 	};
 }
 
