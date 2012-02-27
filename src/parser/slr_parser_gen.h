@@ -23,23 +23,24 @@ namespace splicpp
 			
 			for(size_t i = 0; i < c.size(); i++)
 			{
-				std::vector<ptable::transition> actrow(terminals);
-				std::vector<stid> gotorow(nterminals);
+				std::vector<ptable::acttransition> actrow(terminals);
+				std::vector<ptable::gototransition> gotorow(nterminals);
 
-				for(stid a = 0; a < actrow.size(); a++)
-					actrow.push_back(generate_act(c[i], c, a, g));
+				for(stid a = 0; a < g.symbols_size(); a++)
+					if(g.fetch_symbol(a)->type() == s_lit)
+						actrow.push_back(generate_act(c[i], c, a, g));
+					else if(g.fetch_symbol(a)->type() == s_nlit)
+						gotorow.push_back(generate_goto(c[i], c, a, g));
 					
 				result.add_state(actrow, gotorow);
-				
-				//TODO: goto
 			}
 			
 			return result;
 		}
 		
-		static ptable::transition generate_act(const std::vector<item<0>> i_set, const std::vector<std::vector<item<0>>> c, const stid a, const grammar g)
+		static ptable::acttransition generate_act(const std::vector<item<0>> i_set, const std::vector<std::vector<item<0>>> c, const stid a, const grammar g)
 		{
-			std::vector<ptable::transition> result;
+			std::vector<ptable::acttransition> result;
 		
 			//case 2(a)
 			for(size_t i = 0; i < i_set.size(); i++)
@@ -49,7 +50,7 @@ namespace splicpp
 					
 					for(stateid j = 0; j < c.size(); j++)
 						if(item_equals(goto_set, c[j]))
-							result.push_back(ptable::transition::shift(j));
+							result.push_back(ptable::acttransition::shift(j));
 				}
 			
 			//case 2(b)
@@ -57,22 +58,32 @@ namespace splicpp
 			{
 				stid start = g.fetch_rule(i_set[i].rule).start;
 				if(start != g.NL_REAL_START && i_set[i].at_end(g) && is_in<stid>(a, follow(start, g)))
-					result.push_back(ptable::transition::reduce(i_set[i].rule));
+					result.push_back(ptable::acttransition::reduce(i_set[i].rule));
 			}
 			
 			//case 2(c)
 			if(a == g.L_END)
 				for(size_t i = 0; i < i_set.size(); i++)
 					if(i_set[i].at_end(g) && i_set[i].rule == g.R_START)
-						result.push_back(ptable::transition::accept());
+						result.push_back(ptable::acttransition::accept());
 			
 			if(result.size() == 0)
-				return ptable::transition::error();
+				return ptable::acttransition::error();
 			
 			if(result.size() > 1)
 				throw std::exception(); //TODO - not SLR(1)
 			
 			return result[0];
+		}
+		
+		static ptable::gototransition generate_goto(const std::vector<item<0>> i_set, const std::vector<std::vector<item<0>>> c, const stid a, const grammar g)
+		{
+			auto goto_set = goto_f<0>(i_set, a, g);
+			for(stateid j = 0; j < c.size(); j++)
+				if(item_equals(goto_set, c[j]))
+					return ptable::gototransition::jump(j);
+			
+			throw std::exception();
 		}
 		
 		static std::vector<stid> first(const stid a, const grammar g) //dragon book, page 221
