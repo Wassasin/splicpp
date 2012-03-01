@@ -43,8 +43,9 @@ namespace splicpp
 			return false;
 		}
 
-		bool is_in(const std::vector<itemset<L>> c, const grammar g)
+		bool is_in(const std::vector<itemset<L>> c)
 		{
+			/*
 			//TODO REMOVE
 			std::cout << "----------" << std::endl << "item_is_in(1)" << std::endl;
 			this->print(g);
@@ -53,15 +54,12 @@ namespace splicpp
 			print(c, g);
 			std::cout << std::endl;
 			//END TODO REMOVE
+			*/
 			
 			for(size_t i = 0; i < c.size(); i++)
 				if((*this) == c.at(i))
-				{
-					std::cout << "true" << std::endl;
 					return true;
-				}
 
-			std::cout << "false" << std::endl;
 			return false;
 		}
 		
@@ -102,7 +100,6 @@ namespace splicpp
 			{
 				c.at(i).print(g);
 				std::cout << std::endl << std::endl;
-				
 			}
 		}
 	};

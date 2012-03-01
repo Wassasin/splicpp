@@ -55,8 +55,8 @@ int main(int argc, char **argv)
 	splicpp::bnf b;
 	splicpp::lexer l(b, lang);
 
-	while(!l.at_end())
-		b.print_token(l.next(), lang);
+//	while(!l.at_end())
+//		b.print_token(l.next(), lang);
 		
 	splicpp::slr_test0 test;
 	splicpp::slr_parser_gen::generate(test).print(test);

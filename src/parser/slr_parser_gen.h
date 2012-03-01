@@ -24,15 +24,15 @@ namespace splicpp
 			
 			for(size_t i = 0; i < c.size(); i++)
 			{
-				std::vector<ptable::acttransition> actrow(terminals);
-				std::vector<ptable::gototransition> gotorow(nterminals);
-
+				std::vector<ptable::acttransition> actrow;
+				std::vector<ptable::gototransition> gotorow;
+				
 				for(stid a = 0; a < g.symbols_size(); a++)
 					if(g.fetch_symbol(a)->type() == s_lit)
 						actrow.push_back(generate_act(c.at(i), c, a, g));
-			//		else if(g.fetch_symbol(a)->type() == s_nlit)
-			//			gotorow.push_back(generate_goto(c[i], c, a, g));
-					
+					else if(g.fetch_symbol(a)->type() == s_nlit)
+						gotorow.push_back(generate_goto(c.at(i), c, a, g));
+				
 				result.add_state(actrow, gotorow);
 			}
 			
@@ -72,7 +72,7 @@ namespace splicpp
 				return ptable::acttransition::error();
 			
 			if(result.size() > 1)
-				throw std::exception(); //TODO - not SLR(1)
+				throw std::runtime_error("Parser is not SLR(1)");
 			
 			return result[0];
 		}
@@ -84,7 +84,7 @@ namespace splicpp
 				if(goto_set == c.at(j))
 					return ptable::gototransition::jump(j);
 			
-			throw std::exception();
+			return ptable::gototransition::error();
 		}
 		
 		static std::vector<stid> first(const stid a, const grammar g) //dragon book, page 221
@@ -171,7 +171,7 @@ namespace splicpp
 			if(a == g.NL_START) //case 1
 				result.push_back(g.L_END);
 			
-			for(rid i = 0; i < g.symbols_size(); i++)
+			for(rid i = 0; i < g.rules_size(); i++)
 			{
 				const rule r = g.fetch_rule(i);
 				for(size_t j = 0; j < r.body.size(); j++)
@@ -232,11 +232,13 @@ namespace splicpp
 
 			c.push_back(closure<0>(init_set, g));
 			
+			/*
 			//TODO REMOVE
 			std::cout << "-----" << std::endl << "after closure" << std::endl;
 			itemset<0>::print(c, g);
 			std::cout << std::endl;
 			//END TODO REMOVE
+			*/
 			
 			bool changed;
 			do
@@ -250,11 +252,12 @@ namespace splicpp
 					for(stid x = 0; x < g.symbols_size(); x++)
 					{
 						auto goto_set = goto_f<0>(i_set, x, g);
-						if(goto_set.size() == 0 || goto_set.is_in(c, g))
+						if(goto_set.size() == 0 || goto_set.is_in(c))
 							continue;
 						
 						c.push_back(goto_set);
 						
+						/*
 						//TODO REMOVE
 						for(size_t j = 0; j < goto_set.size(); j++)
 						{
@@ -264,6 +267,7 @@ namespace splicpp
 							
 						std::cout << std::endl;
 						//END TODO REMOVE
+						*/
 						
 						changed = true;
 					}

@@ -66,7 +66,7 @@ namespace splicpp
 				switch(t)
 				{
 					case t_error:
-						std::cout << "err";
+						//std::cout << "err";
 					break;
 					case t_accept:
 						std::cout << "acc";
@@ -112,7 +112,7 @@ namespace splicpp
 				switch(t)
 				{
 					case t_error:
-						std::cout << "err";
+						//std::cout << "err";
 					break;
 					case t_jump:
 						std::cout << state;
@@ -138,7 +138,13 @@ namespace splicpp
 		void add_state(const std::vector<acttransition> actrow, const std::vector<gototransition> gotorow)
 		{
 			if(actrow.size() != terminals || gotorow.size() != nonterminals)
-				throw std::exception();
+			{
+				std::cout << actrow.size() << std::endl;
+				std::cout << terminals << std::endl;
+				std::cout << gotorow.size() << std::endl;
+				std::cout << nonterminals << std::endl;
+				throw std::logic_error("parser table row does not have predetermined number of transitions");
+			}
 			
 			acttable.push_back(actrow);
 			gototable.push_back(gotorow);
