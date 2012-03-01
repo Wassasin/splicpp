@@ -85,10 +85,10 @@ namespace splicpp
 		{
 			for(uint j = 0; j < symbols.size(); j++)
 			{
-				if(symbols[j]->type() != s_lit)
+				if(symbols.at(j)->type() != s_lit)
 					continue;
 				
-				literal* lit = static_cast<literal*>(symbols[j].get()); //downcast, checked by enum type()
+				literal* lit = static_cast<literal*>(symbols.at(j).get()); //downcast, checked by enum type()
 				boost::optional<uint> length = lit->match(source, pos);
 				
 				if(!length)
@@ -102,17 +102,17 @@ namespace splicpp
 		
 		void print_token(const token t, const std::string source) const
 		{
-			std::cout << symbols[t.type]->name << " [" << source.substr(t.pos, t.length) << ']' << std::endl;
+			std::cout << symbols.at(t.type)->name << " [" << source.substr(t.pos, t.length) << ']' << std::endl;
 		}
 
 		rule fetch_rule(const rid i) const
 		{
-			return rules[i];
+			return rules.at(i);
 		}
 
 		std::shared_ptr<symbol> fetch_symbol(const stid i) const
 		{
-			return symbols[i];
+			return symbols.at(i);
 		}
 
 		size_t rules_size() const
@@ -129,7 +129,7 @@ namespace splicpp
 		{
 			size_t result = 0;
 			for(size_t i = 0; i < symbols.size(); i++)
-				if(symbols[i]->type() == s_nlit)
+				if(symbols.at(i)->type() == s_nlit)
 					result++;
 
 			return result;
@@ -139,7 +139,7 @@ namespace splicpp
 		{
 			size_t result = 0;
 			for(size_t i = 0; i < symbols.size(); i++)
-				if(symbols[i]->type() == s_lit)
+				if(symbols.at(i)->type() == s_lit)
 					result++;
 
 			return result;

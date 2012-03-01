@@ -27,7 +27,7 @@ namespace splicpp
 		, dot(dot)
 		, lookahead(lookahead)
 		{}
-		
+
 		bool operator==(const item<L>& y) const
 		{
 			if(this->rule != y.rule || this->dot != y.dot)
@@ -39,6 +39,11 @@ namespace splicpp
 					return false;
 			
 			return true;
+		}
+
+		bool operator!=(const item<L>& y) const
+		{
+			return(!((*this)==y));
 		}
 
 		bool at_end(const grammar g) const
@@ -56,9 +61,9 @@ namespace splicpp
 			return g.fetch_rule(rule).body[dot-1];
 		}
 
-		item<L> next() const
+		item<L> next(const grammar g) const
 		{
-			if(at_end())
+			if(at_end(g))
 				throw std::exception(); //TODO
 
 			return item(rule, dot+1, lookahead);
@@ -75,7 +80,7 @@ namespace splicpp
 				if(dot == i)
 					std::cout << '.';
 				
-				std::cout << g.fetch_symbol(r.body[i]) << ' ';
+				std::cout << g.fetch_symbol(r.body[i])->name << ' ';
 			}
 			
 			if(dot == r.body.size())

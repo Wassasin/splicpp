@@ -6,6 +6,7 @@
 
 #include "ptable.h"
 #include "item.h"
+#include "itemset.h"
 
 namespace splicpp
 {
@@ -21,24 +22,24 @@ namespace splicpp
 			auto c = items(g);
 			ptable result(terminals, nterminals);
 			
-		/*	for(size_t i = 0; i < c.size(); i++)
+			for(size_t i = 0; i < c.size(); i++)
 			{
 				std::vector<ptable::acttransition> actrow(terminals);
 				std::vector<ptable::gototransition> gotorow(nterminals);
 
 				for(stid a = 0; a < g.symbols_size(); a++)
 					if(g.fetch_symbol(a)->type() == s_lit)
-						actrow.push_back(generate_act(c[i], c, a, g));
-					else if(g.fetch_symbol(a)->type() == s_nlit)
-						gotorow.push_back(generate_goto(c[i], c, a, g));
+						actrow.push_back(generate_act(c.at(i), c, a, g));
+			//		else if(g.fetch_symbol(a)->type() == s_nlit)
+			//			gotorow.push_back(generate_goto(c[i], c, a, g));
 					
 				result.add_state(actrow, gotorow);
-			}*/
+			}
 			
 			return result;
 		}
 		
-		static ptable::acttransition generate_act(const std::vector<item<0>> i_set, const std::vector<std::vector<item<0>>> c, const stid a, const grammar g)
+		static ptable::acttransition generate_act(const itemset<0> i_set, const std::vector<itemset<0>> c, const stid a, const grammar g)
 		{
 			std::vector<ptable::acttransition> result;
 		
@@ -49,7 +50,7 @@ namespace splicpp
 					auto goto_set = goto_f<0>(i_set, a, g);
 					
 					for(stateid j = 0; j < c.size(); j++)
-						if(item_equals(goto_set, c[j]))
+						if(goto_set == c.at(j))
 							result.push_back(ptable::acttransition::shift(j));
 				}
 			
@@ -76,11 +77,11 @@ namespace splicpp
 			return result[0];
 		}
 		
-		static ptable::gototransition generate_goto(const std::vector<item<0>> i_set, const std::vector<std::vector<item<0>>> c, const stid a, const grammar g)
+		static ptable::gototransition generate_goto(const itemset<0> i_set, const std::vector<itemset<0>> c, const stid a, const grammar g)
 		{
 			auto goto_set = goto_f<0>(i_set, a, g);
 			for(stateid j = 0; j < c.size(); j++)
-				if(item_equals(goto_set, c[j]))
+				if(goto_set == c.at(j))
 					return ptable::gototransition::jump(j);
 			
 			throw std::exception();
@@ -203,9 +204,9 @@ namespace splicpp
 		}
 	
 		template <size_t L>
-		static std::vector<item<L>> goto_f(const std::vector<item<L>> i_set, const stid x, const grammar g)
+		static itemset<L> goto_f(const itemset<L> i_set, const stid x, const grammar g)
 		{
-			std::vector<item<L>> preselection;
+			itemset<L> preselection;
 			for(size_t i = 0; i < i_set.size(); i++)
 			{
 				const item<L> i_item = i_set[i];
@@ -216,43 +217,26 @@ namespace splicpp
 				if(i_item.after_dot(g) != x)
 					continue;
 
-				preselection.push_back(i_item);
+				preselection.push_back(i_item.next(g));
 			}
 
 			return closure<L>(preselection, g);
 		}
-
-		template <size_t L>
-		static bool item_is_in(const std::vector<item<L>> i_set, const std::vector<std::vector<item<L>>> c)
+		
+		static std::vector<itemset<0>> items(const grammar g) //dragon book, page 246
 		{
-			for(size_t i = 0; i < c.size(); i++)
-				if(item_equals(c[i], i_set))
-					return true;
+			std::vector<itemset<0>> c;
 
-			return false;
-		}
-
-		template <size_t L>
-		static bool item_equals(const std::vector<item<L>> i_set, const std::vector<item<L>> j_set)
-		{
-			if(i_set.size() != j_set.size())
-				return false;
-			
-			for(size_t i = 0; i < i_set.size(); i++)
-				if(!is_in<item<L>>(i_set[i], j_set))
-					return false;
-
-			return true;
-		}
-
-		static std::vector<std::vector<item<0>>> items(const grammar g) //dragon book, page 246
-		{
-			std::vector<std::vector<item<0>>> c;
-
-			std::vector<item<0>> init_set;
+			itemset<0> init_set;
 			init_set.push_back(item<0>(g.R_START, 0));
 
 			c.push_back(closure<0>(init_set, g));
+			
+			//TODO REMOVE
+			std::cout << "-----" << std::endl << "after closure" << std::endl;
+			itemset<0>::print(c, g);
+			std::cout << std::endl;
+			//END TODO REMOVE
 			
 			bool changed;
 			do
@@ -261,12 +245,12 @@ namespace splicpp
 
 				for(size_t i = 0; i < c.size(); i++)
 				{
-					auto i_set = c[i];
+					auto i_set = c.at(i);
 					
 					for(stid x = 0; x < g.symbols_size(); x++)
 					{
 						auto goto_set = goto_f<0>(i_set, x, g);
-						if(goto_set.size() == 0 || is_in(goto_set, c))
+						if(goto_set.size() == 0 || goto_set.is_in(c, g))
 							continue;
 						
 						c.push_back(goto_set);
@@ -290,9 +274,9 @@ namespace splicpp
 		}
 
 		template <size_t L>
-		static std::vector<item<L>> closure(const std::vector<item<L>> i_set, const grammar g) //dragon book, page 245
+		static itemset<L> closure(const itemset<L> i_set, const grammar g) //dragon book, page 245
 		{
-			std::vector<item<L>> j_set(i_set);
+			itemset<L> j_set(i_set);
 
 			std::vector<bool> added(g.symbols_size());
 			for(size_t i = 0; i < g.symbols_size(); i++)
@@ -325,6 +309,8 @@ namespace splicpp
 						j_set.push_back(item<L>(j, 0));
 						changed = true;
 					}
+					
+					added[b] = true;
 				}
 			} while(changed);
 
