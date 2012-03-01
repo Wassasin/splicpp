@@ -149,22 +149,28 @@ namespace splicpp
 			acttable.push_back(actrow);
 			gototable.push_back(gotorow);
 		}
-
+		
 		std::vector<rid> parse(lexer& l) const
 		{
+			const grammar g = l.get_grammar();
+		
 			std::vector<rid> output;
 			std::stack<stateid> stack;
+			
 			stack.push(0); //Push s0
 		
 			l.reset();
-			
+
 			token a = l.next();
 			while(true)
 			{
 				stateid s = stack.top();
-				stack.pop();
+//				stack.pop();
 			
-				acttransition t = acttable[s][a.type];
+				acttransition t = acttable.at(s).at(g.translate_lit(a.type));
+				std::cout << s << ':' << g.fetch_symbol(g.translate_lit(a.type))->name << ' ';
+				t.print();
+				std::cout << std::endl;
 				if(t.t == acttransition::t_shift)
 				{
 					stack.push(t.state);
@@ -172,12 +178,13 @@ namespace splicpp
 				}
 				else if(t.t == acttransition::t_reduce)
 				{
-					rule r = l.get_grammar().fetch_rule(t.rule);
+					rule r = g.fetch_rule(t.rule);
+					g.print_rule(t.rule);
 					for(uint i = 0; i < r.body.size(); i++)
 						stack.pop();
 					
 					stateid st = stack.top();
-					gototransition gt = gototable[st][r.start];
+					gototransition gt = gototable.at(st).at(g.translate_nlit(r.start));
 					
 					if(gt.t == gototransition::t_error)
 						throw std::exception();
@@ -188,8 +195,10 @@ namespace splicpp
 				else if(t.t == acttransition::t_accept)
 					break;
 				else
-					throw std::exception(); //TODO
+					throw std::runtime_error("parser error on line "+a.line);
 			}
+			
+			return output;
 		}
 		
 		void print(const grammar g) const

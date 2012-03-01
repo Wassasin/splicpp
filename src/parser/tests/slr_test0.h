@@ -23,7 +23,7 @@ namespace splicpp
 			, L_TIMES(add_symbol(	new static_literal("*", "*")))
 			, L_LBRACKET(add_symbol(new static_literal("(", "(")))
 			, L_RBRACKET(add_symbol(new static_literal(")", ")")))
-			, L_ID(add_symbol(		new static_literal("id", "id")))
+			, L_ID(add_symbol(		new regex_literal("id", "([a-zA-Z0-9\\-]+)")))
 			{
 				add_rule(rule(NL_START) + NL_E);
 				

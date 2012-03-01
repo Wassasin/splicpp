@@ -52,14 +52,21 @@ int main(int argc, char **argv)
 		"expr		:== list | expr expr-sep list\n"
 		"list		:== rule-name | list rule-name";
 
-	splicpp::bnf b;
-	splicpp::lexer l(b, lang);
+//	splicpp::bnf b;
+//	splicpp::lexer l(b, lang);
 
 //	while(!l.at_end())
 //		b.print_token(l.next(), lang);
-		
+	
 	splicpp::slr_test0 test;
-	splicpp::slr_parser_gen::generate(test).print(test);
+	splicpp::ptable t = splicpp::slr_parser_gen::generate(test);
+	t.print(test);
+
+	splicpp::lexer l(test, "woei + blaat");
+	auto blaat = t.parse(l);
+	std::cout << "-----" << std::endl;
+	for(size_t i = 0; i < blaat.size(); i++)
+		test.print_rule(blaat.at(i));
 
 	return 0;
 }

@@ -77,8 +77,8 @@ namespace splicpp
 		
 		void print() const
 		{
-			for(uint i = 0; i < rules.size(); i++)
-				rules[i].print();
+			for(rid i = 0; i < rules.size(); i++)
+				print_rule(i);
 		}
 		
 		boost::optional<token> try_match(const std::string source, const uint pos, const uint line) const
@@ -104,8 +104,25 @@ namespace splicpp
 		{
 			std::cout << symbols.at(t.type)->name << " [" << source.substr(t.pos, t.length) << ']' << std::endl;
 		}
+		
+		void print_rule(const rid r) const
+		{
+			const rule rtmp = fetch_rule(r);
+			
+			std::cout << fetch_symbol(rtmp.start)->name << " :== ";
+				
+			for(uint i = 0; i < rtmp.body.size(); i++)
+			{
+				if(i > 0)
+					std::cout << ' ';
+					
+				std::cout << fetch_symbol(rtmp.body.at(i))->name;
+			}
+			
+			std::cout << std::endl;
+		}
 
-		rule fetch_rule(const rid i) const
+		const rule fetch_rule(const rid i) const
 		{
 			return rules.at(i);
 		}
@@ -142,6 +159,26 @@ namespace splicpp
 				if(symbols.at(i)->type() == s_lit)
 					result++;
 
+			return result;
+		}
+		
+		size_t translate_lit(const stid id) const
+		{
+			size_t result = 0;
+			for(size_t i = 0; i < id; i++)
+				if(symbols.at(i)->type() == s_lit)
+					result++;
+			
+			return result;
+		}
+		
+		size_t translate_nlit(const stid id) const
+		{
+			size_t result = 0;
+			for(size_t i = 0; i < id; i++)
+				if(symbols.at(i)->type() == s_nlit)
+					result++;
+			
 			return result;
 		}
 	};
