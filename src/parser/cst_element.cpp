@@ -1,5 +1,5 @@
-#include "cst_element.h"
-#include "cst_node.h"
+#include "cst_element.hpp"
+#include "cst_node.hpp"
 
 namespace splicpp
 {

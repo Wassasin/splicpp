@@ -4,10 +4,10 @@
 #include <vector>
 #include <memory>
 
-#include "symbols.h"
-#include "rule.h"
-#include "token.h"
-#include "typedefs.h"
+#include "symbols.hpp"
+#include "rule.hpp"
+#include "token.hpp"
+#include "typedefs.hpp"
 
 namespace splicpp
 {

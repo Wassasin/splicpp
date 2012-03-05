@@ -1,9 +1,9 @@
 #ifndef BNF_H
 #define BNF_H
 
-#include "../common/grammar.h"
-#include "../common/symbols.h"
-#include "../common/rule.h"
+#include "../common/grammar.hpp"
+#include "../common/symbols.hpp"
+#include "../common/rule.hpp"
 
 namespace splicpp
 {

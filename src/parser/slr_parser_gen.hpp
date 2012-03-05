@@ -1,12 +1,12 @@
 #ifndef SLR_PARSER_GEN_H
 #define SLR_PARSER_GEN_H
 
-#include "../common/typedefs.h"
-#include "../common/generic.h"
+#include "../common/typedefs.hpp"
+#include "../common/generic.hpp"
 
-#include "ptable.h"
-#include "item.h"
-#include "itemset.h"
+#include "ptable.hpp"
+#include "item.hpp"
+#include "itemset.hpp"
 
 namespace splicpp
 {

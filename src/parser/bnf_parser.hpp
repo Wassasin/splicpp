@@ -1,9 +1,9 @@
 #ifndef BNF_PARSER_H
 #define BNF_PARSER_H
 
-#include "bnf.h"
-#include "ptable.h"
-#include "slr_parser_gen.h"
+#include "bnf.hpp"
+#include "ptable.hpp"
+#include "slr_parser_gen.hpp"
 
 namespace splicpp
 {

@@ -1,8 +1,8 @@
 #include <iostream>
 #include <boost/program_options.hpp>
 
-#include "common/grammar.h"
-#include "parser/bnf_parser.h"
+#include "common/grammar.hpp"
+#include "parser/bnf_parser.hpp"
 
 int main(int argc, char **argv)
 {

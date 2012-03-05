@@ -4,12 +4,12 @@
 #include <vector>
 #include <stack>
 
-#include "../common/typedefs.h"
-#include "../common/grammar.h"
+#include "../common/typedefs.hpp"
+#include "../common/grammar.hpp"
 
-#include "lexer.h"
-#include "cst_node.h"
-#include "cst_element.h"
+#include "lexer.hpp"
+#include "cst_node.hpp"
+#include "cst_element.hpp"
 
 namespace splicpp
 {

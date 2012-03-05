@@ -3,10 +3,10 @@
 
 #include <boost/optional.hpp>
 
-#include "cst_node.h"
+#include "cst_node.hpp"
 
-#include "../common/token.h"
-#include "../common/grammar.h"
+#include "../common/token.hpp"
+#include "../common/grammar.hpp"
 
 namespace splicpp
 {

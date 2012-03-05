@@ -5,7 +5,7 @@
 #include <memory>
 #include <boost/foreach.hpp>
 
-#include "../common/grammar.h"
+#include "../common/grammar.hpp"
 
 namespace splicpp
 {

@@ -4,8 +4,8 @@
 #include <vector>
 #include <boost/array.hpp>
 
-#include "../common/rule.h"
-#include "../common/typedefs.h"
+#include "../common/rule.hpp"
+#include "../common/typedefs.hpp"
 
 namespace splicpp
 {

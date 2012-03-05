@@ -3,9 +3,9 @@
 
 #include <boost/optional.hpp>
 
-#include "../common/token.h"
-#include "../common/symbols.h"
-#include "../common/typedefs.h"
+#include "../common/token.hpp"
+#include "../common/symbols.hpp"
+#include "../common/typedefs.hpp"
 
 namespace splicpp
 {

@@ -1,4 +1,4 @@
-#include "symbols.h"
+#include "symbols.hpp"
 
 namespace splicpp
 {

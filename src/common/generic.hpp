@@ -1,6 +1,8 @@
 #ifndef GENERIC_H
 #define GENERIC_H
 
+#include <vector>
+
 namespace splicpp
 {
 	template <typename T>
