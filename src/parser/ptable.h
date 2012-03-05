@@ -8,6 +8,7 @@
 #include "../common/grammar.h"
 
 #include "lexer.h"
+#include "cst.h"
 
 namespace splicpp
 {
@@ -165,7 +166,6 @@ namespace splicpp
 			while(true)
 			{
 				stateid s = stack.top();
-//				stack.pop();
 			
 				acttransition t = acttable.at(s).at(g.translate_lit(a.type));
 				std::cout << s << ':' << g.fetch_symbol(g.translate_lit(a.type))->name << ' ';
