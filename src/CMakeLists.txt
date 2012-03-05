@@ -12,8 +12,11 @@ add_executable(splicpp
 	common/symbols.cpp
 	common/token.cpp
 	
+	parser/bnf_parser.cpp
 	parser/cst_element.cpp
 	parser/cst_node.cpp
+	parser/lexer.cpp
+	parser/ptable.cpp
 )
 
 add_definitions("-Wall -Wextra -Weffc++ -std=c++0x -g3 -fno-inline -O0")
