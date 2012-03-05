@@ -151,46 +151,53 @@ namespace splicpp
 			gototable.push_back(gotorow);
 		}
 		
-		std::vector<rid> parse(lexer& l) const
+		cst_node::cst_element parse(lexer& l) const
 		{
 			const grammar g = l.get_grammar();
 		
-			std::vector<rid> output;
-			std::stack<stateid> stack;
+			std::stack<cst_node::cst_element> e_stack;
+			std::stack<stateid> s_stack;
 			
-			stack.push(0); //Push s0
-		
 			l.reset();
-
 			token a = l.next();
+			
+			s_stack.push(0); //Push s0
 			while(true)
 			{
-				stateid s = stack.top();
+				stateid s = s_stack.top();
 			
 				acttransition t = acttable.at(s).at(g.translate_lit(a.type));
-				std::cout << s << ':' << g.fetch_symbol(g.translate_lit(a.type))->name << ' ';
-				t.print();
-				std::cout << std::endl;
 				if(t.t == acttransition::t_shift)
 				{
-					stack.push(t.state);
+					s_stack.push(t.state);
+					e_stack.push(cst_node::cst_element(a));
+					
 					a = l.next();
 				}
 				else if(t.t == acttransition::t_reduce)
 				{
 					rule r = g.fetch_rule(t.rule);
-					g.print_rule(t.rule);
-					for(uint i = 0; i < r.body.size(); i++)
-						stack.pop();
 					
-					stateid st = stack.top();
+					std::shared_ptr<cst_node> n(new cst_node(t.rule));
+					for(uint i = 0; i < r.body.size(); i++)
+					{
+						assert(!n->is_full(g));
+						n->add_element(e_stack.top());
+						
+						s_stack.pop();
+						e_stack.pop();
+					}
+					
+					assert(n->is_full(g));
+					
+					stateid st = s_stack.top();
 					gototransition gt = gototable.at(st).at(g.translate_nlit(r.start));
 					
 					if(gt.t == gototransition::t_error)
 						throw std::exception();
 					
-					stack.push(gt.state);
-					output.push_back(t.rule);
+					s_stack.push(gt.state);
+					e_stack.push(cst_node::cst_element(n));
 				}
 				else if(t.t == acttransition::t_accept)
 					break;
@@ -198,7 +205,14 @@ namespace splicpp
 					throw std::runtime_error("parser error on line "+a.line);
 			}
 			
-			return output;
+			assert(e_stack.size() == 1);
+			const auto result_el = e_stack.top();
+
+			assert(result_el.is_node());
+			const auto result_node = result_el.as_node();
+
+			assert(result_node->fetch_stid(g) == g.NL_START);
+			return result_node;
 		}
 		
 		void print(const grammar g) const

@@ -18,7 +18,7 @@ namespace splicpp
 		std::vector<char> ignore_list;
 
 	public:
-		const stid S_EPSILON, NL_REAL_START, NL_START, L_END;
+		const stid NL_REAL_START, NL_START, L_END, S_EPSILON;
 		const rid R_START;
 
 		grammar()
@@ -26,10 +26,10 @@ namespace splicpp
 		, rules()
 		, ignore_list()
 
-		, S_EPSILON(add_symbol(new epsilon()))
 		, NL_REAL_START(add_symbol(new non_literal("S'")))
 		, NL_START(add_symbol(new non_literal("S")))
 		, L_END(add_symbol(new end_literal()))
+		, S_EPSILON(add_symbol(new epsilon()))
 
 		, R_START(add_rule(rule(NL_REAL_START) + NL_START))
 		{}
