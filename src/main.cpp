@@ -1,17 +1,8 @@
 #include <iostream>
 #include <boost/program_options.hpp>
 
-#include "common/typedefs.h"
-#include "common/token.h"
-
-#include "parser/ptable.h"
-
-#include "parser/bnf.h"
-#include "parser/lexer.h"
-
-#include "parser/slr_parser_gen.h"
-
-#include "parser/tests/slr_test0.h"
+#include "common/grammar.h"
+#include "parser/bnf_parser.h"
 
 int main(int argc, char **argv)
 {
@@ -42,31 +33,18 @@ int main(int argc, char **argv)
 		return -1;
 	}
 	
-	// ---
-	splicpp::ptable p(10, 10);
-	
-	// ---
 	std::string lang = 
 		"syntax		:== rule | syntax newline rule\n"
 		"rule		:== rule-name assignment expr\n"
 		"expr		:== list | expr expr-sep list\n"
 		"list		:== rule-name | list rule-name";
 
-//	splicpp::bnf b;
-//	splicpp::lexer l(b, lang);
-
-//	while(!l.at_end())
-//		b.print_token(l.next(), lang);
+	splicpp::grammar g;
+	splicpp::bnf_parser p;
 	
-	splicpp::bnf test;
-	splicpp::ptable t = splicpp::slr_parser_gen::generate(test);
-	t.print(test);
-
-	splicpp::lexer l(test, lang);
-	auto blaat = t.parse(l);
-	std::cout << "-----" << std::endl;
+	p.parse(g, lang);
 	
-	blaat.print(test, lang, 1);
-
+	g.print();
+	
 	return 0;
 }

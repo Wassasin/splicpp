@@ -6,6 +6,7 @@
 
 #include "symbols.h"
 #include "rule.h"
+#include "token.h"
 #include "typedefs.h"
 
 namespace splicpp
@@ -102,7 +103,7 @@ namespace splicpp
 		
 		void print_token(const token t, const std::string source) const
 		{
-			std::cout << symbols.at(t.type)->name << " [" << source.substr(t.pos, t.length) << ']' << std::endl;
+			std::cout << symbols.at(t.type)->name << " [" << t.as_string(source) << ']' << std::endl;
 		}
 		
 		void print_rule(const rid r) const
@@ -126,10 +127,24 @@ namespace splicpp
 		{
 			return rules.at(i);
 		}
+		
+		stid fetch_stid(const std::string name) const
+		{
+			for(stid i = 0; i < symbols.size(); i++)
+				if(symbols.at(i)->name == name)
+					return i;
+			
+			throw std::runtime_error("Unknown symbol");
+		}
 
 		std::shared_ptr<symbol> fetch_symbol(const stid i) const
 		{
 			return symbols.at(i);
+		}
+		
+		std::shared_ptr<symbol> fetch_symbol(const std::string name) const
+		{
+			return symbols.at(fetch_stid(name));
 		}
 
 		size_t rules_size() const

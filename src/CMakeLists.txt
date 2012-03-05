@@ -6,6 +6,8 @@ include_directories("${PROJECT_BINARY_DIR}")
 
 add_executable(splicpp
 	main.cpp
+	parser/cst_element.cpp
+	parser/cst_node.cpp
 )
 
 add_definitions("-Wall -Wextra -Weffc++ -std=c++0x -g3 -fno-inline -O0")

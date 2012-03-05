@@ -8,7 +8,8 @@
 #include "../common/grammar.h"
 
 #include "lexer.h"
-#include "cst.h"
+#include "cst_node.h"
+#include "cst_element.h"
 
 namespace splicpp
 {
@@ -151,11 +152,11 @@ namespace splicpp
 			gototable.push_back(gotorow);
 		}
 		
-		cst_node::cst_element parse(lexer& l) const
+		cst_element parse(lexer& l) const
 		{
 			const grammar g = l.get_grammar();
 		
-			std::stack<cst_node::cst_element> e_stack;
+			std::stack<std::shared_ptr<cst_element>> e_stack;
 			std::stack<stateid> s_stack;
 			
 			l.reset();
@@ -170,7 +171,7 @@ namespace splicpp
 				if(t.t == acttransition::t_shift)
 				{
 					s_stack.push(t.state);
-					e_stack.push(cst_node::cst_element(a));
+					e_stack.push(std::shared_ptr<cst_element>(new cst_element(a)));
 					
 					a = l.next();
 				}
@@ -178,17 +179,16 @@ namespace splicpp
 				{
 					rule r = g.fetch_rule(t.rule);
 					
-					std::shared_ptr<cst_node> n(new cst_node(t.rule));
+					cst_node n(t.rule);
 					for(uint i = 0; i < r.body.size(); i++)
 					{
-						assert(!n->is_full(g));
-						n->add_element(e_stack.top());
+						assert(!n.is_full(g));
+						n.add_element(e_stack.top());
 						
 						s_stack.pop();
 						e_stack.pop();
 					}
-					
-					assert(n->is_full(g));
+					assert(n.is_full(g));
 					
 					stateid st = s_stack.top();
 					gototransition gt = gototable.at(st).at(g.translate_nlit(r.start));
@@ -197,7 +197,7 @@ namespace splicpp
 						throw std::exception();
 					
 					s_stack.push(gt.state);
-					e_stack.push(cst_node::cst_element(n));
+					e_stack.push(std::shared_ptr<cst_element>(new cst_element(n)));
 				}
 				else if(t.t == acttransition::t_accept)
 					break;
@@ -208,10 +208,10 @@ namespace splicpp
 			assert(e_stack.size() == 1);
 			const auto result_el = e_stack.top();
 
-			assert(result_el.is_node());
-			const auto result_node = result_el.as_node();
+			assert(result_el->is_node());
+			const auto result_node = result_el->as_node();
 
-			assert(result_node->fetch_stid(g) == g.NL_START);
+			assert(result_node.fetch_stid(g) == g.NL_START);
 			return result_node;
 		}
 		

@@ -16,6 +16,11 @@ namespace splicpp
 		, length(length)
 		, line(line)
 		{}
+		
+		std::string as_string(std::string source) const
+		{
+			return source.substr(pos, length);
+		}
 	};
 }
 

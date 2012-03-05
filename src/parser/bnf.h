@@ -9,9 +9,9 @@ namespace splicpp
 {
 	class bnf : public grammar
 	{
-		const stid L_RULE_NAME, L_ASS, L_EXPR_SEP, L_NEWLINE, NL_SYNTAX, NL_RULE, NL_EXPR, NL_LIST;
-		
 	public:
+		const stid L_RULE_NAME, L_ASS, L_EXPR_SEP, L_NEWLINE, NL_SYNTAX, NL_RULE, NL_EXPR, NL_LIST;
+	
 		bnf()
 		: grammar()
 
