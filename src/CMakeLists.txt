@@ -6,6 +6,12 @@ include_directories("${PROJECT_BINARY_DIR}")
 
 add_executable(splicpp
 	main.cpp
+	
+	common/grammar.cpp
+	common/rule.cpp
+	common/symbols.cpp
+	common/token.cpp
+	
 	parser/cst_element.cpp
 	parser/cst_node.cpp
 )

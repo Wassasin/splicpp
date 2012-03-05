@@ -1,6 +1,8 @@
 #ifndef TYPEDEFS_H
 #define TYPEDEFS_H
 
+#include <cstddef>
+
 namespace splicpp
 {
 	typedef unsigned char byte;

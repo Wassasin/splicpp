@@ -1,6 +1,8 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
+#include <string>
+
 #include "typedefs.h"
 
 namespace splicpp
@@ -16,11 +18,8 @@ namespace splicpp
 		, length(length)
 		, line(line)
 		{}
-		
-		std::string as_string(std::string source) const
-		{
-			return source.substr(pos, length);
-		}
+				
+		std::string as_string(const std::string source) const;
 	};
 }
 
