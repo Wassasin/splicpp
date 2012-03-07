@@ -1,8 +1,7 @@
 #include <iostream>
 #include <boost/program_options.hpp>
 
-#include "common/grammar.hpp"
-#include "parser/bnf_parser.hpp"
+#include "parser/spl_parser.hpp"
 
 int main(int argc, char **argv)
 {
@@ -33,13 +32,8 @@ int main(int argc, char **argv)
 		return -1;
 	}
 	
-	std::string lang = 
-		"syntax		:== rule | syntax newline rule\n"
-		"rule		:== rule-name assignment expr\n"
-		"expr		:== list | expr expr-sep list\n"
-		"list		:== rule-name | list rule-name";
 	
-	splicpp::bnf_parser p;
+	splicpp::spl_parser p;
 	
 	//splicpp::grammar tmp;
 	
