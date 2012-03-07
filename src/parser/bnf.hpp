@@ -16,7 +16,7 @@ namespace splicpp
 		bnf()
 		: grammar()
 
-		, L_RULE_NAME(add_symbol(	new regex_literal("l_rule_name", "([a-zA-Z0-9\\-]+)")))
+		, L_RULE_NAME(add_symbol(	new regex_literal("l_rule_name", "([a-zA-Z0-9\\-\\_]+)")))
 		, L_ASSIGNMENT(add_symbol(	new static_literal("l_assignment", ":==")))
 		, L_EXPR_SEP(add_symbol(	new static_literal("l_expr_sep", "|")))
 		, L_OPTIONAL(add_symbol(	new static_literal("l_optional", "?")))
