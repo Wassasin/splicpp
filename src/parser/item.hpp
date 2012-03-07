@@ -60,6 +60,11 @@ namespace splicpp
 		{
 			return g.fetch_rule(rule).body[dot-1];
 		}
+		
+		std::vector<stid> remainder(const grammar g) const
+		{
+			return subvector<stid>(g.fetch_rule(rule).body, dot);
+		}
 
 		item<L> next(const grammar g) const
 		{

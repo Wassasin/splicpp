@@ -25,6 +25,22 @@ namespace splicpp
 		}
 	}
 	
+	bool ptable::acttransition::operator==(const acttransition x) const
+	{
+		if(this->t != x.t)
+			return false;
+		
+		if(this->t == acttranstype::t_shift)
+			if(this->state != x.state)
+				return false;
+		
+		if(this->t == acttranstype::t_reduce)
+			if(this->rule != x.rule)
+				return false;
+		
+		return true;
+	}
+	
 	void ptable::gototransition::print() const
 	{
 		switch(t)

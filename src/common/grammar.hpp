@@ -49,6 +49,7 @@ namespace splicpp
 		void print() const;
 		void print_token(const token t, const std::string source) const;
 		void print_rule(const rid r) const;
+		void print_symbol(const stid i) const;
 		
 		const rule fetch_rule(const rid i) const;
 		stid fetch_stid(const std::string name) const;

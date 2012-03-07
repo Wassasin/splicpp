@@ -103,10 +103,13 @@ namespace splicpp
 						continue;
 					
 					if(r.body.size() > 0) //case 2
-					{
 						for(size_t j = 0; j < r.body.size(); j++)
 						{
 							bool has_epsilon = false;
+							
+							if(r.body[j] == a)
+								throw std::runtime_error("infinite recursion detected");
+							
 							auto first_j = first(r.body[j], g);
 							for(size_t k = 0; k < first_j.size(); k++)
 							{
@@ -122,7 +125,6 @@ namespace splicpp
 							else if(j == r.body.size()-1)
 								result.push_back(g.S_EPSILON);
 						}
-					}
 					else //case 3
 						result.push_back(g.S_EPSILON);
 				}
@@ -232,23 +234,13 @@ namespace splicpp
 
 			c.push_back(closure<0>(init_set, g));
 			
-			/*
-			//TODO REMOVE
-			std::cout << "-----" << std::endl << "after closure" << std::endl;
-			itemset<0>::print(c, g);
-			std::cout << std::endl;
-			//END TODO REMOVE
-			*/
-			
 			bool changed;
 			do
 			{
 				changed = false;
 
-				for(size_t i = 0; i < c.size(); i++)
+				for(const auto i_set : c)
 				{
-					auto i_set = c.at(i);
-					
 					for(stid x = 0; x < g.symbols_size(); x++)
 					{
 						auto goto_set = goto_f<0>(i_set, x, g);
@@ -256,21 +248,12 @@ namespace splicpp
 							continue;
 						
 						c.push_back(goto_set);
-						
-						/*
-						//TODO REMOVE
-						for(size_t j = 0; j < goto_set.size(); j++)
-						{
-							goto_set[j].print(g);
-							std::cout << "\t";
-						}
-							
-						std::cout << std::endl;
-						//END TODO REMOVE
-						*/
-						
 						changed = true;
+						break;
 					}
+					
+					if(changed)
+						break;
 				}
 			} while(changed);
 
@@ -278,10 +261,8 @@ namespace splicpp
 		}
 
 		template <size_t L>
-		static itemset<L> closure(const itemset<L> i_set, const grammar g) //dragon book, page 245
+		static itemset<L> closure(itemset<L> i_set, const grammar g) //dragon book, page 245
 		{
-			itemset<L> j_set(i_set);
-
 			std::vector<bool> added(g.symbols_size());
 			for(size_t i = 0; i < g.symbols_size(); i++)
 				added[i] = false;
@@ -291,12 +272,12 @@ namespace splicpp
 			{
 				changed = false;
 
-				for(size_t i = 0; i < j_set.size(); i++)
+				for(const item<L> i : i_set)
 				{
-					if(j_set[i].at_end(g))
+					if(i.at_end(g))
 						continue;
 
-					stid b = j_set[i].after_dot(g);
+					stid b = i.after_dot(g);
 					
 					if(g.fetch_symbol(b)->type() != s_nlit)
 						continue;
@@ -310,7 +291,7 @@ namespace splicpp
 						if(r.start != b)
 							continue;
 						
-						j_set.push_back(item<L>(j, 0));
+						i_set.push_back(item<L>(j, 0));
 						changed = true;
 					}
 					
@@ -318,7 +299,7 @@ namespace splicpp
 				}
 			} while(changed);
 
-			return j_set;
+			return i_set;
 		}
 	};
 }

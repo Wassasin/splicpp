@@ -87,6 +87,11 @@ namespace splicpp
 		
 		std::cout << std::endl;
 	}
+	
+	void grammar::print_symbol(const stid i) const
+	{
+		std::cout << fetch_symbol(i)->name << std::endl;
+	}
 
 	const rule grammar::fetch_rule(const rid i) const
 	{

@@ -62,6 +62,7 @@ namespace splicpp
 			}
 			
 			void print() const;
+			bool operator==(const acttransition x) const;
 		};
 		
 		struct gototransition

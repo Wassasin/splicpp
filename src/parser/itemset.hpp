@@ -45,17 +45,6 @@ namespace splicpp
 
 		bool is_in(const std::vector<itemset<L>> c)
 		{
-			/*
-			//TODO REMOVE
-			std::cout << "----------" << std::endl << "item_is_in(1)" << std::endl;
-			this->print(g);
-			std::cout << std::endl;
-			std::cout << "----------" << std::endl << "item_is_in(2)" << std::endl;
-			print(c, g);
-			std::cout << std::endl;
-			//END TODO REMOVE
-			*/
-			
 			for(size_t i = 0; i < c.size(); i++)
 				if((*this) == c.at(i))
 					return true;
@@ -81,6 +70,21 @@ namespace splicpp
 		inline size_t size() const
 		{
 			return contents.size();
+		}
+		
+		typename std::vector<item<L>>::allocator_type get_allocator() const
+		{
+			return contents.get_allocator();
+		}
+		
+		typename std::vector<item<L>>::const_iterator begin() const
+		{
+			return contents.begin();
+		}
+		
+		typename std::vector<item<L>>::const_iterator end() const
+		{
+			return contents.end();
 		}
 
 		void print(const grammar g) const

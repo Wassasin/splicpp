@@ -3,7 +3,7 @@
 
 #include "bnf.hpp"
 #include "ptable.hpp"
-#include "slr_parser_gen.hpp"
+#include "clr_parser_gen.hpp"
 
 namespace splicpp
 {
@@ -28,8 +28,10 @@ namespace splicpp
 	public:
 		bnf_parser()
 		: g_bnf()
-		, t(splicpp::slr_parser_gen::generate(g_bnf))
-		{}
+		, t(splicpp::clr_parser_gen::generate(g_bnf))
+		{
+			t.print(g_bnf);
+		}
 		
 		void parse(grammar& g, const std::string lang);
 	};
