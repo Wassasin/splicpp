@@ -18,9 +18,8 @@ add_executable(splicpp
 	parser/cst_node.cpp
 	parser/lexer.cpp
 	parser/ptable.cpp
+	parser/spl_parser.cpp
 )
-
-add_dependencies(splicpp DEPENDS konijn)
 
 macro(add_grammar SRC_FILE)
 	add_custom_command(
@@ -35,6 +34,7 @@ endmacro()
 
 add_grammar(bnf.bnf)
 add_grammar(test.bnf)
+add_grammar(spl.bnf)
 
 add_definitions("-Wall -Wextra -Weffc++ -std=c++0x -g3 -fno-inline -O0")
 
