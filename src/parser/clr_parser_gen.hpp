@@ -50,11 +50,11 @@ namespace splicpp
 				}
 			
 			//case 2(b)
-			for(size_t i = 0; i < i_set.size(); i++)
+			for(item<1> i : i_set)
 			{
-				stid start = g.fetch_rule(i_set[i].rule).start;
-				if(start != g.NL_REAL_START && i_set[i].at_end(g) && i_set[i].lookahead[0] == a)
-					result.push_back(ptable::acttransition::reduce(i_set[i].rule));
+				stid start = g.fetch_rule(i.rule).start;
+				if(start != g.NL_REAL_START && i.at_end(g) && i.lookahead[0] == a)
+					result.push_back(ptable::acttransition::reduce(i.rule));
 			}
 			
 			//case 2(c)

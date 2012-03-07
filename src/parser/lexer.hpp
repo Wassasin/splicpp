@@ -10,8 +10,8 @@ namespace splicpp
 {
 	class lexer
 	{
-		grammar g;
-		std::string str;
+		const grammar g;
+		const std::string str;
 
 		uint i, line;
 		
@@ -30,6 +30,7 @@ namespace splicpp
 		
 		bool at_end() const;
 		grammar get_grammar() const;
+		std::string get_str() const;
 	};
 }
 

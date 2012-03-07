@@ -38,13 +38,12 @@ int main(int argc, char **argv)
 		"rule		:== rule-name assignment expr\n"
 		"expr		:== list | expr expr-sep list\n"
 		"list		:== rule-name | list rule-name";
-
-	splicpp::grammar g;
+	
 	splicpp::bnf_parser p;
 	
-	p.parse(g, lang);
+	//splicpp::grammar tmp;
 	
-	g.print();
+	//p.parse(tmp, lang);
 	
 	return 0;
 }

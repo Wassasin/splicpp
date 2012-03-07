@@ -1,42 +1,41 @@
 #ifndef BNF_H
 #define BNF_H
 
-#include "../common/grammar.hpp"
-#include "../common/symbols.hpp"
-#include "../common/rule.hpp"
+#include <boost/algorithm/string/trim.hpp>
+
+#include "bnf_bootstrap_parser.hpp"
+#include "../common/io.hpp"
 
 namespace splicpp
 {
 	class bnf : public grammar
 	{
 	public:
-		const stid L_RULE_NAME, L_ASS, L_EXPR_SEP, L_NEWLINE, NL_SYNTAX, NL_RULE, NL_EXPR, NL_LIST;
+		const stid L_RULE_NAME, L_ASSIGNMENT, L_EXPR_SEP, L_OPTIONAL, L_KLEENE, L_PLUS, L_NEWLINE, NL_SYNTAX;
 	
 		bnf()
 		: grammar()
 
-		, L_RULE_NAME(add_symbol(	new regex_literal("rule-name", "([a-zA-Z0-9\\-]+)")))
-		, L_ASS(add_symbol(			new static_literal("assignment", ":==")))
-		, L_EXPR_SEP(add_symbol(	new static_literal("expr-sep", "|")))
-		, L_NEWLINE(add_symbol(		new static_literal("newline", "\n")))
+		, L_RULE_NAME(add_symbol(	new regex_literal("l_rule_name", "([a-zA-Z0-9\\-]+)")))
+		, L_ASSIGNMENT(add_symbol(	new static_literal("l_assignment", ":==")))
+		, L_EXPR_SEP(add_symbol(	new static_literal("l_expr_sep", "|")))
+		, L_OPTIONAL(add_symbol(	new static_literal("l_optional", "?")))
+		, L_KLEENE(add_symbol(		new static_literal("l_kleene", "*")))
+		, L_PLUS(add_symbol(		new static_literal("l_plus", "+")))
+		, L_NEWLINE(add_symbol(		new static_literal("l_newline", "\n")))
 		
-		, NL_SYNTAX(add_symbol(		new non_literal("syntax")))
-		, NL_RULE(add_symbol(		new non_literal("rule")))
-		, NL_EXPR(add_symbol(		new non_literal("expr")))
-		, NL_LIST(add_symbol(		new non_literal("list")))
+		, NL_SYNTAX(add_symbol(		new non_literal("nl_syntax")))
 		{
-			add_rule(rule(NL_START) + NL_SYNTAX);
-
-			add_rule(rule(NL_SYNTAX) + NL_RULE);
-			add_rule(rule(NL_SYNTAX) + NL_SYNTAX + L_NEWLINE + NL_RULE);
-			add_rule(rule(NL_RULE) + L_RULE_NAME + L_ASS + NL_EXPR);
-			add_rule(rule(NL_EXPR) + NL_LIST);
-			add_rule(rule(NL_EXPR) + NL_EXPR + L_EXPR_SEP + NL_LIST);
-			add_rule(rule(NL_LIST) + L_RULE_NAME);
-			add_rule(rule(NL_LIST) + NL_LIST + L_RULE_NAME);
-
 			ignore(' ');
 			ignore('\t');
+			
+			splicpp::bnf_bootstrap_parser p;
+			std::string lang = readfile("grammars/bnf.bnf");
+			boost::algorithm::trim(lang);
+			
+			p.parse((*this), lang);
+			
+			add_rule(rule(NL_START) + NL_SYNTAX);
 		}
 	};
 }

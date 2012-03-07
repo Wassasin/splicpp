@@ -1,6 +1,7 @@
 #include "ptable.hpp"
 
 #include <stack>
+#include <sstream>
 
 namespace splicpp
 {
@@ -121,7 +122,11 @@ namespace splicpp
 			else if(t.t == acttransition::t_accept)
 				break;
 			else
-				throw std::runtime_error("parser error on line "+a.line);
+			{
+				std::stringstream s;
+				s << "parser error on line " << a.line+1 << " near \"" << a.as_string(l.get_str()) << "\"";
+				throw std::runtime_error(s.str());
+			}
 		}
 		
 		assert(e_stack.size() == 1);

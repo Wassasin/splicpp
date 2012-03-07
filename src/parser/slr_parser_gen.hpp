@@ -108,7 +108,8 @@ namespace splicpp
 							bool has_epsilon = false;
 							
 							if(r.body[j] == a)
-								throw std::runtime_error("infinite recursion detected");
+								continue;
+								//throw std::runtime_error("infinite recursion detected");
 							
 							auto first_j = first(r.body[j], g);
 							for(size_t k = 0; k < first_j.size(); k++)

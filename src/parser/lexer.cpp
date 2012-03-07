@@ -45,4 +45,9 @@ namespace splicpp
 	{
 		return g;
 	}
+	
+	std::string lexer::get_str() const
+	{
+		return str;
+	}
 }
