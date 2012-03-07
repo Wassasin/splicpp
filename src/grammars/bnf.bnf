@@ -2,7 +2,7 @@ nl_syntax	:== nl_rule
 nl_syntax	:== nl_syntax nl_newlines nl_rule
 nl_syntax	:== nl_syntax nl_newlines nl_alt_rule
 nl_rule		:== l_rule_name l_assignment nl_expr
-nl_alt_rule	:== l_expr_sep nl_list
+nl_alt_rule	:== l_expr_sep nl_expr
 nl_expr		:== nl_symbol
 nl_expr		:== nl_expr nl_symbol
 nl_symbol	:== l_rule_name
