@@ -16,7 +16,11 @@ namespace splicpp
 		itemset()
 		: contents()
 		{}
-
+		
+		itemset(std::initializer_list<item<L>> list)
+		: contents(list)
+		{}
+		
 		bool operator==(const itemset<L> i_set) const
 		{
 			if(i_set.size() != this->size())

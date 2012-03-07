@@ -159,12 +159,7 @@ namespace splicpp
 		
 		static std::vector<itemset<1>> items(const grammar g) //dragon book, page 261
 		{
-			std::vector<itemset<1>> c;
-
-			itemset<1> init_set;
-			init_set.push_back(item<1>(g.R_START, 0, { { g.L_END } }));
-
-			c.push_back(closure(init_set, g));
+			std::vector<itemset<1>> c = {closure({ item<1>(g.R_START, 0, { { g.L_END } }) }, g)};
 			
 			bool changed;
 			do
