@@ -21,9 +21,8 @@ namespace splicpp
 		stid try_add_symbol(grammar& g, const std::string name) const;
 		void parse_syntax(grammar& g, const std::string str, const cst_node n) const;
 		void parse_rule(grammar& g, const std::string str, const cst_node n) const;
-		void parse_expr(grammar& g, const std::string str, const cst_node n, const stid start) const;
-		void parse_list(grammar& g, const std::string str, const cst_node n, rule& r) const;
-		std::string parse_rule_name(const std::string str, const token t) const;
+		void parse_expr(grammar& g, const std::string str, const cst_node n, rule& r) const;
+		std::string parse_rule_name(const std::string str, const std::shared_ptr<cst_element> e) const;
 	
 	public:
 		bnf_bootstrap_parser()

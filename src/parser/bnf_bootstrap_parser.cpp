@@ -13,14 +13,14 @@ namespace splicpp
 		
 		void bnf_bootstrap_parser::parse_syntax(grammar& g, const std::string str, const cst_node n) const //syntax :== rule | syntax newline rule
 		{
-			n.assert_stid(g_bnf, "syntax");
+			n.assert_stid(g_bnf, "nl_syntax");
 			
 			if(n.size() == 1)
 				parse_rule(g, str, n[0]->as_node());
 			else if(n.size() == 3)
 			{
 				parse_syntax(g, str, n[0]->as_node());
-				n[1]->assert_token(g_bnf, "newline");
+				n[1]->assert_token(g_bnf, "l_newline");
 				parse_rule(g, str, n[2]->as_node());
 			}
 			else
@@ -29,52 +29,36 @@ namespace splicpp
 		
 		void bnf_bootstrap_parser::parse_rule(grammar& g, const std::string str, const cst_node n) const //rule :== rule-name assignment expr
 		{
-			n.assert_stid(g_bnf, "rule");
+			n.assert_stid(g_bnf, "nl_rule");
 			assert(n.size() == 3);
 			
-			n[0]->assert_token(g_bnf, "rule-name");
-			stid s = try_add_symbol(g, parse_rule_name(str, n[0]->as_token()));
-			n[1]->assert_token(g_bnf, "assignment");
-			parse_expr(g, str, n[2]->as_node(), s);
-		}
-		
-		void bnf_bootstrap_parser::parse_expr(grammar& g, const std::string str, const cst_node n, const stid start) const //expr :== list | expr expr-sep list
-		{
-			n.assert_stid(g_bnf, "expr");
-			rule r(start);
+			stid s = try_add_symbol(g, parse_rule_name(str, n[0]));
+			n[1]->assert_token(g_bnf, "l_assignment");
 			
-			if(n.size() == 1)
-				parse_list(g, str, n[0]->as_node(), r);
-			else if(n.size() == 3)
-			{
-				parse_expr(g, str, n[0]->as_node(), start);
-				n[1]->assert_token(g_bnf, "expr-sep");
-				parse_list(g, str, n[2]->as_node(), r);
-			}
-			else
-				throw std::logic_error("unexpected rule");
-				
+			rule r(s);
+			parse_expr(g, str, n[2]->as_node(), r);
 			g.add_rule(r);
 		}
 		
-		void bnf_bootstrap_parser::parse_list(grammar& g, const std::string str, const cst_node n, rule& r) const //list :== rule-name | list rule-name
+		void bnf_bootstrap_parser::parse_expr(grammar& g, const std::string str, const cst_node n, rule& r) const //expr :== | expr rule-name
 		{
-			n.assert_stid(g_bnf, "list");
+			n.assert_stid(g_bnf, "nl_expr");
 			
 			if(n.size() == 0)
 			{}
 			else if(n.size() == 2)
 			{
-				parse_list(g, str, n[0]->as_node(), r);
-				r.append_body(try_add_symbol(g, parse_rule_name(str, n[1]->as_token())));
+				parse_expr(g, str, n[0]->as_node(), r);
+				r.append_body(try_add_symbol(g, parse_rule_name(str, n[1])));
 			}
 			else
 				throw std::logic_error("unexpected rule");
 		}
 		
-		std::string bnf_bootstrap_parser::parse_rule_name(const std::string str, const token t) const
+		std::string bnf_bootstrap_parser::parse_rule_name(const std::string str, const std::shared_ptr<cst_element> e) const
 		{
-			return t.as_string(str);
+			e->assert_token(g_bnf, "l_rule_name");
+			return e->as_token().as_string(str);
 		}
 		
 		void bnf_bootstrap_parser::parse(grammar& g, const std::string lang)
