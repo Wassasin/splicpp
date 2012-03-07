@@ -26,7 +26,7 @@ namespace splicpp
 					return parse_rule(g, str, n[2]->as_node());
 				else if(n[2]->is_node(g_bnf, "nl_alt_rule"))
 				{
-					parse_alt_rule(g, str, n, s);
+					parse_alt_rule(g, str, n[2]->as_node(), s);
 					return s;
 				}
 			}
