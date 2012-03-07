@@ -13,6 +13,22 @@ namespace splicpp
 		return(type == t_node);
 	}
 	
+	bool cst_element::is_token(const grammar g, const std::string str) const
+	{
+		if(!is_token())
+			return false;
+		
+		return(g.fetch_symbol(as_token().type)->name == str);
+	}
+	
+	bool cst_element::is_node(const grammar g, const std::string str) const
+	{
+		if(!is_node())
+			return false;
+		
+		return(g.fetch_symbol(as_node().fetch_stid(g))->name == str);
+	}
+	
 	token cst_element::as_token() const
 	{
 		return tok.get();
@@ -34,9 +50,13 @@ namespace splicpp
 			node.get().print(g, source, tab);
 	}
 	
-	void cst_element::assert_token(const grammar g, const std::string str)
+	void cst_element::assert_token(const grammar g, const std::string str) const
 	{
-		assert(is_token());
-		assert(g.fetch_symbol(as_token().type)->name == str);
+		assert(is_token(g, str));
+	}
+	
+	void cst_element::assert_node(const grammar g, const std::string str) const
+	{
+		assert(is_node(g, str));
 	}
 }
