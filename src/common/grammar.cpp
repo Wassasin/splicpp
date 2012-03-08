@@ -1,5 +1,7 @@
 #include "grammar.hpp"
 
+#include <sstream>
+
 namespace splicpp
 {
 	void grammar::ignore(const char c)
@@ -44,7 +46,10 @@ namespace splicpp
 	void grammar::print() const
 	{
 		for(rid i = 0; i < rules.size(); i++)
+		{
+			std::cout << i << ": ";
 			print_rule(i);
+		}
 	}
 	
 	boost::optional<token> grammar::try_match(const std::string source, const uint pos, const uint line) const
@@ -165,5 +170,33 @@ namespace splicpp
 				result++;
 		
 		return result;
+	}
+	
+	void grammar::check() const
+	{
+		for(stid i = 0; i < symbols.size(); i++)
+		{
+			std::shared_ptr<symbol> s = symbols.at(i);
+			if(s->type() == s_lit)
+				continue;
+			
+			if(s->type() == s_nlit)
+			{
+				bool defined = false;
+				for(const rule r : rules)
+					if(r.start == i)
+					{
+						defined = true;
+						break;
+					}
+				
+				if(!defined)
+				{
+					std::stringstream str;
+					str << "Nonliteral " << s->name << " has not been defined";
+					throw std::logic_error(str.str());
+				}
+			}
+		}
 	}
 }

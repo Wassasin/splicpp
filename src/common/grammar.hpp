@@ -63,6 +63,8 @@ namespace splicpp
 		
 		size_t translate_lit(const stid id) const;
 		size_t translate_nlit(const stid id) const;
+		
+		void check() const;
 	};
 }
 
