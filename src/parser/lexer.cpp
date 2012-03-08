@@ -18,21 +18,28 @@ namespace splicpp
 	token lexer::next()
 	{
 		consume_garbage();
-		boost::optional<token> tmp_t = g.try_match(str, i, line);
+		boost::optional<token> tmp_t;
 		
+		tmp_t = g.try_match(str, i, line);
 		if(!tmp_t)
 		{
 			std::cerr << "Can not match to tokens: \"" << str.substr(i, 10) << '"' << std::endl; //TODO
 			throw std::exception();
 		}
-		
+	
 		token t = tmp_t.get();
-		
+	
 		for(uint j = 0; j < t.length; j++)
 			if(str[i+j] == '\n')
 				line++;
 
 		i += t.length;
+
+		if(g.fetch_symbol(t.type)->type() == s_ignored)
+			return next();
+
+		g.print_token(t, str);
+
 		return t;
 	}
 	

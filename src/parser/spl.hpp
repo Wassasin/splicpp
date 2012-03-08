@@ -11,10 +11,13 @@ namespace splicpp
 	class spl : public grammar
 	{
 	public:
-		const stid L_VOID, L_BOOL, L_INT, L_FALSE, L_TRUE, L_IF, L_ELSE, L_WHILE, L_RETURN, L_SEMICOLON, L_BRACKET_LEFT, L_BRACKET_RIGHT, L_CBRACKET_LEFT, L_CBRACKET_RIGHT, L_SBRACKET_LEFT, L_SBRACKET_RIGHT, L_COMMA, L_ID, L_DIGIT, L_UNDERSCORE, L_MINUS, L_PLUS, L_TIMES, L_DIVIDES, L_MOD, L_DISJUNCTION, L_CONJUNCTION, L_LEQ, L_GEQ, L_EQ, L_NEQ, L_LESSER, L_GREATER, L_ASSIGNMENT, L_NEGATION, L_COLON, NL_PROG;
+		const stid C_LINE, C_BLOCK, L_VOID, L_BOOL, L_INT, L_FALSE, L_TRUE, L_IF, L_ELSE, L_WHILE, L_RETURN, L_SEMICOLON, L_BRACKET_LEFT, L_BRACKET_RIGHT, L_CBRACKET_LEFT, L_CBRACKET_RIGHT, L_SBRACKET_LEFT, L_SBRACKET_RIGHT, L_COMMA, L_ID, L_DIGIT, L_UNDERSCORE, L_MINUS, L_PLUS, L_TIMES, L_DIVIDES, L_MOD, L_DISJUNCTION, L_CONJUNCTION, L_LEQ, L_GEQ, L_EQ, L_NEQ, L_LESSER, L_GREATER, L_ASSIGNMENT, L_NEGATION, L_COLON, NL_PROG;
 	
 		spl()
 		: grammar()
+		
+		, C_LINE(add_symbol(				new line_comment_literal("c_line", "//")))
+		, C_BLOCK(add_symbol(				new block_comment_literal("c_block", "/*", "*/")))
 		
 		, L_VOID(add_symbol(				new regex_literal("l_void", "(\\<Void\\>)")))
 		, L_BOOL(add_symbol(				new regex_literal("l_bool", "(\\<Bool\\>)")))
@@ -62,12 +65,14 @@ namespace splicpp
 		, L_NEGATION(add_symbol(			new static_literal("l_negation", "!")))
 		, L_COLON(add_symbol(				new static_literal("l_colon", ":")))
 
-		, NL_PROG(add_symbol(		new non_literal("nl_prog")))
-		{
+		, NL_PROG(add_symbol(				new non_literal("nl_prog")))
+		{		
 			ignore(' ');
 			ignore('\t');
+			ignore('\n');
 			
 			splicpp::bnf_parser p;
+			
 			std::string lang = readfile("grammars/spl.bnf");
 			boost::algorithm::trim(lang);
 			
@@ -75,10 +80,9 @@ namespace splicpp
 			
 			add_rule(rule(NL_START) + NL_PROG);
 			
-			std::cout << std::endl;
-			print();
+			check();
 			
-			//check();
+			//print();
 		}
 	};
 }

@@ -29,9 +29,7 @@ namespace splicpp
 		bnf_parser()
 		: g_bnf()
 		, t(splicpp::clr_parser_gen::generate(g_bnf))
-		{
-			t.print(g_bnf);
-		}
+		{}
 		
 		void parse(grammar& g, const std::string lang);
 	};

@@ -14,7 +14,8 @@ namespace splicpp
 	{
 		s_lit,
 		s_nlit,
-		s_epsilon
+		s_epsilon,
+		s_ignored
 	};
 
 	class symbol
@@ -110,6 +111,40 @@ namespace splicpp
 		{
 			return s_nlit;
 		}
+	};
+	
+	class ignored_literal : public literal
+	{
+	public:
+		ignored_literal(const std::string name)
+		: literal(name)
+		{}
+		
+		virtual stype type() const
+		{
+			return s_lit;
+		}
+	};
+	
+	class block_comment_literal : public ignored_literal
+	{
+		const std::string start, end;
+	public:
+		block_comment_literal(const std::string name, const std::string start, const std::string end)
+		: ignored_literal(name)
+		, start(start)
+		, end(end)
+		{}
+	
+		virtual boost::optional<uint> match(const std::string source, const uint pos) const;
+	};
+	
+	class line_comment_literal : public block_comment_literal
+	{
+	public:
+		line_comment_literal(const std::string name, const std::string str)
+		: block_comment_literal(name, str, "\n")
+		{}
 	};
 }
 
