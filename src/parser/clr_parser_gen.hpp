@@ -1,6 +1,8 @@
 #ifndef CLR_PARSER_GEN_H
 #define CLR_PARSER_GEN_H
 
+#include <boost/function.hpp>
+
 #include "slr_parser_gen.hpp"
 
 namespace splicpp
@@ -10,7 +12,15 @@ namespace splicpp
 		clr_parser_gen() {}
 
 	public:
-		static ptable generate(const grammar g) //dragon book, page 265
+		typedef boost::function<void (std::vector<ptable::acttransition>& transitions, const size_t i, const std::vector<itemset<1>> c, const stid a, const grammar g)> conflict_resolver;
+		static void resolve_nothing(std::vector<ptable::acttransition>&, const size_t, const std::vector<itemset<1>>, const stid, const grammar) {}
+	
+		static ptable generate(const grammar g)
+		{
+			return generate(g, resolve_nothing);
+		}
+	
+		static ptable generate(const grammar g, const conflict_resolver f) //dragon book, page 265
 		{
 			const size_t terminals = g.terminals_size(), nterminals = g.nterminals_size();
 		
@@ -24,9 +34,9 @@ namespace splicpp
 				
 				for(stid a = 0; a < g.symbols_size(); a++)
 					if(g.fetch_symbol(a)->type() == s_lit)
-						actrow.push_back(generate_act(c.at(i), c, a, g));
+						actrow.push_back(generate_act(i, c, a, g, f));
 					else if(g.fetch_symbol(a)->type() == s_nlit)
-						gotorow.push_back(generate_goto(c.at(i), c, a, g));
+						gotorow.push_back(generate_goto(i, c, a, g));
 				
 				result.add_state(actrow, gotorow);
 			}
@@ -34,8 +44,9 @@ namespace splicpp
 			return result;
 		}
 		
-		static ptable::acttransition generate_act(const itemset<1> i_set, const std::vector<itemset<1>> c, const stid a, const grammar g)
+		static ptable::acttransition generate_act(const size_t i_set_i, const std::vector<itemset<1>> c, const stid a, const grammar g, const conflict_resolver f)
 		{
+			const itemset<1> i_set = c.at(i_set_i);
 			std::vector<ptable::acttransition> result;
 		
 			//case 2(a)
@@ -70,14 +81,17 @@ namespace splicpp
 				return ptable::acttransition::error();
 			
 			if(result.size() > 1)
+				f(result, i_set_i, c, a, g);
+			
+			if(result.size() > 1)
 				throw std::runtime_error("Parser is not CLR(1)");
 			
 			return result[0];
 		}
 		
-		static ptable::gototransition generate_goto(const itemset<1> i_set, const std::vector<itemset<1>> c, const stid a, const grammar g) //dragon book, page 265
+		static ptable::gototransition generate_goto(const size_t i, const std::vector<itemset<1>> c, const stid a, const grammar g) //dragon book, page 265
 		{
-			auto goto_set = goto_f<1>(i_set, a, g);
+			auto goto_set = goto_f<1>(c.at(i), a, g);
 			for(stateid j = 0; j < c.size(); j++)
 				if(goto_set == c.at(j))
 					return ptable::gototransition::jump(j);

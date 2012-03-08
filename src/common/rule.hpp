@@ -19,6 +19,8 @@ namespace splicpp
 		
 		void append_body(const stid s);
 		rule operator+(stid s);
+		bool operator==(const rule x) const;
+		bool operator!=(const rule x) const;
 		bool is_epsilon() const;
 		void print() const;
 	};
