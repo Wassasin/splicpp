@@ -56,7 +56,7 @@ namespace splicpp
 	{
 		for(uint j = 0; j < symbols.size(); j++)
 		{
-			if(symbols.at(j)->type() != s_lit)
+			if(symbols.at(j)->type() != s_lit && symbols.at(j)->type() != s_ignored)
 				continue;
 			
 			literal* lit = static_cast<literal*>(symbols.at(j).get()); //downcast, checked by enum type()

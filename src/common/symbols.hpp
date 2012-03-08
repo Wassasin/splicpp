@@ -122,7 +122,7 @@ namespace splicpp
 		
 		virtual stype type() const
 		{
-			return s_lit;
+			return s_ignored;
 		}
 	};
 	
