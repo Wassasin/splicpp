@@ -49,19 +49,17 @@ namespace splicpp
 			const itemset<1> i_set = c.at(i_set_i);
 			std::vector<ptable::acttransition> result;
 		
+			const auto goto_set = goto_f<1>(i_set, a, g);
+		
 			//case 2(a)
 			for(size_t i = 0; i < i_set.size(); i++)
 				if(!i_set[i].at_end(g) && i_set[i].after_dot(g) == a)
-				{
-					auto goto_set = goto_f<1>(i_set, a, g);
-					
 					for(stateid j = 0; j < c.size(); j++)
 						if(goto_set == c.at(j))
 							result.push_back(ptable::acttransition::shift(j));
-				}
 			
 			//case 2(b)
-			for(item<1> i : i_set)
+			for(const item<1> i : i_set)
 			{
 				stid start = g.fetch_rule(i.rule).start;
 				if(start != g.NL_REAL_START && i.at_end(g) && i.lookahead[0] == a)
