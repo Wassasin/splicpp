@@ -5,13 +5,13 @@ nl_decl			:== nl_var_decl
 				|	nl_fun_decl
 
 nl_var_decl		:== nl_type l_id l_assignment nl_exp l_semicolon
-nl_fun_decl		:== nl_ret_type l_id l_brackets_left nl_f_args? l_brackets_right l_cbracket_left nl_var_decl* nl_stmt+ l_cbracket_right
+nl_fun_decl		:== nl_ret_type l_id l_bracket_left nl_f_args? l_bracket_right l_cbracket_left nl_var_decl* nl_stmt+ l_cbracket_right
 nl_ret_type		:== nl_type
 				|	l_void
 
 nl_type			:== l_int
 				|	l_bool
-				|	l_brackets_left nl_type l_comma nl_type l_brackets_right
+				|	l_bracket_left nl_type l_comma nl_type l_bracket_right
 				|	l_sbracket_left nl_type l_sbracket_right
 				|	l_id
 
@@ -30,13 +30,57 @@ nl_stmt			:== l_cbracket_left l_cbracket_right
 				|	nl_fun_call l_semicolon
 				|	l_return nl_exp l_semicolon
 
-nl_exp			:== l_id
-
 nl_fun_call		:== l_id l_bracket_left l_bracket_right
 				|	l_id l_bracket_left nl_act_args l_bracket_right
 
 nl_act_args		:== nl_exp
 				|	nl_exp l_comma nl_act_args
 
-nl_int			:==	l_digit+
-				|	l_minus l_digit+
+nl_int			:==	l_digit
+				|	l_minus l_digit
+				
+nl_exp			:== nl_exp1
+
+nl_exp1			:== nl_exp2
+				|	nl_exp2 l_disjunction nl_exp1
+
+nl_exp2			:== nl_exp3
+				|	nl_exp3 l_conjunction nl_exp2
+
+nl_exp3			:== nl_exp4
+				|	nl_exp3	nl_compr_op nl_exp4
+
+nl_compr_op		:== l_leq
+				|	l_geq
+				|	l_eq
+				|	l_neq
+				|	l_lesser
+				|	l_greater
+
+nl_exp4			:== nl_exp5
+				|	nl_exp4 nl_sum_op nl_exp5
+
+nl_sum_op		:== l_plus
+				|	l_minus
+
+nl_exp5			:== nl_exp6
+				|	nl_exp5 nl_product_op nl_exp6
+
+nl_product_op	:== l_times
+				|	l_divides
+				|	l_mod
+
+nl_exp6			:== nl_exp7
+				|	l_negation nl_exp6
+				
+nl_exp7			:== nl_exp8
+				|	nl_exp7 l_colon nl_exp8
+
+nl_exp8			:== nl_fun_call
+				|	nl_int
+				|	l_id
+				|	l_true
+				|	l_false
+				|	l_sbracket_left l_sbracket_right
+				|	l_bracket_left nl_exp l_bracket_right
+				|	l_bracket_left nl_exp l_comma nl_exp l_bracket_right
