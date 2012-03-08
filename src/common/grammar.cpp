@@ -98,7 +98,7 @@ namespace splicpp
 		std::cout << fetch_symbol(i)->name << std::endl;
 	}
 
-	const rule grammar::fetch_rule(const rid i) const
+	const rule& grammar::fetch_rule(const rid i) const
 	{
 		return rules.at(i);
 	}

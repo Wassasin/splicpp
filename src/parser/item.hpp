@@ -46,27 +46,27 @@ namespace splicpp
 			return(!((*this)==y));
 		}
 
-		bool at_end(const grammar g) const
+		bool at_end(const grammar& g) const
 		{
 			return(g.fetch_rule(rule).body.size() == dot);
 		}
 
-		stid after_dot(const grammar g) const
+		stid after_dot(const grammar& g) const
 		{
 			return g.fetch_rule(rule).body[dot];
 		}
 
-		stid before_dot(const grammar g) const
+		stid before_dot(const grammar& g) const
 		{
 			return g.fetch_rule(rule).body[dot-1];
 		}
 		
-		std::vector<stid> remainder(const grammar g) const
+		std::vector<stid> remainder(const grammar& g) const
 		{
 			return subvector<stid>(g.fetch_rule(rule).body, dot);
 		}
 
-		item<L> next(const grammar g) const
+		item<L> next(const grammar& g) const
 		{
 			if(at_end(g))
 				throw std::exception(); //TODO
@@ -74,7 +74,7 @@ namespace splicpp
 			return item(rule, dot+1, lookahead);
 		}
 		
-		void print(const grammar g) const
+		void print(const grammar& g) const
 		{
 			const splicpp::rule r = g.fetch_rule(rule);
 		

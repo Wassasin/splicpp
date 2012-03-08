@@ -12,15 +12,15 @@ namespace splicpp
 		clr_parser_gen() {}
 
 	public:
-		typedef boost::function<void (std::vector<ptable::acttransition>& transitions, const size_t i, const std::vector<itemset<1>> c, const stid a, const grammar g)> conflict_resolver;
+		typedef boost::function<void (std::vector<ptable::acttransition>& transitions, const size_t i, const std::vector<itemset<1>> c, const stid a, const grammar& g)> conflict_resolver;
 		static void resolve_nothing(std::vector<ptable::acttransition>&, const size_t, const std::vector<itemset<1>>, const stid, const grammar) {}
 	
-		static ptable generate(const grammar g)
+		static ptable generate(const grammar& g)
 		{
 			return generate(g, resolve_nothing);
 		}
 	
-		static ptable generate(const grammar g, const conflict_resolver f) //dragon book, page 265
+		static ptable generate(const grammar& g, const conflict_resolver f) //dragon book, page 265
 		{
 			const size_t terminals = g.terminals_size(), nterminals = g.nterminals_size();
 		
@@ -44,7 +44,7 @@ namespace splicpp
 			return result;
 		}
 		
-		static ptable::acttransition generate_act(const size_t i_set_i, const std::vector<itemset<1>> c, const stid a, const grammar g, const conflict_resolver f)
+		static ptable::acttransition generate_act(const size_t i_set_i, const std::vector<itemset<1>>& c, const stid a, const grammar& g, const conflict_resolver f)
 		{
 			const itemset<1> i_set = c.at(i_set_i);
 			std::vector<ptable::acttransition> result;
@@ -89,7 +89,7 @@ namespace splicpp
 			return result[0];
 		}
 		
-		static ptable::gototransition generate_goto(const size_t i, const std::vector<itemset<1>> c, const stid a, const grammar g) //dragon book, page 265
+		static ptable::gototransition generate_goto(const size_t i, const std::vector<itemset<1>>& c, const stid a, const grammar& g) //dragon book, page 265
 		{
 			auto goto_set = goto_f<1>(c.at(i), a, g);
 			for(stateid j = 0; j < c.size(); j++)
@@ -99,7 +99,7 @@ namespace splicpp
 			return ptable::gototransition::error();
 		}
 		
-		static itemset<1> closure(itemset<1> i_set, const grammar g) //dragon book, page 261
+		static itemset<1> closure(itemset<1> i_set, const grammar& g) //dragon book, page 261
 		{
 			bool changed;
 			do
@@ -152,7 +152,7 @@ namespace splicpp
 		}
 		
 		template <size_t L>
-		static itemset<L> goto_f(const itemset<L> i_set, const stid x, const grammar g)
+		static itemset<L> goto_f(const itemset<L>& i_set, const stid x, const grammar& g)
 		{
 			itemset<L> preselection;
 			for(size_t i = 0; i < i_set.size(); i++)
@@ -171,31 +171,24 @@ namespace splicpp
 			return closure(preselection, g);
 		}
 		
-		static std::vector<itemset<1>> items(const grammar g) //dragon book, page 261
+		static std::vector<itemset<1>> items(const grammar& g) //dragon book, page 261
 		{
 			std::vector<itemset<1>> c = {closure({ item<1>(g.R_START, 0, { { g.L_END } }) }, g)};
 			
-			bool changed;
-			do
+			//the repeat as described in the dragon book is unnecessary, already captured by the random access and c.size
+			for(size_t i = 0; i < c.size(); i++)
 			{
-				changed = false;
-
-				for(const itemset<1> i_set : c)
+				const itemset<1> i_set = c.at(i);
+			
+				for(stid x = 0; x < g.symbols_size(); x++)
 				{
-					for(stid x = 0; x < g.symbols_size(); x++)
-					{
-						auto goto_set = goto_f<1>(i_set, x, g);
-						if(goto_set.size() == 0 || goto_set.is_in(c))
-							continue;
-						
-						c.push_back(goto_set);
-						changed = true;
-					}
+					auto goto_set = goto_f<1>(i_set, x, g);
+					if(goto_set.size() == 0 || goto_set.is_in(c))
+						continue;
 					
-					if(changed)
-						break;
+					c.push_back(goto_set);
 				}
-			} while(changed);
+			}
 			
 			return c;
 		}

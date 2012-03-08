@@ -51,7 +51,7 @@ namespace splicpp
 		void print_rule(const rid r) const;
 		void print_symbol(const stid i) const;
 		
-		const rule fetch_rule(const rid i) const;
+		const rule& fetch_rule(const rid i) const;
 		stid fetch_stid(const std::string name) const;
 		std::shared_ptr<symbol> fetch_symbol(const stid i) const;
 		std::shared_ptr<symbol> fetch_symbol(const std::string name) const;

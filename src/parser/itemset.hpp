@@ -91,7 +91,7 @@ namespace splicpp
 			return contents.end();
 		}
 
-		void print(const grammar g) const
+		void print(const grammar& g) const
 		{
 			std::cout << '{';
 			for(size_t i = 0; i < contents.size(); i++)
@@ -102,7 +102,7 @@ namespace splicpp
 			std::cout << '}';
 		}
 
-		static void print(const std::vector<itemset<L>> c, const grammar g)
+		static void print(const std::vector<itemset<L>> c, const grammar& g)
 		{
 			for(size_t i = 0; i < c.size(); i++)
 			{

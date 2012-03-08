@@ -15,7 +15,7 @@ namespace splicpp
 		slr_parser_gen() {}
 
 	public:
-		static ptable generate(const grammar g) //dragon book, page 253
+		static ptable generate(const grammar& g) //dragon book, page 253
 		{
 			const size_t terminals = g.terminals_size(), nterminals = g.nterminals_size();
 		
@@ -39,7 +39,7 @@ namespace splicpp
 			return result;
 		}
 		
-		static ptable::acttransition generate_act(const itemset<0> i_set, const std::vector<itemset<0>> c, const stid a, const grammar g)
+		static ptable::acttransition generate_act(const itemset<0>& i_set, const std::vector<itemset<0>>& c, const stid a, const grammar& g)
 		{
 			std::vector<ptable::acttransition> result;
 		
@@ -77,7 +77,7 @@ namespace splicpp
 			return result[0];
 		}
 		
-		static ptable::gototransition generate_goto(const itemset<0> i_set, const std::vector<itemset<0>> c, const stid a, const grammar g)
+		static ptable::gototransition generate_goto(const itemset<0>& i_set, const std::vector<itemset<0>>& c, const stid a, const grammar& g)
 		{
 			auto goto_set = goto_f<0>(i_set, a, g);
 			for(stateid j = 0; j < c.size(); j++)
@@ -87,7 +87,7 @@ namespace splicpp
 			return ptable::gototransition::error();
 		}
 		
-		static std::vector<stid> first(const stid a, const grammar g) //dragon book, page 221
+		static std::vector<stid> first(const stid a, const grammar& g) //dragon book, page 221
 		{
 			std::vector<stid> result;
 			
@@ -137,7 +137,7 @@ namespace splicpp
 			return result;
 		}
 		
-		static std::vector<stid> first(const std::vector<stid> as, const grammar g)
+		static std::vector<stid> first(const std::vector<stid>& as, const grammar& g)
 		{
 			std::vector<stid> result;
 			
@@ -165,7 +165,7 @@ namespace splicpp
 			return result;
 		}
 		
-		static std::vector<stid> follow(const stid a, const grammar g) //dragon book, page 221
+		static std::vector<stid> follow(const stid a, const grammar& g) //dragon book, page 221
 		{
 			assert(g.fetch_symbol(a)->type() == s_nlit);
 			
@@ -207,7 +207,7 @@ namespace splicpp
 		}
 	
 		template <size_t L>
-		static itemset<L> goto_f(const itemset<L> i_set, const stid x, const grammar g)
+		static itemset<L> goto_f(const itemset<L>& i_set, const stid x, const grammar& g)
 		{
 			itemset<L> preselection;
 			for(size_t i = 0; i < i_set.size(); i++)
@@ -226,7 +226,7 @@ namespace splicpp
 			return closure<L>(preselection, g);
 		}
 		
-		static std::vector<itemset<0>> items(const grammar g) //dragon book, page 246
+		static std::vector<itemset<0>> items(const grammar& g) //dragon book, page 246
 		{
 			std::vector<itemset<0>> c = { closure<0>({ item<0>(g.R_START, 0) }, g) };
 			
@@ -257,7 +257,7 @@ namespace splicpp
 		}
 
 		template <size_t L>
-		static itemset<L> closure(itemset<L> i_set, const grammar g) //dragon book, page 245
+		static itemset<L> closure(itemset<L> i_set, const grammar& g) //dragon book, page 245
 		{
 			std::vector<bool> added(g.symbols_size());
 			for(size_t i = 0; i < g.symbols_size(); i++)

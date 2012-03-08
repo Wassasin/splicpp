@@ -39,14 +39,14 @@ namespace splicpp
 		
 		bool is_token() const;
 		bool is_node() const;
-		bool is_token(const grammar g, const std::string str) const;
-		bool is_node(const grammar g, const std::string str) const;
+		bool is_token(const grammar& g, const std::string str) const;
+		bool is_node(const grammar& g, const std::string str) const;
 		
 		token as_token() const;
 		cst_node as_node() const;
-		void print(const grammar g, const std::string source, const uint tab) const;
-		void assert_token(const grammar g, const std::string str) const;
-		void assert_node(const grammar g, const std::string str) const;
+		void print(const grammar& g, const std::string source, const uint tab) const;
+		void assert_token(const grammar& g, const std::string str) const;
+		void assert_node(const grammar& g, const std::string str) const;
 	};
 }
 

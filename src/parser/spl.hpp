@@ -78,7 +78,7 @@ namespace splicpp
 			std::cout << std::endl;
 			print();
 			
-			check();
+			//check();
 		}
 	};
 }
