@@ -11,7 +11,7 @@ namespace splicpp
 	class spl : public grammar
 	{
 	public:
-		const stid L_VOID, L_BOOL, L_INT, L_IF, L_ELSE, L_ASSIGNMENT, L_SEMICOLON, L_BRACKETS_LEFT, L_BRACKETS_RIGHT, L_CBRACKET_LEFT, L_CBRACKET_RIGHT, L_SBRACKET_LEFT, L_SBRACKET_RIGHT, L_COMMA, NL_PROG;
+		const stid L_VOID, L_BOOL, L_INT, L_IF, L_ELSE, L_WHILE, L_RETURN, L_ASSIGNMENT, L_SEMICOLON, L_BRACKETS_LEFT, L_BRACKETS_RIGHT, L_CBRACKET_LEFT, L_CBRACKET_RIGHT, L_SBRACKET_LEFT, L_SBRACKET_RIGHT, L_COMMA, L_UNDERSCORE, L_ID, NL_PROG;
 	
 		spl()
 		: grammar()
@@ -22,6 +22,8 @@ namespace splicpp
 		
 		, L_IF(add_symbol(					new regex_literal("l_if", "(\\<if\\>)")))
 		, L_ELSE(add_symbol(				new regex_literal("l_else", "(\\<else\\>)")))
+		, L_WHILE(add_symbol(				new regex_literal("l_while", "(\\<while\\>)")))
+		, L_RETURN(add_symbol(				new regex_literal("l_return", "(\\<return\\>)")))
 		
 		, L_ASSIGNMENT(add_symbol(			new static_literal("l_assignment", "=")))
 		, L_SEMICOLON(add_symbol(			new static_literal("l_semicolon", ";")))
@@ -32,6 +34,9 @@ namespace splicpp
 		, L_SBRACKET_LEFT(add_symbol(		new static_literal("l_sbracket_left", "[")))
 		, L_SBRACKET_RIGHT(add_symbol(		new static_literal("l_sbracket_right", "]")))
 		, L_COMMA(add_symbol(				new static_literal("l_comma", ",")))
+		, L_UNDERSCORE(add_symbol(			new static_literal("l_underscore", "_")))
+		
+		, L_ID(add_symbol(					new regex_literal("l_id", "([a-zA-Z][a-zA-Z0-9]*[\\_]?)")))
 
 		, NL_PROG(add_symbol(		new non_literal("nl_prog")))
 		{
