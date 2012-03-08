@@ -1,0 +1,27 @@
+nl_prog			:== nl_decl
+				|	nl_prog nl_decl
+
+nl_decl			:== nl_var_decl
+				|	nl_fun_decl
+
+nl_var_decl		:== nl_type nl_id l_assignment nl_exp l_semicolon
+nl_fun_decl		:== nl_ret_type nl_id l_brackets_left nl_f_args? l_brackets_right l_cbracket_left nl_var_decl* nl_stmt+ l_cbracket_right
+nl_ret_type		:== nl_type
+				|	l_void
+
+nl_type			:== l_int
+				|	l_bool
+				|	l_brackets_left nl_type l_comma nl_type l_brackets_right
+				|	l_sbracket_left nl_type l_sbracket_right
+				|	nl_id
+
+nl_f_args		:== nl_type nl_id
+				|	nl_type nl_id l_comma nl_f_args
+			
+nl_nested_stmt	:== nl_stmt
+				|	nl_nested_stmt nl_stmt
+
+nl_stmt			:== l_cbracket_left l_cbracket_right
+				|	l_cbracket_left nl_nested_stmt l_cbracket_right
+				|	l_if l_bracket_left nl_exp l_bracket_right nl_stmt
+				|	l_if l_bracket_left nl_exp l_bracket_right nl_stmt l_else nl_stmt

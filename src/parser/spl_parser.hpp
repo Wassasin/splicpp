@@ -17,6 +17,7 @@ namespace splicpp
 		: g()
 		, t(splicpp::clr_parser_gen::generate(g))
 		{
+			std::cout << std::endl;
 			t.print(g);
 		}
 	};

@@ -2,8 +2,6 @@ Prog		:= Decl | Prog Decl
 Decl		:= VarDecl | FunDecl
 VarDecl		:= Type id '=' Exp ';'
 FunDecl		:= RetType id '(' [ FArgs ] ')' '{' VarDecl* Stmt+ '}'
-FunDecl`	:= FunDecl` VarDecl | FunDecl``
-FunDecl``	:= Stmt | FunDecl`` Stmt
 RetType		:= Type | 'Void'
 Type		:= 'Int' | 'Bool' | '(' Type ',' Type ')' | '[' Type ']' | id
 FArgs		:= Type id | Type id ',' Fargs
