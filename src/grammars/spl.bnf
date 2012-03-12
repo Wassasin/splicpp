@@ -1,5 +1,4 @@
-nl_prog			:== nl_decl
-				|	nl_prog nl_decl
+nl_prog			:== nl_decl+
 
 nl_decl			:== nl_var_decl
 				|	nl_fun_decl
@@ -18,8 +17,7 @@ nl_type			:== l_int
 nl_f_args		:== nl_type l_id
 				|	nl_type l_id l_comma nl_f_args
 			
-nl_nested_stmt	:== nl_stmt
-				|	nl_nested_stmt nl_stmt
+nl_nested_stmt	:== nl_stmt+
 
 nl_stmt			:== l_cbracket_left l_cbracket_right
 				|	l_cbracket_left nl_nested_stmt l_cbracket_right
@@ -36,8 +34,7 @@ nl_fun_call		:== l_id l_bracket_left l_bracket_right
 nl_act_args		:== nl_exp
 				|	nl_exp l_comma nl_act_args
 
-nl_digit		:==	l_digit
-				|	l_minus l_digit
+nl_digit		:==	l_minus? l_digit
 				
 nl_exp			:== nl_exp1
 

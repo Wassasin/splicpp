@@ -12,7 +12,8 @@ int main(int argc, char **argv)
 
 	options.add_options()
 	("help,h", "display this message")
-	("ptable,p", "prints the SPL parser table")
+	("pptable,p", "prints the SPL parser table")
+	("pgrammar,g", "prints the generated grammar")
 	("file,f", boost::program_options::value<decltype(f)>(&f), "file to be parsed")
 	//("clean,c", "forces regeneration of ptable")
 	;
@@ -38,6 +39,9 @@ int main(int argc, char **argv)
 	
 	
 	splicpp::spl_parser p;
+	
+	if(vm.count("pgrammar"))
+		p.print_g();
 	
 	if(vm.count("ptable"))
 		p.print_t();

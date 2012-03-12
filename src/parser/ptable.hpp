@@ -2,6 +2,8 @@
 #define PTABLE_H
 
 #include <vector>
+#include <boost/serialization/base_object.hpp>
+#include <boost/serialization/vector.hpp>
 
 #include "../common/typedefs.hpp"
 #include "../common/grammar.hpp"
@@ -14,8 +16,9 @@ namespace splicpp
 	class ptable
 	{
 	public:
-		struct acttransition
+		class acttransition
 		{
+		public:
 			enum acttranstype
 			{
 				t_error,
@@ -31,6 +34,27 @@ namespace splicpp
 				rid rule;
 			};
 			
+		private:
+			friend class boost::serialization::access;
+			template<class Archive>
+			void serialize(Archive & ar, const unsigned int)
+			{
+				ar & t;
+				ar & state;
+			}
+		
+		protected:
+			acttransition()
+			: t()
+			, state()
+			{}
+		
+			acttransition(acttranstype t, stateid state)
+			: t(t)
+			, state(state)
+			{}
+		
+		public:
 			static acttransition error()
 			{
 				acttransition x;
@@ -76,6 +100,14 @@ namespace splicpp
 			gototranstype t;
 			stateid state;
 			
+			friend class boost::serialization::access;
+			template<class Archive>
+			void serialize(Archive & ar, const unsigned int)
+			{
+				ar & t;
+				ar & state;
+			}
+			
 			static gototransition error()
 			{
 				gototransition x;
@@ -100,7 +132,24 @@ namespace splicpp
 		std::vector<std::vector<acttransition>> acttable;
 		std::vector<std::vector<gototransition>> gototable;
 
+		friend class boost::serialization::access;
+		template<class Archive>
+		void serialize(Archive & ar, const unsigned int)
+		{
+		    ar & terminals;
+		    ar & nonterminals;
+		    ar & acttable;
+		    ar & gototable;
+		}
+
 	public:
+		ptable()
+		: terminals(0)
+		, nonterminals()
+		, acttable()
+		, gototable()
+		{}
+	
 		ptable(size_t terminals, size_t nonterminals)
 		: terminals(terminals)
 		, nonterminals(nonterminals)

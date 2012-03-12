@@ -36,8 +36,10 @@ add_grammar(bnf.bnf)
 add_grammar(test.bnf)
 add_grammar(spl.bnf)
 
-add_definitions("-Wall -Wextra -Weffc++ -std=c++0x -g3 -fno-inline -O0")
+add_definitions("-Wall -Wextra -Weffc++ -std=c++0x -g3 -O3")
 
-find_package(Boost COMPONENTS system program_options regex filesystem REQUIRED)
+find_package(Boost COMPONENTS system program_options regex filesystem serialization REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
-target_link_libraries(splicpp ${Boost_SYSTEM_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY} ${Boost_REGEX_LIBRARY} ${Boost_FILESYSTEM_LIBRARY})
+target_link_libraries(splicpp ${Boost_SYSTEM_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY} ${Boost_REGEX_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} ${Boost_SERIALIZATION_LIBRARY})
+
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/cache)

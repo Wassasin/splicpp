@@ -2,6 +2,7 @@
 #define TYPEDEFS_H
 
 #include <cstddef>
+#include <memory>
 
 namespace splicpp
 {

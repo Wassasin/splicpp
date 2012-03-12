@@ -1,6 +1,14 @@
 #ifndef SPL_PARSER_H
 #define SPL_PARSER_H
 
+#include <boost/optional.hpp>
+#include <boost/filesystem/convenience.hpp>
+
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/serialization/base_object.hpp>
+
+
 #include "spl.hpp"
 #include "ptable.hpp"
 #include "clr_parser_gen.hpp"
@@ -15,6 +23,69 @@ namespace splicpp
 	
 		const spl g;
 		const ptable t;
+		
+		template <typename T>
+		std::vector<T> autoparse_plus(const std::string str, const cst_node n, boost::function<T (const std::string str, const cst_node n)> f) const
+		{
+			const std::string s_name = g.fetch_symbol(n.fetch_stid(g))->name;
+			
+			const std::string appendix = "_plus";
+			const std::string prefix = s_name.substr(0, s_name.size() - appendix.size());
+			
+			assert(s_name.substr(s_name.size() - appendix.size()) == appendix);
+			
+			if(n.size() == 1)
+				return std::vector<T> { f(n[0]->as_node()) };
+			else if(n.size() == 2)
+			{
+				std::vector<T> result = autoparse_plus(str, n[0]->as_node(), f);
+				result.push_back(f(n[1]->as_node()));
+				return result;
+			}
+			else
+				throw std::logic_error("unexpected rule");
+		}
+		
+		template <typename T>
+		std::vector<T> autoparse_kleene(const std::string str, const cst_node n, boost::function<T (const std::string str, const cst_node n)> f) const
+		{
+			const std::string s_name = g.fetch_symbol(n.fetch_stid(g))->name;
+			
+			const std::string appendix = "_kleene";
+			const std::string prefix = s_name.substr(0, s_name.size() - appendix.size());
+			
+			assert(s_name.substr(s_name.size() - appendix.size()) == appendix);
+			
+			std::vector<T> result;
+			if(n.size() == 0)
+				return result;
+			else if(n.size() == 2)
+			{
+				result = autoparse_plus(str, n[0]->as_node(), f);
+				result.push_back(f(n[1]->as_node()));
+				return result;
+			}
+			else
+				throw std::logic_error("unexpected rule");
+		}
+		
+		template <typename T>
+		boost::optional<T> autoparse_opt(const std::string str, const cst_node n, boost::function<T (const std::string str, const cst_node n)> f) const
+		{
+			const std::string s_name = g.fetch_symbol(n.fetch_stid(g))->name;
+			
+			const std::string appendix = "_opt";
+			const std::string prefix = s_name.substr(0, s_name.size() - appendix.size());
+			
+			assert(s_name.substr(s_name.size() - appendix.size()) == appendix);
+			
+			if(n.size() == 0)
+				return boost::optional<T>();
+			else if(n.size() == 1)
+				return f(n[1]->as_node());
+			else
+				throw std::logic_error("unexpected rule");
+		}
 		
 		void parse_prog(const std::string str, const cst_node n) const
 		{
@@ -295,8 +366,31 @@ namespace splicpp
 	public:
 		spl_parser()
 		: g()
-		, t(splicpp::clr_parser_gen::generate(g, resolve_conflicts))
+		, t(fetch_ptable(g))
 		{}
+		
+		static ptable fetch_ptable(const grammar& g)
+		{
+			const std::string filename = "cache/spl.ptable";
+			ptable result;
+			
+			if(boost::filesystem::exists(filename))
+			{
+				std::ifstream ifs(filename);
+				boost::archive::text_iarchive ia(ifs);
+				ia >> result;
+			}
+			else
+			{
+				result = splicpp::clr_parser_gen::generate(g, resolve_conflicts);
+				
+				std::ofstream ofs(filename);
+				boost::archive::text_oarchive oa(ofs);
+				oa << result;
+			}
+			
+			return result;
+		}		
 		
 		void parse(std::string str) const;
 		

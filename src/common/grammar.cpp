@@ -28,6 +28,11 @@ namespace splicpp
 	rid grammar::add_rule(rule r)
 	{
 		remove_epsilons(r);
+		
+		for(rid i = 0; i < rules.size(); i++)
+			if(r == rules.at(i))
+				return i;
+		
 		rid i = rules.size();
 		rules.push_back(r);
 		return i;
