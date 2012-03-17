@@ -24,7 +24,7 @@ namespace splicpp
 		{
 			const size_t terminals = g.terminals_size(), nterminals = g.nterminals_size();
 		
-			auto c = items(g);
+			const auto c = items(g);
 			ptable result(terminals, nterminals);
 			
 			for(size_t i = 0; i < c.size(); i++)
@@ -115,14 +115,13 @@ namespace splicpp
 						continue;
 
 					std::vector<stid> sentence = i.next(g).remainder(g);
-					for(const stid a : i.lookahead)
-						sentence.push_back(a);
+					sentence.insert(sentence.end(), i.lookahead.begin(), i.lookahead.end());
 
 					const std::vector<stid> first_set = slr_parser_gen::first(sentence, g);
 
-					for(size_t j = 0; j < g.rules_size(); j++)
+					for(rid j = 0; j < g.rules_size(); j++)
 					{
-						rule r = g.fetch_rule(j);
+						const rule r = g.fetch_rule(j);
 						if(r.start != b)
 							continue;
 						

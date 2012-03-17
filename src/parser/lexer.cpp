@@ -38,8 +38,6 @@ namespace splicpp
 		if(g.fetch_symbol(t.type)->type() == s_ignored)
 			return next();
 
-		g.print_token(t, str);
-
 		return t;
 	}
 	

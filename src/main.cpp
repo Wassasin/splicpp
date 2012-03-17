@@ -43,12 +43,13 @@ int main(int argc, char **argv)
 	if(vm.count("pgrammar"))
 		p.print_g();
 	
-	if(vm.count("ptable"))
+	if(vm.count("pptable"))
 		p.print_t();
 	
 	//splicpp::grammar tmp;
 	
-	p.parse(splicpp::readfile(f));
+	for(auto decl : p.parse(splicpp::readfile(f)))
+		decl->pretty_print(std::cout << std::endl);
 	
 	return 0;
 }

@@ -19,6 +19,17 @@ add_executable(splicpp
 	parser/lexer.cpp
 	parser/ptable.cpp
 	parser/spl_parser.cpp
+	
+	ast/ast.cpp
+	ast/ast_decl.cpp
+	ast/ast_exp.cpp
+	ast/ast_f_arg.cpp
+	ast/ast_fun_call.cpp
+	ast/ast_fun_decl.cpp
+	ast/ast_id.cpp
+	ast/ast_stmt.cpp
+	ast/ast_type.cpp
+	ast/ast_var_decl.cpp
 )
 
 macro(add_grammar SRC_FILE)
@@ -33,10 +44,10 @@ macro(add_grammar SRC_FILE)
 endmacro()
 
 add_grammar(bnf.bnf)
-add_grammar(test.bnf)
+#add_grammar(test.bnf)
 add_grammar(spl.bnf)
 
-add_definitions("-Wall -Wextra -Weffc++ -std=c++0x -g3 -O3")
+add_definitions("-Wall -Wextra -Weffc++ -std=c++0x -pedantic -g3")
 
 find_package(Boost COMPONENTS system program_options regex filesystem serialization REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})

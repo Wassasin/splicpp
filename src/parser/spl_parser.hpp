@@ -2,6 +2,7 @@
 #define SPL_PARSER_H
 
 #include <boost/optional.hpp>
+#include <boost/lexical_cast.hpp>
 #include <boost/filesystem/convenience.hpp>
 
 #include <boost/archive/text_iarchive.hpp>
@@ -13,7 +14,7 @@
 #include "ptable.hpp"
 #include "clr_parser_gen.hpp"
 
-//#include "../common/ast.hpp"
+#include "../ast/ast_decl.hpp"
 
 namespace splicpp
 {
@@ -25,7 +26,7 @@ namespace splicpp
 		const ptable t;
 		
 		template <typename T>
-		std::vector<T> autoparse_plus(const std::string str, const cst_node n, boost::function<T (const std::string str, const cst_node n)> f) const
+		std::vector<T> autoparse_plus(const std::string str, const cst_node n, boost::function<T (const spl_parser*, const std::string str, const cst_node n)> f) const
 		{
 			const std::string s_name = g.fetch_symbol(n.fetch_stid(g))->name;
 			
@@ -35,11 +36,11 @@ namespace splicpp
 			assert(s_name.substr(s_name.size() - appendix.size()) == appendix);
 			
 			if(n.size() == 1)
-				return std::vector<T> { f(n[0]->as_node()) };
+				return std::vector<T> { f(this, str, n[0]->as_node()) };
 			else if(n.size() == 2)
 			{
 				std::vector<T> result = autoparse_plus(str, n[0]->as_node(), f);
-				result.push_back(f(n[1]->as_node()));
+				result.push_back(f(this, str, n[1]->as_node()));
 				return result;
 			}
 			else
@@ -47,7 +48,7 @@ namespace splicpp
 		}
 		
 		template <typename T>
-		std::vector<T> autoparse_kleene(const std::string str, const cst_node n, boost::function<T (const std::string str, const cst_node n)> f) const
+		std::vector<T> autoparse_kleene(const std::string str, const cst_node n, boost::function<T (const spl_parser*, const std::string str, const cst_node n)> f) const
 		{
 			const std::string s_name = g.fetch_symbol(n.fetch_stid(g))->name;
 			
@@ -61,8 +62,8 @@ namespace splicpp
 				return result;
 			else if(n.size() == 2)
 			{
-				result = autoparse_plus(str, n[0]->as_node(), f);
-				result.push_back(f(n[1]->as_node()));
+				result = autoparse_kleene(str, n[0]->as_node(), f);
+				result.push_back(f(this, str, n[1]->as_node()));
 				return result;
 			}
 			else
@@ -70,7 +71,7 @@ namespace splicpp
 		}
 		
 		template <typename T>
-		boost::optional<T> autoparse_opt(const std::string str, const cst_node n, boost::function<T (const std::string str, const cst_node n)> f) const
+		boost::optional<T> autoparse_opt(const std::string str, const cst_node n, boost::function<T (const spl_parser*, const std::string str, const cst_node n)> f) const
 		{
 			const std::string s_name = g.fetch_symbol(n.fetch_stid(g))->name;
 			
@@ -82,292 +83,51 @@ namespace splicpp
 			if(n.size() == 0)
 				return boost::optional<T>();
 			else if(n.size() == 1)
-				return f(n[1]->as_node());
+				return f(this, str, n[0]->as_node());
 			else
 				throw std::logic_error("unexpected rule");
 		}
 		
-		void parse_prog(const std::string str, const cst_node n) const
-		{
-			n.assert_stid(g, "nl_prog");
-			
-			if(n.size() == 1)
-				parse_decl(str, n[0]->as_node());
-			else if(n.size() == 2)
-			{
-				parse_prog(str, n[0]->as_node());
-				parse_decl(str, n[1]->as_node());
-			}
-			else
-				throw std::logic_error("unexpected rule");
-		}
+		std::vector<std::shared_ptr<ast_decl>> parse_prog(const std::string str, const cst_node n) const;
+		std::shared_ptr<ast_decl> parse_decl(const std::string str, const cst_node n) const;
+		std::shared_ptr<ast_var_decl> parse_var_decl(const std::string str, const cst_node n) const;
+		std::shared_ptr<ast_fun_decl> parse_fun_decl(const std::string str, const cst_node n) const;
+		boost::optional<std::shared_ptr<ast_type>> parse_ret_type(const std::string str, const cst_node n) const;
+		std::shared_ptr<ast_type> parse_type(const std::string str, const cst_node n) const;
+		std::vector<std::shared_ptr<ast_f_arg>> parse_f_args(const std::string str, const cst_node n) const;
+		std::shared_ptr<ast_stmt> parse_stmt(const std::string str, const cst_node n) const;
+		std::shared_ptr<ast_fun_call> parse_fun_call(const std::string str, const cst_node n) const;
+		std::vector<std::shared_ptr<ast_exp>> parse_act_args(const std::string str, const cst_node n) const;
 		
-		void parse_decl(const std::string str, const cst_node n) const
-		{
-			n.assert_stid(g, "nl_decl");
-			
-			if(n.size() == 1)
-			{
-				if(n[0]->is_node(g, "nl_var_decl"))
-					parse_var_decl(str, n[0]->as_node());
-				else if(n[0]->is_node(g, "nl_fun_decl"))
-					parse_fun_decl(str, n[0]->as_node());
-				else
-					throw std::logic_error("unexpected rule");				
-			}
-			else
-				throw std::logic_error("unexpected rule");
-		}
+		std::shared_ptr<ast_exp> parse_exp(const std::string str, const cst_node n) const;
+		std::shared_ptr<ast_exp> parse_exp1(const std::string str, const cst_node n) const;
+		std::shared_ptr<ast_exp> parse_exp2(const std::string str, const cst_node n) const;
+		std::shared_ptr<ast_exp> parse_exp3(const std::string str, const cst_node n) const;
+		ast_exp_op2::op_type parse_compr_op(const cst_node n) const;
+		std::shared_ptr<ast_exp> parse_exp4(const std::string str, const cst_node n) const;
+		ast_exp_op2::op_type parse_sum_op(const cst_node n) const;
+		std::shared_ptr<ast_exp> parse_exp5(const std::string str, const cst_node n) const;
+		ast_exp_op2::op_type parse_product_op(const cst_node n) const;
+		std::shared_ptr<ast_exp> parse_exp6(const std::string str, const cst_node n) const;
+		std::shared_ptr<ast_exp> parse_exp7(const std::string str, const cst_node n) const;
+		std::shared_ptr<ast_exp> parse_exp8(const std::string str, const cst_node n) const;
+		int parse_digit(const std::string str, const cst_node n) const;
+		std::shared_ptr<ast_id> parse_id(const std::string str, const std::shared_ptr<cst_element> e) const;
 		
-		void parse_var_decl(const std::string str, const cst_node n) const
-		{
-			n.assert_stid(g, "nl_var_decl");
-			assert(n.size() == 5);
-			
-			parse_type(str, n[0]->as_node());
-
-			n[2]->assert_token(g, "l_assignment");
-			std::cout << parse_id(str, n[1]) << sep << "=" << sep;
-			
-			parse_exp(str, n[3]->as_node());
-			n[4]->assert_token(g, "l_semicolon");
-			
-			std::cout << ';' << std::endl;
-		}
-		
-		void parse_f_args_opt(const std::string str, const cst_node n) const
-		{
-			n.assert_stid(g, "nl_f_args_opt");
-			
-			if(n.size() == 0)
-				return;
-			else if(n.size() == 1)
-				parse_f_args(str, n[0]->as_node());
-			else
-				throw std::logic_error("unexpected rule");
-		}
-		
-		void parse_var_decl_kleene(const std::string str, const cst_node n) const
-		{
-			n.assert_stid(g, "nl_var_decl_kleene");
-			
-			if(n.size() == 0)
-				return;
-			else if(n.size() == 2)
-			{
-				parse_var_decl_kleene(str, n[0]->as_node());
-				parse_var_decl(str, n[1]->as_node());
-			}
-			else
-				throw std::logic_error("unexpected rule");
-		}
-		
-		void parse_stmt_plus(const std::string str, const cst_node n) const
-		{
-			n.assert_stid(g, "nl_stmt_plus");
-			
-			if(n.size() == 1)
-				parse_stmt(str, n[0]->as_node());
-			else if(n.size() == 2)
-			{
-				parse_stmt_plus(str, n[0]->as_node());
-				parse_stmt(str, n[1]->as_node());
-			}
-			else
-				throw std::logic_error("unexpected rule");
-		}
-		
-		void parse_fun_decl(const std::string str, const cst_node n) const
-		{
-			n.assert_stid(g, "nl_fun_decl");
-			assert(n.size() == 9);
-			
-			parse_ret_type(str, n[0]->as_node());
-			std::string id = parse_id(str, n[1]);
-			n[2]->assert_token(g, "l_bracket_left");
-			
-			std::cout << id << '(';
-			
-			parse_f_args_opt(str, n[3]->as_node());
-			n[4]->assert_token(g, "l_bracket_right");
-			n[5]->assert_token(g, "l_cbracket_left");
-			
-			std::cout << ") {";
-			
-			parse_var_decl_kleene(str, n[6]->as_node());
-			parse_stmt_plus(str, n[7]->as_node());
-			n[8]->assert_token(g, "l_cbracket_right");
-			
-			std::cout << "}";
-		}
-		
-		void parse_ret_type(const std::string str, const cst_node n) const
-		{
-			n.assert_stid(g, "nl_ret_type");
-			assert(n.size() == 1);
-			
-			if(n[0]->is_node(g, "nl_type"))
-				parse_type(str, n[0]->as_node());
-			else if(n[0]->is_token(g, "l_void"))
-				std::cout << "Void";
-		}
-		
-		void parse_type(const std::string str, const cst_node n) const
-		{
-			n.assert_stid(g, "nl_type");
-			
-			if(n.size() == 1)
-			{
-				if(n[0]->is_token(g, "l_int"))
-					std::cout << "Int";
-				else if(n[0]->is_token(g, "l_bool"))
-					std::cout << "Bool";
-				else if(n[0]->is_token(g, "l_id"))
-					std::cout << parse_id(str, n[0]);
-			}
-			else if(n.size() == 3)
-			{
-				n[0]->assert_token(g, "l_sbracket_left");
-				std::cout << '{';
-				
-				parse_type(str, n[1]->as_node());
-				
-				n[2]->assert_token(g, "l_sbracket_right");
-				std::cout << '}';
-			}
-			else if(n.size() == 5)
-			{
-				n[0]->assert_token(g, "l_bracket_left");
-				std::cout << '(';
-				
-				parse_type(str, n[1]->as_node());
-				
-				n[2]->assert_token(g, "l_comma");
-				std::cout << ',';
-				
-				parse_type(str, n[3]->as_node());
-				
-				n[4]->assert_token(g, "l_bracket_right");
-				std::cout << ')';
-			}
-			else
-				throw std::logic_error("unexpected rule");
-		}
-		
-		void parse_f_args(const std::string str, const cst_node n) const
-		{
-			n.assert_stid(g, "nl_f_args");
-			
-			if(n.size() == 2)
-			{
-				parse_type(str, n[0]->as_node());
-				std::cout << parse_id(str, n[1]);
-			}
-			else if(n.size() == 4)
-			{
-				parse_type(str, n[0]->as_node());
-				std::cout << parse_id(str, n[1]);
-
-				n[2]->assert_token(g, "l_comma");
-				std::cout << ',';
-				
-				parse_f_args(str, n[3]->as_node());
-			}
-			else
-				throw std::logic_error("unexpected rule");
-		}
-		
-		void parse_nested_stmt(const std::string str, const cst_node n) const
-		{
-			n.assert_stid(g, "nl_nested_stmt");
-			
-			if(n.size() == 1)
-				parse_stmt(str, n[0]->as_node());
-			else if(n.size() == 2)
-			{
-				parse_nested_stmt(str, n[0]->as_node());
-				parse_stmt(str, n[1]->as_node());
-			}
-			else
-				throw std::logic_error("unexpected rule");
-		}
-		
-		void parse_stmt(const std::string str, const cst_node n) const
-		{
-			//
-		}
-		
-		void parse_fun_call(const std::string str, const cst_node n) const
-		{
-			//
-		}
-		
-		void parse_act_args(const std::string str, const cst_node n) const
-		{
-			//
-		}
-		
-		void parse_int(const std::string str, const cst_node n) const
-		{
-			//
-		}
-		
-		void parse_exp(const std::string str, const cst_node n) const
-		{
-			//
-		}
-		
-		void parse_exp1(const std::string str, const cst_node n) const
-		{
-			//
-		}
-		
-		void parse_exp2(const std::string str, const cst_node n) const
-		{
-			//
-		}
-		
-		void parse_exp3(const std::string str, const cst_node n) const
-		{
-			//
-		}
-		
-		void parse_exp4(const std::string str, const cst_node n) const
-		{
-			//
-		}
-		
-		void parse_exp5(const std::string str, const cst_node n) const
-		{
-			//
-		}
-		
-		void parse_exp6(const std::string str, const cst_node n) const
-		{
-			//
-		}
-		
-		void parse_exp7(const std::string str, const cst_node n) const
-		{
-			//
-		}
-		
-		void parse_exp8(const std::string str, const cst_node n) const
-		{
-			//
-		}
-		
-		std::string parse_id(const std::string str, const std::shared_ptr<cst_element> e) const
-		{
-			e->assert_token(g, "l_id");
-			return e->as_token().as_string(str);
-		}
+		std::logic_error unexpected_element(const std::shared_ptr<cst_element> e) const;
+		std::logic_error unexpected_token(const token t) const;
+		std::logic_error unexpected_node(const cst_node n) const;
 		
 	public:
 		spl_parser()
 		: g()
 		, t(fetch_ptable(g))
-		{}
+		{}	
+		
+		std::vector<std::shared_ptr<ast_decl>> parse(std::string str) const;
+		
+		void print_g() const;
+		void print_t() const;
 		
 		static ptable fetch_ptable(const grammar& g)
 		{
@@ -390,12 +150,7 @@ namespace splicpp
 			}
 			
 			return result;
-		}		
-		
-		void parse(std::string str) const;
-		
-		void print_g() const;
-		void print_t() const;
+		}
 		
 		static void resolve_conflicts(std::vector<ptable::acttransition>& transitions, const size_t i, const std::vector<itemset<1>> c, const stid a, const grammar g)
 		{
