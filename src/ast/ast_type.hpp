@@ -23,21 +23,21 @@ namespace splicpp
 		};
 		
 		virtual ast_type_type type() const = 0;
-		virtual void pretty_print(std::ostream& s) const = 0;
+		virtual void pretty_print(std::ostream& s, const uint tab) const = 0;
 	};
 	
 	class ast_type_int : public ast_type
 	{
 	public:
 		virtual ast_type_type type() const;
-		virtual void pretty_print(std::ostream& s) const;
+		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
 	
 	class ast_type_bool : public ast_type
 	{
 	public:
 		virtual ast_type_type type() const;
-		virtual void pretty_print(std::ostream& s) const;
+		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
 	
 	class ast_type_tuple : public ast_type
@@ -51,7 +51,7 @@ namespace splicpp
 		{}
 	
 		virtual ast_type_type type() const;
-		virtual void pretty_print(std::ostream& s) const;
+		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
 	
 	class ast_type_array : public ast_type
@@ -64,7 +64,7 @@ namespace splicpp
 		{}
 		
 		virtual ast_type_type type() const;
-		virtual void pretty_print(std::ostream& s) const;
+		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
 	
 	class ast_type_id : public ast_type
@@ -77,7 +77,7 @@ namespace splicpp
 		{}
 		
 		virtual ast_type_type type() const;
-		virtual void pretty_print(std::ostream& s) const;
+		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
 }
 

@@ -7,9 +7,9 @@ namespace splicpp
 		args.push_back(exp);
 	}
 
-	void ast_fun_call::pretty_print(std::ostream& s) const
+	void ast_fun_call::pretty_print(std::ostream& s, const uint tab) const
 	{
-		id->pretty_print(s);
+		id->pretty_print(s, tab);
 		s << '(';
 		
 		bool first = true;
@@ -20,7 +20,7 @@ namespace splicpp
 			else
 				s << ", ";
 			
-			arg->pretty_print(s);
+			arg->pretty_print(s, tab);
 		}
 		s << ')';
 	}

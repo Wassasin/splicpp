@@ -14,14 +14,15 @@ namespace splicpp
 		return type_stmts;
 	}
 	
-	void ast_stmt_stmts::pretty_print(std::ostream& s) const
+	void ast_stmt_stmts::pretty_print(std::ostream& s, const uint tab) const
 	{
-		s << '{' << std::endl;
+		s << '{';
 		for(const auto stmt : stmts)
 		{
-			stmt->pretty_print(s);
-			s << std::endl;
+			ast::print_newline(s, tab+1);
+			stmt->pretty_print(s, tab+1);
 		}
+		ast::print_newline(s, tab);
 		s << '}';
 	}
 	
@@ -32,17 +33,21 @@ namespace splicpp
 		return type_if;
 	}
 	
-	void ast_stmt_if::pretty_print(std::ostream& s) const
+	void ast_stmt_if::pretty_print(std::ostream& s, const uint tab) const
 	{
 		s << "if(";
-		exp->pretty_print(s);
-		s << ')' << std::endl;
-		stmt_true->pretty_print(s);
+		exp->pretty_print(s, tab);
+		s << ')';
+		
+		ast::print_newline(s, tab);
+		stmt_true->pretty_print(s,tab);
 		
 		if(stmt_false)
 		{
-			s << "else" << std::endl;
-			stmt_false.get()->pretty_print(s);
+			ast::print_newline(s, tab);
+			s << "else";
+			ast::print_newline(s, tab);
+			stmt_false.get()->pretty_print(s, tab);
 		}
 	}
 	
@@ -53,12 +58,13 @@ namespace splicpp
 		return type_while;
 	}
 	
-	void ast_stmt_while::pretty_print(std::ostream& s) const
+	void ast_stmt_while::pretty_print(std::ostream& s, const uint tab) const
 	{
 		s << "while(";
-		exp->pretty_print(s);
-		s << ')' << std::endl;
-		stmt->pretty_print(s);
+		exp->pretty_print(s, tab);
+		s << ')';
+		ast::print_newline(s, tab);
+		stmt->pretty_print(s, tab);
 	}
 	
 	/* ast_stmt_assignment */
@@ -68,11 +74,11 @@ namespace splicpp
 		return type_assignment;
 	}
 	
-	void ast_stmt_assignment::pretty_print(std::ostream& s) const
+	void ast_stmt_assignment::pretty_print(std::ostream& s, const uint tab) const
 	{
-		id->pretty_print(s);
+		id->pretty_print(s, tab);
 		s << " = ";
-		exp->pretty_print(s);
+		exp->pretty_print(s, tab);
 		s << ';';
 	}
 	
@@ -83,9 +89,9 @@ namespace splicpp
 		return type_fun_call;
 	}
 	
-	void ast_stmt_fun_call::pretty_print(std::ostream& s) const
+	void ast_stmt_fun_call::pretty_print(std::ostream& s, const uint tab) const
 	{
-		f->pretty_print(s);
+		f->pretty_print(s, tab);
 		s << ';';
 	}
 	
@@ -96,10 +102,10 @@ namespace splicpp
 		return type_return;
 	}
 	
-	void ast_stmt_return::pretty_print(std::ostream& s) const
+	void ast_stmt_return::pretty_print(std::ostream& s, const uint tab) const
 	{
 		s << "return ";
-		exp->pretty_print(s);
+		exp->pretty_print(s, tab);
 		s << ';';
 	}
 }

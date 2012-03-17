@@ -18,7 +18,7 @@ namespace splicpp
 		};
 		
 		virtual ast_decl_type type() const = 0;
-		virtual void pretty_print(std::ostream& s) const = 0;
+		virtual void pretty_print(std::ostream& s, const uint tab) const = 0;
 	};
 	
 	class ast_decl_var : public ast_decl
@@ -31,7 +31,7 @@ namespace splicpp
 		{}
 	
 		virtual ast_decl_type type() const;
-		virtual void pretty_print(std::ostream& s) const;
+		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
 	
 	class ast_decl_fun : public ast_decl
@@ -44,7 +44,7 @@ namespace splicpp
 		{}
 		
 		virtual ast_decl_type type() const;
-		virtual void pretty_print(std::ostream& s) const;
+		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
 }
 

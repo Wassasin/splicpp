@@ -8,7 +8,7 @@ namespace splicpp
 		return type_int;
 	}
 	
-	void ast_type_int::pretty_print(std::ostream& s) const
+	void ast_type_int::pretty_print(std::ostream& s, const uint) const
 	{
 		s << "Int";
 	}
@@ -20,7 +20,7 @@ namespace splicpp
 		return type_bool;
 	}
 	
-	void ast_type_bool::pretty_print(std::ostream& s) const
+	void ast_type_bool::pretty_print(std::ostream& s, const uint) const
 	{
 		s << "Bool";
 	}
@@ -32,12 +32,12 @@ namespace splicpp
 		return type_tuple;
 	}
 	
-	void ast_type_tuple::pretty_print(std::ostream& s) const
+	void ast_type_tuple::pretty_print(std::ostream& s, const uint tab) const
 	{
 		s << "(";
-		t_left->pretty_print(s);
+		t_left->pretty_print(s, tab);
 		s << ", ";
-		t_right->pretty_print(s);
+		t_right->pretty_print(s, tab);
 		s << ")";
 	}
 	
@@ -48,10 +48,10 @@ namespace splicpp
 		return type_array;
 	}
 	
-	void ast_type_array::pretty_print(std::ostream& s) const
+	void ast_type_array::pretty_print(std::ostream& s, const uint tab) const
 	{
 		s << "[";
-		t->pretty_print(s);
+		t->pretty_print(s, tab);
 		s << "]";
 	}
 	
@@ -62,8 +62,8 @@ namespace splicpp
 		return type_id;
 	}
 	
-	void ast_type_id::pretty_print(std::ostream& s) const
+	void ast_type_id::pretty_print(std::ostream& s, const uint tab) const
 	{
-		id->pretty_print(s);
+		id->pretty_print(s, tab);
 	}
 }

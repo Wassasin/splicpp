@@ -46,10 +46,11 @@ int main(int argc, char **argv)
 	if(vm.count("pptable"))
 		p.print_t();
 	
-	//splicpp::grammar tmp;
-	
 	for(auto decl : p.parse(splicpp::readfile(f)))
-		decl->pretty_print(std::cout << std::endl);
+	{
+		decl->pretty_print(std::cout, 0);
+		std::cout << std::endl;
+	}
 	
 	return 0;
 }

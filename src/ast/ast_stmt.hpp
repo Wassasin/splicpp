@@ -25,7 +25,7 @@ namespace splicpp
 		};
 		
 		virtual ast_stmt_type type() const = 0;
-		virtual void pretty_print(std::ostream& s) const = 0;
+		virtual void pretty_print(std::ostream& s, const uint tab) const = 0;
 	};
 	
 	class ast_stmt_stmts : public ast_stmt
@@ -40,7 +40,7 @@ namespace splicpp
 		void add_stmt(std::shared_ptr<ast_stmt> stmt);
 	
 		virtual ast_stmt_type type() const;
-		virtual void pretty_print(std::ostream& s) const;
+		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
 	
 	class ast_stmt_if : public ast_stmt
@@ -63,7 +63,7 @@ namespace splicpp
 		{}
 		
 		virtual ast_stmt_type type() const;
-		virtual void pretty_print(std::ostream& s) const;
+		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
 	
 	class ast_stmt_while : public ast_stmt
@@ -78,7 +78,7 @@ namespace splicpp
 		{}
 		
 		virtual ast_stmt_type type() const;
-		virtual void pretty_print(std::ostream& s) const;
+		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
 	
 	class ast_stmt_assignment : public ast_stmt
@@ -93,7 +93,7 @@ namespace splicpp
 		{}
 		
 		virtual ast_stmt_type type() const;
-		virtual void pretty_print(std::ostream& s) const;
+		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
 	
 	class ast_stmt_fun_call : public ast_stmt
@@ -106,7 +106,7 @@ namespace splicpp
 		{}
 		
 		virtual ast_stmt_type type() const;
-		virtual void pretty_print(std::ostream& s) const;		
+		virtual void pretty_print(std::ostream& s, const uint tab) const;		
 	};
 	
 	class ast_stmt_return : public ast_stmt
@@ -119,7 +119,7 @@ namespace splicpp
 		{}
 		
 		virtual ast_stmt_type type() const;
-		virtual void pretty_print(std::ostream& s) const;
+		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
 }
 

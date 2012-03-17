@@ -19,7 +19,7 @@ namespace splicpp
 		, id(id)
 		{}
 		
-		virtual void pretty_print(std::ostream& s) const;
+		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
 }
 

@@ -17,15 +17,15 @@ namespace splicpp
 		stmts.push_back(stmt);
 	}
 
-	void ast_fun_decl::pretty_print(std::ostream& s) const
+	void ast_fun_decl::pretty_print(std::ostream& s, const uint tab) const
 	{
 		if(t)
-			t.get()->pretty_print(s);
+			t.get()->pretty_print(s, tab);
 		else
 			s << "Void";
 		
 		s << ' ';
-		id->pretty_print(s);
+		id->pretty_print(s, tab);
 		s << '(';
 		
 		bool first = true;
@@ -36,17 +36,26 @@ namespace splicpp
 			else
 				s << ", ";
 			
-			arg->pretty_print(s);
+			arg->pretty_print(s, tab);
 		}
 		
-		s << ')' << std::endl << '{';
+		s << ')';
+		ast::print_newline(s, tab);
+		s << '{';
 		
 		for(const auto decl : decls)
-			decl->pretty_print(s);
+		{
+			ast::print_newline(s, tab+1);
+			decl->pretty_print(s, tab+1);
+		}
 		
 		for(const auto stmt : stmts)
-			stmt->pretty_print(s);
+		{
+			ast::print_newline(s, tab+1);
+			stmt->pretty_print(s, tab+1);
+		}
 		
+		ast::print_newline(s, tab);
 		s << '}';
 	}
 }

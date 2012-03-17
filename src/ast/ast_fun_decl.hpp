@@ -43,7 +43,7 @@ namespace splicpp
 		void add_decl(std::shared_ptr<ast_var_decl> decl);
 		void add_stmt(std::shared_ptr<ast_stmt> stmt);
 		
-		virtual void pretty_print(std::ostream& s) const;
+		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
 }
 

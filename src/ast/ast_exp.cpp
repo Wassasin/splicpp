@@ -9,9 +9,9 @@ namespace splicpp
 		return type_id;
 	}
 	
-	void ast_exp_id::pretty_print(std::ostream& s) const
+	void ast_exp_id::pretty_print(std::ostream& s, const uint tab) const
 	{
-		id->pretty_print(s);
+		id->pretty_print(s, tab);
 	}
 	
 	/* ast_exp_op2 */
@@ -26,11 +26,11 @@ namespace splicpp
 		return type_op2;
 	}
 	
-	void ast_exp_op2::pretty_print(std::ostream& s) const
+	void ast_exp_op2::pretty_print(std::ostream& s, const uint tab) const
 	{
-		e_left->pretty_print(s);
+		e_left->pretty_print(s, tab);
 		s << string_map[t];
-		e_right->pretty_print(s);
+		e_right->pretty_print(s, tab);
 	}
 	
 	/* ast_exp_negation */
@@ -40,10 +40,10 @@ namespace splicpp
 		return type_negation;
 	}
 	
-	void ast_exp_negation::pretty_print(std::ostream& s) const
+	void ast_exp_negation::pretty_print(std::ostream& s, const uint tab) const
 	{
 		s << '!';
-		exp->pretty_print(s);
+		exp->pretty_print(s, tab);
 	}
 	
 	/* ast_exp_int */
@@ -53,7 +53,7 @@ namespace splicpp
 		return type_int;
 	}
 	
-	void ast_exp_int::pretty_print(std::ostream& s) const
+	void ast_exp_int::pretty_print(std::ostream& s, const uint) const
 	{
 		s << i;
 	}
@@ -65,7 +65,7 @@ namespace splicpp
 		return type_bool;
 	}
 	
-	void ast_exp_bool::pretty_print(std::ostream& s) const
+	void ast_exp_bool::pretty_print(std::ostream& s, const uint) const
 	{
 		if(b)
 			s << "True";
@@ -80,10 +80,10 @@ namespace splicpp
 		return type_exp;
 	}
 	
-	void ast_exp_exp::pretty_print(std::ostream& s) const
+	void ast_exp_exp::pretty_print(std::ostream& s, const uint tab) const
 	{
 		s << '(';
-		exp->pretty_print(s);
+		exp->pretty_print(s, tab);
 		s << ')';
 	}
 	
@@ -94,9 +94,9 @@ namespace splicpp
 		return type_fun_call;
 	}
 	
-	void ast_exp_fun_call::pretty_print(std::ostream& s) const
+	void ast_exp_fun_call::pretty_print(std::ostream& s, const uint tab) const
 	{
-		c->pretty_print(s);
+		c->pretty_print(s, tab);
 	}
 	
 	/* ast_exp_nil */
@@ -106,7 +106,7 @@ namespace splicpp
 		return type_nil;
 	}
 	
-	void ast_exp_nil::pretty_print(std::ostream& s) const
+	void ast_exp_nil::pretty_print(std::ostream& s, const uint) const
 	{
 		s << "[]";
 	}
@@ -118,12 +118,12 @@ namespace splicpp
 		return type_tuple;
 	}
 	
-	void ast_exp_tuple::pretty_print(std::ostream& s) const
+	void ast_exp_tuple::pretty_print(std::ostream& s, const uint tab) const
 	{
 		s << '(';
-		e_left->pretty_print(s);
+		e_left->pretty_print(s, tab);
 		s << ", ";
-		e_right->pretty_print(s);
+		e_right->pretty_print(s, tab);
 		s << ')';
 	}
 }
