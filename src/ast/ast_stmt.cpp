@@ -104,8 +104,12 @@ namespace splicpp
 	
 	void ast_stmt_return::pretty_print(std::ostream& s, const uint tab) const
 	{
-		s << "return ";
-		exp->pretty_print(s, tab);
+		s << "return";
+		if(exp)
+		{
+			s << ' ';
+			exp.get()->pretty_print(s, tab);
+		}
 		s << ';';
 	}
 }

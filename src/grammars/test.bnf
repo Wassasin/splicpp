@@ -1,4 +1,0 @@
-syntax		:== rule | syntax newline rule
-rule		:== rule-name assignment expr
-expr		:== list | expr expr-sep list
-list		:== rule-name | list rule-name

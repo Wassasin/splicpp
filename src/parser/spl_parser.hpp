@@ -92,7 +92,6 @@ namespace splicpp
 		std::shared_ptr<ast_decl> parse_decl(const std::string str, const cst_node n) const;
 		std::shared_ptr<ast_var_decl> parse_var_decl(const std::string str, const cst_node n) const;
 		std::shared_ptr<ast_fun_decl> parse_fun_decl(const std::string str, const cst_node n) const;
-		boost::optional<std::shared_ptr<ast_type>> parse_ret_type(const std::string str, const cst_node n) const;
 		std::shared_ptr<ast_type> parse_type(const std::string str, const cst_node n) const;
 		std::vector<std::shared_ptr<ast_f_arg>> parse_f_args(const std::string str, const cst_node n) const;
 		std::shared_ptr<ast_stmt> parse_stmt(const std::string str, const cst_node n) const;
@@ -154,46 +153,7 @@ namespace splicpp
 		
 		static void resolve_conflicts(std::vector<ptable::acttransition>& transitions, const size_t i, const std::vector<itemset<1>> c, const stid a, const grammar g)
 		{
-			resolve_conflict_id(transitions, i, c, a, g);
 			resolve_conflict_dangling_else(transitions, i, c, a, g);
-		}
-
-		static void resolve_conflict_id(std::vector<ptable::acttransition>& transitions, const size_t, const std::vector<itemset<1>>, const stid a, const grammar g)
-		{
-			/*
-				Problem: S/R-conflict on rule
-					nl_ret_type :== nl_type
-			
-				On token
-					l_id
-			
-				Solution: choose shift if conflict on rule
-			*/
-			
-			if(transitions.size() != 2)
-				return;
-			
-			if(a != g.fetch_stid("l_id"))
-				return;
-			
-			size_t strans = 0, rtrans = 1;
-			if(transitions.at(strans).t == ptable::acttransition::t_shift && transitions.at(rtrans).t == ptable::acttransition::t_shift)
-				return; //shift-shift conflict
-				
-			if(transitions.at(strans).t == ptable::acttransition::t_reduce && transitions.at(rtrans).t == ptable::acttransition::t_shift)
-				std::swap(strans, rtrans);
-			
-			assert(transitions.at(strans).t == ptable::acttransition::t_shift && transitions.at(rtrans).t == ptable::acttransition::t_reduce);
-			
-			const stid NL_RET_TYPE = g.fetch_stid("nl_ret_type"), NL_TYPE = g.fetch_stid("nl_type");
-			const rule r = rule(NL_RET_TYPE) + NL_TYPE;
-			
-			rule conflict_rule = g.fetch_rule(transitions.at(rtrans).rule);
-			
-			if(conflict_rule != r)
-				return;
-			
-			transitions.erase(transitions.begin() + strans);
 		}
 
 		static void resolve_conflict_dangling_else(std::vector<ptable::acttransition>& transitions, const size_t, const std::vector<itemset<1>>, const stid a, const grammar g)

@@ -111,9 +111,13 @@ namespace splicpp
 	
 	class ast_stmt_return : public ast_stmt
 	{
-		std::shared_ptr<ast_exp> exp;
+		boost::optional<std::shared_ptr<ast_exp>> exp;
 	
 	public:
+		ast_stmt_return()
+		: exp()
+		{}
+	
 		ast_stmt_return(__decltype(exp) exp)
 		: exp(exp)
 		{}
