@@ -3,6 +3,8 @@
 #include <stack>
 #include <sstream>
 
+#include "../common/utils.hpp"
+
 namespace splicpp
 {
 	void ptable::acttransition::print() const
@@ -123,9 +125,20 @@ namespace splicpp
 				break;
 			else
 			{
-				std::stringstream s;
-				s << "parser error on line " << a.line+1 << " near \"" << a.as_string(l.get_str()) << "\"";
-				throw std::runtime_error(s.str());
+				std::stringstream str;
+				str << "parser error on line " << a.line+1 << " near \"" << a.as_string(l.get_str()) << "\" (" << g.fetch_symbol(a.type)->name << "), expected ";
+				
+				delim_end_printer p(", ", " or ", str);
+				const auto ts = acttable.at(s);
+				for(size_t i = 0; i < g.symbols_size(); i++)
+				{
+					const auto sym = g.fetch_symbol(i);
+					if(sym->type() == s_lit && ts.at(g.translate_lit(i)).t != acttransition::t_error)
+						p.print(sym->name);
+				}
+				
+				p.finish();
+				throw std::runtime_error(str.str());
 			}
 		}
 		
