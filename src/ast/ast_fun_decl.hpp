@@ -11,8 +11,17 @@
 #include "ast_var_decl.hpp"
 #include "ast_stmt.hpp"
 
+#include "../typing/symboltable.hpp"
+#include "../typing/varcontext.hpp"
+
 namespace splicpp
 {
+	class ast_f_arg;
+	class ast_var_decl;
+	class ast_stmt;
+	class symboltable;
+	class varcontext;
+
 	class ast_fun_decl : public ast
 	{
 		boost::optional<std::shared_ptr<ast_type>> t;
@@ -42,6 +51,11 @@ namespace splicpp
 		void add_arg(std::shared_ptr<ast_f_arg> arg);
 		void add_decl(std::shared_ptr<ast_var_decl> decl);
 		void add_stmt(std::shared_ptr<ast_stmt> stmt);
+		
+		void assign(sid i);
+		std::string fetch_name() const;
+		
+		void register_locals(symboltable& s, varcontext& c);
 		
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};

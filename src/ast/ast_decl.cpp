@@ -2,6 +2,21 @@
 
 namespace splicpp
 {
+	/* ast_decl_var */
+
+	void ast_decl_var::register_globals(symboltable& s, varcontext& c)
+	{
+		c.assign(v->fetch_name(), s.reg_var(v));
+	}
+	
+	void ast_decl_var::register_locals(symboltable& s, varcontext& c)
+	{
+		varcontext ctype; //Fresh context
+		v->register_types(s, ctype);
+		
+		v->assign_ids(c);
+	}
+
 	ast_decl::ast_decl_type ast_decl_var::type() const
 	{
 		return t_var_decl;
@@ -10,6 +25,18 @@ namespace splicpp
 	void ast_decl_var::pretty_print(std::ostream& s, const uint tab) const
 	{
 		v->pretty_print(s, tab);
+	}
+	
+	/* ast_decl_fun */
+	
+	void ast_decl_fun::register_globals(symboltable& s, varcontext& c)
+	{
+		c.assign(f->fetch_name(), s.reg_fun(f));
+	}
+	
+	void ast_decl_fun::register_locals(symboltable& s, varcontext& c)
+	{
+		f->register_locals(s, c);
 	}
 	
 	ast_decl::ast_decl_type ast_decl_fun::type() const

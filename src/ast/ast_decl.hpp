@@ -1,6 +1,8 @@
 #ifndef AST_DECL_H
 #define AST_DECL_H
 
+#include "../common/typedefs.hpp"
+
 #include "ast.hpp"
 
 #include "ast_fun_decl.hpp"
@@ -8,6 +10,9 @@
 
 namespace splicpp
 {
+	class symboltable;
+	class varcontext;
+
 	class ast_decl : public ast
 	{
 	public:
@@ -16,6 +21,9 @@ namespace splicpp
 			t_var_decl,
 			t_fun_decl
 		};
+		
+		virtual void register_globals(symboltable&, varcontext& c) = 0;
+		virtual void register_locals(symboltable&, varcontext& c) = 0;
 		
 		virtual ast_decl_type type() const = 0;
 		virtual void pretty_print(std::ostream& s, const uint tab) const = 0;
@@ -30,6 +38,9 @@ namespace splicpp
 		: v(v)
 		{}
 	
+		virtual void register_globals(symboltable&, varcontext& c);
+		virtual void register_locals(symboltable&, varcontext& c);
+		
 		virtual ast_decl_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
@@ -42,6 +53,9 @@ namespace splicpp
 		ast_decl_fun(__decltype(f) f)
 		: f(f)
 		{}
+		
+		virtual void register_globals(symboltable&, varcontext& c);
+		virtual void register_locals(symboltable&, varcontext& c);
 		
 		virtual ast_decl_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;

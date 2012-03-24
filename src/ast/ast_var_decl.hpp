@@ -1,14 +1,24 @@
 #ifndef AST_VAR_DECL_H
 #define AST_VAR_DECL_H
 
+#include <memory>
+
 #include "ast.hpp"
 
 #include "ast_type.hpp"
 #include "ast_id.hpp"
 #include "ast_exp.hpp"
 
+#include "../typing/symboltable.hpp"
+#include "../typing/varcontext.hpp"
+
 namespace splicpp
 {
+	class symboltable;
+	class varcontext;
+	class ast_type;
+	class ast_exp;
+
 	class ast_var_decl : public ast
 	{
 		std::shared_ptr<ast_type> t;
@@ -21,6 +31,12 @@ namespace splicpp
 		, id(id)
 		, exp(exp)
 		{}
+		
+		void assign(sid i);
+		std::string fetch_name() const;
+		
+		void assign_ids(const varcontext& c);
+		void register_types(symboltable& s, varcontext& c);
 		
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};

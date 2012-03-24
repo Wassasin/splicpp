@@ -16,7 +16,48 @@ namespace splicpp
 	{
 		stmts.push_back(stmt);
 	}
-
+	
+	void ast_fun_decl::assign(sid i)
+	{
+		id->assign(i);
+	}
+	
+	std::string ast_fun_decl::fetch_name() const
+	{
+		return id->fetch_name();
+	}
+	
+	void ast_fun_decl::register_locals(symboltable& s, varcontext& c)
+	{
+		varcontext cvar = c;
+		varcontext ctype; //Fresh context
+		
+		if(t)
+			ast_type::register_type(t.get(), s, ctype);
+		
+		for(auto arg : args)
+		{
+			cvar.assign(arg->fetch_name(), s.reg_arg(arg));
+			arg->register_types(s, ctype);
+		}
+		
+		for(auto decl : decls)
+		{
+			cvar.assign(decl->fetch_name(), s.reg_lvar(decl));
+			decl->register_types(s, ctype);
+		}
+		
+		for(auto stmt : stmts)
+			stmt->assign_ids(c);
+		/*
+		std::cout << id->fetch_name() << ": " << std::endl;
+		cvar.print(std::cout);
+		
+		std::cout << id->fetch_name() << " (types): " << std::endl;
+		ctype.print(std::cout);
+		*/
+	}
+	
 	void ast_fun_decl::pretty_print(std::ostream& s, const uint tab) const
 	{
 		if(t)

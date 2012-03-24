@@ -6,6 +6,13 @@ namespace splicpp
 	{
 		args.push_back(exp);
 	}
+	
+	void ast_fun_call::assign_ids(const varcontext& c)
+	{
+		id->assign_ids(c);
+		for(auto arg : args)
+			arg->assign_ids(c);
+	}
 
 	void ast_fun_call::pretty_print(std::ostream& s, const uint tab) const
 	{

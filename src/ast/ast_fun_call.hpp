@@ -9,8 +9,14 @@
 #include "ast_id.hpp"
 #include "ast_exp.hpp"
 
+#include "../typing/symboltable.hpp"
+#include "../typing/varcontext.hpp"
+
 namespace splicpp
 {
+	class symboltable;
+	class varcontext;
+	class ast_id;
 	class ast_exp;
 
 	class ast_fun_call : public ast
@@ -25,6 +31,9 @@ namespace splicpp
 		{}
 		
 		void add_arg(std::shared_ptr<ast_exp> exp);
+		
+		void assign_ids(const varcontext& c);
+		
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
 }

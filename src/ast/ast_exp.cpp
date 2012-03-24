@@ -2,7 +2,12 @@
 
 namespace splicpp
 {
-	/* ast_exp::ast_exp_type */
+	/* ast_exp_id */
+	
+	void ast_exp_id::assign_ids(const varcontext& c)
+	{
+		id->assign_ids(c);
+	}
 	
 	ast_exp::ast_exp_type ast_exp_id::type() const
 	{
@@ -21,6 +26,12 @@ namespace splicpp
 		return t;
 	}
 	
+	void ast_exp_op2::assign_ids(const varcontext& c)
+	{
+		e_left->assign_ids(c);
+		e_right->assign_ids(c);
+	}
+	
 	ast_exp::ast_exp_type ast_exp_op2::type() const
 	{
 		return type_op2;
@@ -35,6 +46,11 @@ namespace splicpp
 	
 	/* ast_exp_negation */
 	
+	void ast_exp_negation::assign_ids(const varcontext& c)
+	{
+		exp->assign_ids(c);
+	}
+	
 	ast_exp::ast_exp_type ast_exp_negation::type() const
 	{
 		return type_negation;
@@ -48,6 +64,11 @@ namespace splicpp
 	
 	/* ast_exp_int */
 	
+	void ast_exp_int::assign_ids(const varcontext&)
+	{
+		//Empty
+	}
+	
 	ast_exp::ast_exp_type ast_exp_int::type() const
 	{
 		return type_int;
@@ -59,6 +80,11 @@ namespace splicpp
 	}
 	
 	/* ast_exp_bool */
+	
+	void ast_exp_bool::assign_ids(const varcontext&)
+	{
+		//Empty
+	}
 	
 	ast_exp::ast_exp_type ast_exp_bool::type() const
 	{
@@ -75,6 +101,11 @@ namespace splicpp
 	
 	/* ast_exp_exp */
 	
+	void ast_exp_exp::assign_ids(const varcontext& c)
+	{
+		exp->assign_ids(c);
+	}
+	
 	ast_exp::ast_exp_type ast_exp_exp::type() const
 	{
 		return type_exp;
@@ -89,6 +120,11 @@ namespace splicpp
 	
 	/* ast_exp_fun_call */
 	
+	void ast_exp_fun_call::assign_ids(const varcontext& cvar)
+	{
+		c->assign_ids(cvar);
+	}
+	
 	ast_exp::ast_exp_type ast_exp_fun_call::type() const
 	{
 		return type_fun_call;
@@ -101,6 +137,11 @@ namespace splicpp
 	
 	/* ast_exp_nil */
 	
+	void ast_exp_nil::assign_ids(const varcontext&)
+	{
+		//Empty
+	}
+	
 	ast_exp::ast_exp_type ast_exp_nil::type() const
 	{
 		return type_nil;
@@ -112,6 +153,12 @@ namespace splicpp
 	}
 	
 	/* ast_exp_tuple */
+	
+	void ast_exp_tuple::assign_ids(const varcontext& c)
+	{
+		e_left->assign_ids(c);
+		e_right->assign_ids(c);
+	}
 	
 	ast_exp::ast_exp_type ast_exp_tuple::type() const
 	{

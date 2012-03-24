@@ -9,8 +9,13 @@
 #include "ast_exp.hpp"
 #include "ast_fun_call.hpp"
 
+#include "../typing/symboltable.hpp"
+#include "../typing/varcontext.hpp"
+
 namespace splicpp
 {
+	class ast_fun_call;
+
 	class ast_stmt : public ast
 	{
 	public:
@@ -23,6 +28,8 @@ namespace splicpp
 			type_fun_call,
 			type_return
 		};
+		
+		virtual void assign_ids(const varcontext& c) = 0;
 		
 		virtual ast_stmt_type type() const = 0;
 		virtual void pretty_print(std::ostream& s, const uint tab) const = 0;
@@ -38,6 +45,8 @@ namespace splicpp
 		{}
 	
 		void add_stmt(std::shared_ptr<ast_stmt> stmt);
+	
+		virtual void assign_ids(const varcontext& c);
 	
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
@@ -62,6 +71,8 @@ namespace splicpp
 		, stmt_false(stmt_false)
 		{}
 		
+		virtual void assign_ids(const varcontext& c);
+		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
@@ -76,6 +87,8 @@ namespace splicpp
 		: exp(exp)
 		, stmt(stmt)
 		{}
+		
+		virtual void assign_ids(const varcontext& c);
 		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
@@ -92,6 +105,8 @@ namespace splicpp
 		, exp(exp)
 		{}
 		
+		virtual void assign_ids(const varcontext& c);
+		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
@@ -104,6 +119,8 @@ namespace splicpp
 		ast_stmt_fun_call(__decltype(f) f)
 		: f(f)
 		{}
+		
+		virtual void assign_ids(const varcontext& c);
 		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;		
@@ -121,6 +138,8 @@ namespace splicpp
 		ast_stmt_return(__decltype(exp) exp)
 		: exp(exp)
 		{}
+		
+		virtual void assign_ids(const varcontext& c);
 		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;

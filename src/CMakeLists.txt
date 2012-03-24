@@ -30,6 +30,9 @@ add_executable(splicpp
 	ast/ast_stmt.cpp
 	ast/ast_type.cpp
 	ast/ast_var_decl.cpp
+	
+	typing/symboltable.cpp
+	typing/varcontext.cpp
 )
 
 macro(add_grammar SRC_FILE)
@@ -44,10 +47,9 @@ macro(add_grammar SRC_FILE)
 endmacro()
 
 add_grammar(bnf.bnf)
-#add_grammar(test.bnf)
 add_grammar(spl.bnf)
 
-add_definitions("-Wall -Wextra -Weffc++ -std=c++0x -pedantic -g3")
+add_definitions("-Wall -Wextra -Weffc++ -std=c++0x -pedantic -g3 -O3")
 
 find_package(Boost COMPONENTS system program_options regex filesystem serialization REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})

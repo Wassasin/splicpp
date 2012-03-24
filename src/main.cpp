@@ -46,11 +46,24 @@ int main(int argc, char **argv)
 	if(vm.count("pptable"))
 		p.print_t();
 	
-	for(auto decl : p.parse(splicpp::readfile(f)))
+	auto decls = p.parse(splicpp::readfile(f));
+	
+	for(auto decl : decls)
 	{
 		decl->pretty_print(std::cout, 0);
 		std::cout << std::endl;
 	}
+	
+	splicpp::symboltable s;
+	splicpp::varcontext c;
+	
+	for(auto decl : decls)
+		decl->register_globals(s, c);
+	
+	for(auto decl : decls)
+		decl->register_locals(s, c);
+	
+	s.print(std::cout);
 	
 	return 0;
 }

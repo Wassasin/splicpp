@@ -8,6 +8,12 @@ namespace splicpp
 	{
 		stmts.push_back(stmt);
 	}
+	
+	void ast_stmt_stmts::assign_ids(const varcontext& c)
+	{
+		for(auto stmt : stmts)
+			stmt->assign_ids(c);
+	}
 
 	ast_stmt::ast_stmt_type ast_stmt_stmts::type() const
 	{
@@ -27,6 +33,14 @@ namespace splicpp
 	}
 	
 	/* ast_stmt_if */
+	
+	void ast_stmt_if::assign_ids(const varcontext& c)
+	{
+		exp->assign_ids(c);
+		stmt_true->assign_ids(c);
+		if(stmt_false)
+			stmt_false.get()->assign_ids(c);
+	}
 	
 	ast_stmt::ast_stmt_type ast_stmt_if::type() const
 	{
@@ -53,6 +67,12 @@ namespace splicpp
 	
 	/* ast_stmt_while */
 	
+	void ast_stmt_while::assign_ids(const varcontext& c)
+	{
+		exp->assign_ids(c);
+		stmt->assign_ids(c);
+	}
+	
 	ast_stmt::ast_stmt_type ast_stmt_while::type() const
 	{
 		return type_while;
@@ -69,6 +89,12 @@ namespace splicpp
 	
 	/* ast_stmt_assignment */
 	
+	void ast_stmt_assignment::assign_ids(const varcontext& c)
+	{
+		id->assign_ids(c);
+		exp->assign_ids(c);
+	}
+	
 	ast_stmt::ast_stmt_type ast_stmt_assignment::type() const
 	{
 		return type_assignment;
@@ -84,6 +110,11 @@ namespace splicpp
 	
 	/* ast_stmt_fun_call */
 	
+	void ast_stmt_fun_call::assign_ids(const varcontext& c)
+	{
+		f->assign_ids(c);
+	}
+	
 	ast_stmt::ast_stmt_type ast_stmt_fun_call::type() const
 	{
 		return type_fun_call;
@@ -96,6 +127,12 @@ namespace splicpp
 	}
 	
 	/* ast_stmt_return */
+	
+	void ast_stmt_return::assign_ids(const varcontext& c)
+	{
+		if(exp)
+			exp.get()->assign_ids(c);
+	}
 	
 	ast_stmt::ast_stmt_type ast_stmt_return::type() const
 	{

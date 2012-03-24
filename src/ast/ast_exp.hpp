@@ -3,14 +3,21 @@
 
 #include <boost/array.hpp>
 
+#include "../common/typedefs.hpp"
+
 #include "ast.hpp"
 
 #include "ast_id.hpp"
 #include "ast_fun_call.hpp"
 
+#include "../typing/symboltable.hpp"
+#include "../typing/varcontext.hpp"
+
 namespace splicpp
 {
 	class ast_fun_call;
+	class symboltable;
+	class varcontext;
 
 	class ast_exp : public ast
 	{
@@ -28,6 +35,8 @@ namespace splicpp
 			type_tuple
 		};
 		
+		virtual void assign_ids(const varcontext& c) = 0;
+		
 		virtual ast_exp_type type() const = 0;
 		virtual void pretty_print(std::ostream& s, const uint tab) const = 0;
 	};
@@ -40,6 +49,8 @@ namespace splicpp
 		ast_exp_id(__decltype(id) id)
 		: id(id)
 		{}
+	
+		virtual void assign_ids(const varcontext& c);
 	
 		virtual ast_exp_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
@@ -69,6 +80,9 @@ namespace splicpp
 		{}
 	
 		op_type optype() const;
+		
+		virtual void assign_ids(const varcontext& c);
+		
 		virtual ast_exp_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
@@ -81,6 +95,8 @@ namespace splicpp
 		ast_exp_negation(__decltype(exp) exp)
 		: exp(exp)
 		{}
+	
+		virtual void assign_ids(const varcontext& c);
 	
 		virtual ast_exp_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
@@ -95,6 +111,8 @@ namespace splicpp
 		: i(i)
 		{}
 	
+		virtual void assign_ids(const varcontext& c);
+	
 		virtual ast_exp_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
@@ -107,6 +125,8 @@ namespace splicpp
 		ast_exp_bool(__decltype(b) b)
 		: b(b)
 		{}
+	
+		virtual void assign_ids(const varcontext& c);
 	
 		virtual ast_exp_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
@@ -121,6 +141,8 @@ namespace splicpp
 		: exp(exp)
 		{}
 	
+		virtual void assign_ids(const varcontext& c);
+	
 		virtual ast_exp_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
@@ -134,6 +156,8 @@ namespace splicpp
 		: c(c)
 		{}
 	
+		virtual void assign_ids(const varcontext& c);
+	
 		virtual ast_exp_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
@@ -143,7 +167,9 @@ namespace splicpp
 	public:
 		ast_exp_nil()
 		{}
-		
+
+		virtual void assign_ids(const varcontext& c);
+
 		virtual ast_exp_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
@@ -157,6 +183,8 @@ namespace splicpp
 		: e_left(e_left)
 		, e_right(e_right)
 		{}
+		
+		virtual void assign_ids(const varcontext& c);
 		
 		virtual ast_exp_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
