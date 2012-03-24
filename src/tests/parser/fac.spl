@@ -12,7 +12,7 @@ Int facR(Int n)
 }
 
 //The iterative version of the factorial function
-Int Facl(Int n)
+Int facI(Int n)
 {
 	Int r = 1;
 	while(n > 1)
@@ -32,7 +32,7 @@ Void main()
 	while(n < 20)
 	{
 		facN = facR(n);
-		if(facN != facL(n) || facN != facL(n))
+		if(facN != facI(n) || facN != facL(n))
 		{
 			print(n : facN : facI(n) : facL(n) : []);
 			ok = False;
