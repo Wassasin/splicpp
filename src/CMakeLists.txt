@@ -27,6 +27,7 @@ add_executable(splicpp
 	ast/ast_fun_call.cpp
 	ast/ast_fun_decl.cpp
 	ast/ast_id.cpp
+	ast/ast_prog.cpp
 	ast/ast_stmt.cpp
 	ast/ast_type.cpp
 	ast/ast_var_decl.cpp

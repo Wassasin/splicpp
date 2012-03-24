@@ -6,7 +6,7 @@
 
 namespace splicpp
 {
-		std::vector<std::shared_ptr<ast_decl>> spl_parser::parse(std::string str) const
+		std::shared_ptr<ast_prog> spl_parser::parse(std::string str) const
 		{
 			lexer l(g, str);
 			cst_element e = t.parse(l);
@@ -27,10 +27,15 @@ namespace splicpp
 		
 		
 		
-		std::vector<std::shared_ptr<ast_decl>> spl_parser::parse_prog(const std::string str, const cst_node n) const
+		std::shared_ptr<ast_prog> spl_parser::parse_prog(const std::string str, const cst_node n) const
 		{
 			n.assert_stid(g, "nl_prog");
-			return autoparse_plus<std::shared_ptr<ast_decl>>(str, n[0]->as_node(), &spl_parser::parse_decl);
+			
+			std::shared_ptr<ast_prog> result(new ast_prog(n.sl()));
+			for(auto decl : autoparse_plus<std::shared_ptr<ast_decl>>(str, n[0]->as_node(), &spl_parser::parse_decl))
+				result->add_decl(decl);
+			
+			return result;
 		}
 		
 		std::shared_ptr<ast_decl> spl_parser::parse_decl(const std::string str, const cst_node n) const

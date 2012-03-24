@@ -15,7 +15,7 @@
 #include "ptable.hpp"
 #include "clr_parser_gen.hpp"
 
-#include "../ast/ast_decl.hpp"
+#include "../ast/ast_prog.hpp"
 
 namespace splicpp
 {
@@ -89,7 +89,7 @@ namespace splicpp
 				throw std::logic_error("unexpected rule");
 		}
 		
-		std::vector<std::shared_ptr<ast_decl>> parse_prog(const std::string str, const cst_node n) const;
+		std::shared_ptr<ast_prog> parse_prog(const std::string str, const cst_node n) const;
 		std::shared_ptr<ast_decl> parse_decl(const std::string str, const cst_node n) const;
 		std::shared_ptr<ast_var_decl> parse_var_decl(const std::string str, const cst_node n) const;
 		std::shared_ptr<ast_fun_decl> parse_fun_decl(const std::string str, const cst_node n) const;
@@ -124,7 +124,7 @@ namespace splicpp
 		, t(fetch_ptable(g))
 		{}	
 		
-		std::vector<std::shared_ptr<ast_decl>> parse(std::string str) const;
+		std::shared_ptr<ast_prog> parse(std::string str) const;
 		
 		void print_g() const;
 		void print_t() const;
