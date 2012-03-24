@@ -21,6 +21,7 @@ add_executable(splicpp
 	parser/spl_parser.cpp
 	
 	ast/ast.cpp
+	ast/ast_construct.cpp
 	ast/ast_decl.cpp
 	ast/ast_exp.cpp
 	ast/ast_f_arg.cpp

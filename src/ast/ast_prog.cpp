@@ -17,6 +17,28 @@ namespace splicpp
 	
 	void ast_prog::register_globals(symboltable& s, varcontext& c)
 	{
+		//Define language constructs
+		std::shared_ptr<ast_construct> cons;
+		
+		cons = decltype(cons)(new ast_construct_print());
+		c.assign(cons->fetch_name(), s.reg_cons(cons));
+		
+		cons = decltype(cons)(new ast_construct_is_empty());
+		c.assign(cons->fetch_name(), s.reg_cons(cons));
+		
+		cons = decltype(cons)(new ast_construct_head());
+		c.assign(cons->fetch_name(), s.reg_cons(cons));
+		
+		cons = decltype(cons)(new ast_construct_tail());
+		c.assign(cons->fetch_name(), s.reg_cons(cons));
+		
+		cons = decltype(cons)(new ast_construct_fst());
+		c.assign(cons->fetch_name(), s.reg_cons(cons));
+		
+		cons = decltype(cons)(new ast_construct_snd());
+		c.assign(cons->fetch_name(), s.reg_cons(cons));
+	
+		//Register globals
 		for(auto decl : decls)
 			decl->register_globals(s, c);
 	}

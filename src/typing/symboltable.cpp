@@ -17,6 +17,14 @@ namespace splicpp
 		return i;
 	}
 	
+	sid symboltable::reg_cons(std::shared_ptr<ast_construct> cons)
+	{
+		sid i = create_entry(symbolref::t_construct, conss.size());
+		//cons->assign(i); // assignment unnecessary
+		conss.push_back(cons);
+		return i;
+	}	
+	
 	sid symboltable::reg_var(std::shared_ptr<ast_var_decl> v)
 	{
 		sid i = create_entry(symbolref::t_var, vars.size());
@@ -58,6 +66,9 @@ namespace splicpp
 			{
 				case symbolref::t_fun:
 					s << funs.at(index[i].i)->fetch_name();
+					break;
+				case symbolref::t_construct:
+					s << conss.at(index[i].i)->fetch_name();
 					break;
 				case symbolref::t_var:
 					s << vars.at(index[i].i)->fetch_name();

@@ -8,6 +8,7 @@
 #include "../common/typedefs.hpp"
 
 #include "../ast/ast_fun_decl.hpp"
+#include "../ast/ast_construct.hpp"
 #include "../ast/ast_var_decl.hpp"
 #include "../ast/ast_f_arg.hpp"
 #include "../ast/ast_type.hpp"
@@ -27,6 +28,7 @@ namespace splicpp
 			enum symbolreftype
 			{
 				t_fun,
+				t_construct,
 				t_var,
 				t_arg,
 				t_local_var,
@@ -44,6 +46,7 @@ namespace splicpp
 		
 		std::vector<symbolref> index;
 		std::vector<std::shared_ptr<ast_fun_decl>> funs;
+		std::vector<std::shared_ptr<ast_construct>> conss;
 		std::vector<std::shared_ptr<ast_var_decl>> vars;
 		std::vector<std::shared_ptr<ast_f_arg>> args;
 		std::vector<std::shared_ptr<ast_var_decl>> local_vars;
@@ -55,6 +58,7 @@ namespace splicpp
 		symboltable()
 		: index()
 		, funs()
+		, conss()
 		, vars()
 		, args()
 		, local_vars()
@@ -62,6 +66,7 @@ namespace splicpp
 		{}
 		
 		sid reg_fun(std::shared_ptr<ast_fun_decl> f);
+		sid reg_cons(std::shared_ptr<ast_construct> c);
 		sid reg_var(std::shared_ptr<ast_var_decl> v);
 		sid reg_arg(std::shared_ptr<ast_f_arg> a);
 		sid reg_lvar(std::shared_ptr<ast_var_decl> lv);
