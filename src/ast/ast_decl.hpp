@@ -22,6 +22,10 @@ namespace splicpp
 			t_fun_decl
 		};
 		
+		ast_decl(const sloc sl)
+		: ast(sl)
+		{}
+		
 		virtual void register_globals(symboltable&, varcontext& c) = 0;
 		virtual void register_locals(symboltable&, varcontext& c) = 0;
 		
@@ -34,8 +38,9 @@ namespace splicpp
 		std::shared_ptr<ast_var_decl> v;
 	
 	public:
-		ast_decl_var(__decltype(v) v)
-		: v(v)
+		ast_decl_var(__decltype(v) v, const sloc sl)
+		: ast_decl(sl)
+		, v(v)
 		{}
 	
 		virtual void register_globals(symboltable&, varcontext& c);
@@ -50,8 +55,9 @@ namespace splicpp
 		std::shared_ptr<ast_fun_decl> f;
 		
 	public:
-		ast_decl_fun(__decltype(f) f)
-		: f(f)
+		ast_decl_fun(__decltype(f) f, const sloc sl)
+		: ast_decl(sl)
+		, f(f)
 		{}
 		
 		virtual void register_globals(symboltable&, varcontext& c);

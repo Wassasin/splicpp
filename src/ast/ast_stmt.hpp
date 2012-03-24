@@ -29,6 +29,10 @@ namespace splicpp
 			type_return
 		};
 		
+		ast_stmt(const sloc sl)
+		: ast(sl)
+		{}
+		
 		virtual void assign_ids(const varcontext& c) = 0;
 		
 		virtual ast_stmt_type type() const = 0;
@@ -40,8 +44,9 @@ namespace splicpp
 		std::vector<std::shared_ptr<ast_stmt>> stmts;
 	
 	public:
-		ast_stmt_stmts()
-		: stmts()
+		ast_stmt_stmts(const sloc sl)
+		: ast_stmt(sl)
+		, stmts()
 		{}
 	
 		void add_stmt(std::shared_ptr<ast_stmt> stmt);
@@ -59,14 +64,16 @@ namespace splicpp
 		boost::optional<std::shared_ptr<ast_stmt>> stmt_false;
 	
 	public:
-		ast_stmt_if(std::shared_ptr<ast_exp> exp, std::shared_ptr<ast_stmt> stmt_true)
-		: exp(exp)
+		ast_stmt_if(std::shared_ptr<ast_exp> exp, std::shared_ptr<ast_stmt> stmt_true, const sloc sl)
+		: ast_stmt(sl)
+		, exp(exp)
 		, stmt_true(stmt_true)
 		, stmt_false()
 		{}
 		
-		ast_stmt_if(std::shared_ptr<ast_exp> exp, std::shared_ptr<ast_stmt> stmt_true, std::shared_ptr<ast_stmt> stmt_false)
-		: exp(exp)
+		ast_stmt_if(std::shared_ptr<ast_exp> exp, std::shared_ptr<ast_stmt> stmt_true, std::shared_ptr<ast_stmt> stmt_false, const sloc sl)
+		: ast_stmt(sl)
+		, exp(exp)
 		, stmt_true(stmt_true)
 		, stmt_false(stmt_false)
 		{}
@@ -83,8 +90,9 @@ namespace splicpp
 		std::shared_ptr<ast_stmt> stmt;
 	
 	public:
-		ast_stmt_while(__decltype(exp) exp, __decltype(stmt) stmt)
-		: exp(exp)
+		ast_stmt_while(__decltype(exp) exp, __decltype(stmt) stmt, const sloc sl)
+		: ast_stmt(sl)
+		, exp(exp)
 		, stmt(stmt)
 		{}
 		
@@ -100,8 +108,9 @@ namespace splicpp
 		std::shared_ptr<ast_exp> exp;
 		
 	public:
-		ast_stmt_assignment(__decltype(id) id, __decltype(exp) exp)
-		: id(id)
+		ast_stmt_assignment(__decltype(id) id, __decltype(exp) exp, const sloc sl)
+		: ast_stmt(sl)
+		, id(id)
 		, exp(exp)
 		{}
 		
@@ -116,8 +125,9 @@ namespace splicpp
 		std::shared_ptr<ast_fun_call> f;
 		
 	public:
-		ast_stmt_fun_call(__decltype(f) f)
-		: f(f)
+		ast_stmt_fun_call(__decltype(f) f, const sloc sl)
+		: ast_stmt(sl)
+		, f(f)
 		{}
 		
 		virtual void assign_ids(const varcontext& c);
@@ -131,12 +141,14 @@ namespace splicpp
 		boost::optional<std::shared_ptr<ast_exp>> exp;
 	
 	public:
-		ast_stmt_return()
-		: exp()
+		ast_stmt_return(const sloc sl)
+		: ast_stmt(sl)
+		, exp()
 		{}
 	
-		ast_stmt_return(__decltype(exp) exp)
-		: exp(exp)
+		ast_stmt_return(__decltype(exp) exp, const sloc sl)
+		: ast_stmt(sl)
+		, exp(exp)
 		{}
 		
 		virtual void assign_ids(const varcontext& c);

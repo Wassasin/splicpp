@@ -6,6 +6,7 @@
 #include <boost/foreach.hpp>
 
 #include "../common/grammar.hpp"
+#include "../common/sloc.hpp"
 
 namespace splicpp
 {
@@ -29,6 +30,7 @@ namespace splicpp
 		void assert_stid(const grammar& g, const stid i) const;
 		void assert_stid(const grammar& g, const std::string str) const;
 		size_t size() const;
+		sloc sl() const;
 
 		static void print_tab(const uint tab)
 		{

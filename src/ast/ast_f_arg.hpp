@@ -24,8 +24,9 @@ namespace splicpp
 		std::shared_ptr<ast_id> id;
 
 	public:	
-		ast_f_arg(__decltype(t) t, __decltype(id) id)
-		: t(t)
+		ast_f_arg(__decltype(t) t, __decltype(id) id, const sloc sl)
+		: ast(sl)
+		, t(t)
 		, id(id)
 		{}
 		

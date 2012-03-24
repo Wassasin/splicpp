@@ -48,7 +48,7 @@ namespace splicpp
 		}
 		
 		for(auto stmt : stmts)
-			stmt->assign_ids(c);
+			stmt->assign_ids(cvar);
 		/*
 		std::cout << id->fetch_name() << ": " << std::endl;
 		cvar.print(std::cout);

@@ -9,6 +9,7 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/base_object.hpp>
 
+#include "../common/errors.hpp"
 
 #include "spl.hpp"
 #include "ptable.hpp"
@@ -110,12 +111,12 @@ namespace splicpp
 		std::shared_ptr<ast_exp> parse_exp6(const std::string str, const cst_node n) const;
 		std::shared_ptr<ast_exp> parse_exp7(const std::string str, const cst_node n) const;
 		std::shared_ptr<ast_exp> parse_exp8(const std::string str, const cst_node n) const;
-		int parse_digit(const std::string str, const cst_node n) const;
+		std::shared_ptr<ast_exp_int> parse_digit(const std::string str, const cst_node n) const;
 		std::shared_ptr<ast_id> parse_id(const std::string str, const std::shared_ptr<cst_element> e) const;
 		
-		std::logic_error unexpected_element(const std::shared_ptr<cst_element> e) const;
-		std::logic_error unexpected_token(const token t) const;
-		std::logic_error unexpected_node(const cst_node n) const;
+		parse_error unexpected_element(const std::shared_ptr<cst_element> e) const;
+		parse_error unexpected_token(const token t) const;
+		parse_error unexpected_node(const cst_node n) const;
 		
 	public:
 		spl_parser()

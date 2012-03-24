@@ -25,7 +25,7 @@ namespace splicpp
 		{
 			std::stringstream s;
 			s << "Use of undefined variable \"" << name << "\"";
-			throw parse_error(s.str());
+			throw parse_error(s.str(), sl);
 		}
 		assign(c[name]);
 	}

@@ -34,6 +34,10 @@ namespace splicpp
 			type_id
 		};
 		
+		ast_type(const sloc sl)
+		: ast(sl)
+		{}
+		
 		virtual ast_type_type type() const = 0;
 		virtual void pretty_print(std::ostream& s, const uint tab) const = 0;
 		
@@ -43,6 +47,10 @@ namespace splicpp
 	class ast_type_int : public ast_type
 	{
 	public:
+		ast_type_int(const sloc sl)
+		: ast_type(sl)
+		{}
+	
 		virtual ast_type_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
@@ -50,6 +58,10 @@ namespace splicpp
 	class ast_type_bool : public ast_type
 	{
 	public:
+		ast_type_bool(const sloc sl)
+		: ast_type(sl)
+		{}
+	
 		virtual ast_type_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
@@ -62,8 +74,9 @@ namespace splicpp
 		virtual void register_types(symboltable& s, varcontext& c) const;
 		
 	public:
-		ast_type_tuple(__decltype(t_left) t_left, __decltype(t_right) t_right)
-		: t_left(t_left)
+		ast_type_tuple(__decltype(t_left) t_left, __decltype(t_right) t_right, const sloc sl)
+		: ast_type(sl)
+		, t_left(t_left)
 		, t_right(t_right)
 		{}
 	
@@ -78,8 +91,9 @@ namespace splicpp
 		virtual void register_types(symboltable& s, varcontext& c) const;
 		
 	public:
-		ast_type_array(__decltype(t) t)
-		: t(t)
+		ast_type_array(__decltype(t) t, const sloc sl)
+		: ast_type(sl)
+		, t(t)
 		{}
 		
 		virtual ast_type_type type() const;
@@ -91,8 +105,9 @@ namespace splicpp
 		std::shared_ptr<ast_id> id;
 		
 	public:
-		ast_type_id(__decltype(id) id)
-		: id(id)
+		ast_type_id(__decltype(id) id, const sloc sl)
+		: ast_type(sl)
+		, id(id)
 		{}
 		
 		void assign(sid i);

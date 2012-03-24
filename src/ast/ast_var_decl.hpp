@@ -26,8 +26,9 @@ namespace splicpp
 		std::shared_ptr<ast_exp> exp;
 	
 	public:
-		ast_var_decl(__decltype(t) t, __decltype(id) id, __decltype(exp) exp)
-		: t(t)
+		ast_var_decl(__decltype(t) t, __decltype(id) id, __decltype(exp) exp, const sloc sl)
+		: ast(sl)
+		, t(t)
 		, id(id)
 		, exp(exp)
 		{}

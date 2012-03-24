@@ -35,6 +35,10 @@ namespace splicpp
 			type_tuple
 		};
 		
+		ast_exp(const sloc sl)
+		: ast(sl)
+		{}
+		
 		virtual void assign_ids(const varcontext& c) = 0;
 		
 		virtual ast_exp_type type() const = 0;
@@ -46,8 +50,9 @@ namespace splicpp
 		std::shared_ptr<ast_id> id;
 	
 	public:
-		ast_exp_id(__decltype(id) id)
-		: id(id)
+		ast_exp_id(__decltype(id) id, const sloc sl)
+		: ast_exp(sl)
+		, id(id)
 		{}
 	
 		virtual void assign_ids(const varcontext& c);
@@ -72,8 +77,9 @@ namespace splicpp
 		
 		const boost::array<const std::string, OP_TYPE_LENGTH> string_map;
 	public:
-		ast_exp_op2(const __decltype(e_left) e_left, const op_type t, const __decltype(e_right) e_right)
-		: e_left(e_left)
+		ast_exp_op2(const __decltype(e_left) e_left, const op_type t, const __decltype(e_right) e_right, const sloc sl)
+		: ast_exp(sl)
+		, e_left(e_left)
 		, e_right(e_right)
 		, t(t)
 		, string_map({ { "+", "-", "*", "/", "%", "==", "<", ">", "<=", ">=", "!=", "&&", "||", ":" } })
@@ -92,8 +98,9 @@ namespace splicpp
 		std::shared_ptr<ast_exp> exp;
 	
 	public:
-		ast_exp_negation(__decltype(exp) exp)
-		: exp(exp)
+		ast_exp_negation(__decltype(exp) exp, const sloc sl)
+		: ast_exp(sl)
+		, exp(exp)
 		{}
 	
 		virtual void assign_ids(const varcontext& c);
@@ -107,8 +114,9 @@ namespace splicpp
 		int i;
 	
 	public:
-		ast_exp_int(__decltype(i) i)
-		: i(i)
+		ast_exp_int(__decltype(i) i, const sloc sl)
+		: ast_exp(sl)
+		, i(i)
 		{}
 	
 		virtual void assign_ids(const varcontext& c);
@@ -122,8 +130,9 @@ namespace splicpp
 		bool b;
 	
 	public:
-		ast_exp_bool(__decltype(b) b)
-		: b(b)
+		ast_exp_bool(__decltype(b) b, const sloc sl)
+		: ast_exp(sl)
+		, b(b)
 		{}
 	
 		virtual void assign_ids(const varcontext& c);
@@ -137,8 +146,9 @@ namespace splicpp
 		std::shared_ptr<ast_exp> exp;
 	
 	public:
-		ast_exp_exp(__decltype(exp) exp)
-		: exp(exp)
+		ast_exp_exp(__decltype(exp) exp, const sloc sl)
+		: ast_exp(sl)
+		, exp(exp)
 		{}
 	
 		virtual void assign_ids(const varcontext& c);
@@ -152,8 +162,9 @@ namespace splicpp
 		std::shared_ptr<ast_fun_call> c;
 	
 	public:
-		ast_exp_fun_call(__decltype(c) c)
-		: c(c)
+		ast_exp_fun_call(__decltype(c) c, const sloc sl)
+		: ast_exp(sl)
+		, c(c)
 		{}
 	
 		virtual void assign_ids(const varcontext& c);
@@ -165,7 +176,8 @@ namespace splicpp
 	class ast_exp_nil : public ast_exp
 	{
 	public:
-		ast_exp_nil()
+		ast_exp_nil(const sloc sl)
+		: ast_exp(sl)
 		{}
 
 		virtual void assign_ids(const varcontext& c);
@@ -179,8 +191,9 @@ namespace splicpp
 		std::shared_ptr<ast_exp> e_left, e_right;
 	
 	public:
-		ast_exp_tuple(__decltype(e_left) e_left, __decltype(e_right) e_right)
-		: e_left(e_left)
+		ast_exp_tuple(__decltype(e_left) e_left, __decltype(e_right) e_right, const sloc sl)
+		: ast_exp(sl)
+		, e_left(e_left)
 		, e_right(e_right)
 		{}
 		

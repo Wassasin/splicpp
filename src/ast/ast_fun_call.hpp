@@ -25,8 +25,9 @@ namespace splicpp
 		std::vector<std::shared_ptr<ast_exp>> args;
 		
 	public:
-		ast_fun_call(__decltype(id) id)
-		: id(id)
+		ast_fun_call(__decltype(id) id, const sloc sl)
+		: ast(sl)
+		, id(id)
 		, args()
 		{}
 		

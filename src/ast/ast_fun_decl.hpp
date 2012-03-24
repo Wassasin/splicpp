@@ -32,16 +32,18 @@ namespace splicpp
 		std::vector<std::shared_ptr<ast_stmt>> stmts;
 	
 	public:
-		ast_fun_decl(__decltype(t) t, __decltype(id) id)
-		: t(t)
+		ast_fun_decl(__decltype(t) t, __decltype(id) id, const sloc sl)
+		: ast(sl)
+		, t(t)
 		, id(id)
 		, args()
 		, decls()
 		, stmts()
 		{}
 		
-		ast_fun_decl(__decltype(id) id)
-		: t()
+		ast_fun_decl(__decltype(id) id, const sloc sl)
+		: ast(sl)
+		, t()
 		, id(id)
 		, args()
 		, decls()

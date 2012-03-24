@@ -21,8 +21,9 @@ namespace splicpp
 		boost::optional<sid> id;
 
 	public:	
-		ast_id(std::string name)
-		: name(name)
+		ast_id(std::string name, const sloc sl)
+		: ast(sl)
+		, name(name)
 		, id()
 		{}
 		
