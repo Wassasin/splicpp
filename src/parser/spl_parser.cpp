@@ -519,6 +519,7 @@ namespace splicpp
 		{
 			e->assert_token(g, "l_id");
 			const token t = e->as_token();
+			
 			std::shared_ptr<ast_id> result(new ast_id(t.as_string(str), t.as_sloc()));
 			return result;
 		}

@@ -21,11 +21,7 @@ namespace splicpp
 		{}
 				
 		std::string as_string(const std::string source) const;
-		
-		sloc as_sloc() const
-		{
-			return sloc(pos, line);
-		}
+		sloc as_sloc() const;
 	};
 }
 

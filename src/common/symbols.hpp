@@ -21,7 +21,7 @@ namespace splicpp
 	class symbol
 	{
 	public:
-		std::string name;
+		const std::string name;
 
 		symbol(const std::string name)
 		: name(name)

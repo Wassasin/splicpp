@@ -6,4 +6,9 @@ namespace splicpp
 	{
 		return source.substr(pos, length);
 	}
+	
+	sloc token::as_sloc() const
+	{
+		return sloc(pos, line);
+	}
 }
