@@ -33,6 +33,7 @@ add_executable(splicpp
 	ast/ast_type.cpp
 	ast/ast_var_decl.cpp
 	
+	typing/typecontext.cpp
 	typing/substitution.cpp
 	typing/symboltable.cpp
 	typing/varcontext.cpp
