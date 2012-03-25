@@ -40,7 +40,9 @@ add_executable(splicpp
 	
 	typing/types/sl_type.cpp
 	typing/types/sl_type_array.cpp
+	typing/types/sl_type_bool.cpp
 	typing/types/sl_type_function.cpp
+	typing/types/sl_type_int.cpp
 	typing/types/sl_type_tuple.cpp
 	typing/types/sl_type_unbound.cpp
 )
