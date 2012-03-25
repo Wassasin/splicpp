@@ -33,8 +33,12 @@ add_executable(splicpp
 	ast/ast_type.cpp
 	ast/ast_var_decl.cpp
 	
+	typing/substitution.cpp
 	typing/symboltable.cpp
 	typing/varcontext.cpp
+	
+	typing/types/sl_type.cpp
+	typing/types/sl_type_unbound.cpp
 )
 
 macro(add_grammar SRC_FILE)
