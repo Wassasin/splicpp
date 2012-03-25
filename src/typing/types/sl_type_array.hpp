@@ -9,7 +9,7 @@ namespace splicpp
 	{
 		std::shared_ptr<sl_type> t;
 	public:
-		sl_type_array(std::shared_ptr<sl_type> t)
+		sl_type_array(const std::shared_ptr<sl_type> t)
 		: t(t)
 		{}
 		
