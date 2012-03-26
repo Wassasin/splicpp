@@ -24,7 +24,7 @@ namespace splicpp
 		s << "t" << id;
 	}
 	
-	std::vector<std::shared_ptr<sl_type_unbound>> sl_type_unbound::fv() const
+	std::vector<std::shared_ptr<sl_type_unbound>> sl_type_unbound::tv() const
 	{
 		std::vector<std::shared_ptr<sl_type_unbound>> result;
 		result.push_back(std::shared_ptr<sl_type_unbound>(new sl_type_unbound(*this)));

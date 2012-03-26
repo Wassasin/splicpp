@@ -16,16 +16,16 @@ namespace splicpp
 		s << ')';
 	}
 	
-	std::vector<std::shared_ptr<sl_type_unbound>> sl_type_tuple::fv() const
+	std::vector<std::shared_ptr<sl_type_unbound>> sl_type_tuple::tv() const
 	{
-		auto result = t_left->fv();
-		for(const auto x : t_right->fv())
+		auto result = t_left->tv();
+		for(const auto x : t_right->tv())
 			result.push_back(x);
 		
 		return result;
 	}
 	
-	//substitution sl_type_array::unify(const std::shared_ptr<sl_type> t, typecontext& c) const; //TODO
+	//substitution sl_type_tuple::unify(const std::shared_ptr<sl_type> t, typecontext& c) const; //TODO
 	std::shared_ptr<sl_type> sl_type_tuple::apply(const substitution& s) const
 	{
 		return std::shared_ptr<sl_type>(new sl_type_tuple(t_left->apply(s), t_right->apply(s)));

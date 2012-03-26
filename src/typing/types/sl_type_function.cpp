@@ -27,20 +27,20 @@ namespace splicpp
 		r->print(s);
 	}
 	
-	std::vector<std::shared_ptr<sl_type_unbound>> sl_type_function::fv() const
+	std::vector<std::shared_ptr<sl_type_unbound>> sl_type_function::tv() const
 	{
 		std::vector<std::shared_ptr<sl_type_unbound>> result;
 		for(const auto arg : args)
-			for(const auto u : arg->fv())
+			for(const auto u : arg->tv())
 				result.push_back(u);
 		
-		for(const auto u : r->fv())
+		for(const auto u : r->tv())
 			result.push_back(u);
 		
 		return result;
 	}
 	
-	//substitution sl_type_array::unify(const std::shared_ptr<sl_type> t, typecontext& c) const; //TODO
+	//substitution sl_type_function::unify(const std::shared_ptr<sl_type> t, typecontext& c) const; //TODO
 	std::shared_ptr<sl_type> sl_type_function::apply(const substitution& s) const
 	{
 		std::vector<std::shared_ptr<sl_type>> newargs;

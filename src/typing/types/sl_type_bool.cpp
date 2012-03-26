@@ -12,7 +12,7 @@ namespace splicpp
 		s << "Bool";
 	}
 	
-	std::vector<std::shared_ptr<sl_type_unbound>> sl_type_bool::fv() const
+	std::vector<std::shared_ptr<sl_type_unbound>> sl_type_bool::tv() const
 	{
 		return std::vector<std::shared_ptr<sl_type_unbound>>();
 	}

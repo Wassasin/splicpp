@@ -14,9 +14,9 @@ namespace splicpp
 		s << ']';
 	}
 	
-	std::vector<std::shared_ptr<sl_type_unbound>> sl_type_array::fv() const
+	std::vector<std::shared_ptr<sl_type_unbound>> sl_type_array::tv() const
 	{
-		return t->fv();
+		return t->tv();
 	}
 	
 	//substitution sl_type_array::unify(const std::shared_ptr<sl_type> t, typecontext& c) const; //TODO

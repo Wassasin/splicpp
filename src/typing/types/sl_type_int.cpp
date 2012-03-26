@@ -12,7 +12,7 @@ namespace splicpp
 		s << "Int";
 	}
 	
-	std::vector<std::shared_ptr<sl_type_unbound>> sl_type_int::fv() const
+	std::vector<std::shared_ptr<sl_type_unbound>> sl_type_int::tv() const
 	{
 		return std::vector<std::shared_ptr<sl_type_unbound>>();
 	}

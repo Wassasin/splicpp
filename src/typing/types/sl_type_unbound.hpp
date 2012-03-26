@@ -22,7 +22,7 @@ namespace splicpp
 		bool equals(const std::shared_ptr<sl_type_unbound> y) const;
 		virtual void print(std::ostream& s) const;
 		
-		virtual std::vector<std::shared_ptr<sl_type_unbound>> fv() const;
+		virtual std::vector<std::shared_ptr<sl_type_unbound>> tv() const;
 		//virtual substitution unify(const std::shared_ptr<sl_type> t, typecontext& c) const; //TODO
 		virtual std::shared_ptr<sl_type> apply(const substitution& s) const;
 	};
