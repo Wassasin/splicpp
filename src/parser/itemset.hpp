@@ -21,7 +21,7 @@ namespace splicpp
 		: contents(list)
 		{}
 		
-		bool operator==(const itemset<L> i_set) const
+		bool operator==(const itemset<L>& i_set) const
 		{
 			if(i_set.size() != this->size())
 				return false;
@@ -63,12 +63,12 @@ namespace splicpp
 		
 		inline item<L>& operator[](const size_t i)
 		{
-			return contents.at(i);
+			return contents[i];
 		}
 		
 		inline const item<L>& operator[](const size_t i) const
 		{
-			return contents.at(i);
+			return contents[i];
 		}
 		
 		inline size_t size() const

@@ -46,7 +46,7 @@ namespace splicpp
 		
 		static ptable::acttransition generate_act(const size_t i_set_i, const std::vector<itemset<1>>& c, const stid a, const grammar& g, const conflict_resolver f)
 		{
-			const itemset<1> i_set = c.at(i_set_i);
+			const itemset<1>& i_set = c.at(i_set_i);
 			std::vector<ptable::acttransition> result;
 		
 			const auto goto_set = goto_f<1>(i_set, a, g);
@@ -59,7 +59,7 @@ namespace splicpp
 							result.push_back(ptable::acttransition::shift(j));
 			
 			//case 2(b)
-			for(const item<1> i : i_set)
+			for(const item<1>& i : i_set)
 			{
 				stid start = g.fetch_rule(i.rule).start;
 				if(start != g.NL_REAL_START && i.at_end(g) && i.lookahead[0] == a)
@@ -99,52 +99,34 @@ namespace splicpp
 		
 		static itemset<1> closure(itemset<1> i_set, const grammar& g) //dragon book, page 261
 		{
-			std::vector<boost::optional<std::vector<stid>>> i_set_firsts;
-			for(size_t ii = 0; ii < i_set.size(); ii++)
-				i_set_firsts.push_back(closure_first(i_set[ii], g));
-		
-			bool changed;
-			do
+			const size_t rsize = g.rules_size();
+			for(size_t ii = 0; ii < i_set.size(); ii++) //i_set changes size, thus foreach does not cut it
 			{
-				changed = false;
-
-				for(size_t ii = 0; ii < i_set.size(); ii++)
-				{
-					assert(i_set.size() == i_set_firsts.size());
+				const item<1>& i = i_set[ii];
+				const auto& first = closure_first(i_set[ii], g);
+				if(!first)
+					continue;
 				
-					const item<1>& i = i_set[ii];
-
-					if(!i_set_firsts.at(ii))
+				const stid b = i.after_dot(g);
+				
+				for(rid j = 0; j < rsize; j++)
+				{
+					const rule& r = g.fetch_rule(j);
+					if(r.start != b)
 						continue;
 					
-					const stid b = i.after_dot(g);
-					
-					for(rid j = 0; j < g.rules_size(); j++)
+					for(const stid bfirst : first.get())
 					{
-						const rule& r = g.fetch_rule(j);
-						if(r.start != b)
+						if(g.fetch_symbol(bfirst)->type() != s_lit)
 							continue;
-						
-						for(const stid bfirst : i_set_firsts.at(ii).get())
-						{
-							if(g.fetch_symbol(bfirst)->type() != s_lit)
-								continue;
-						
-							const auto i_new = item<1>(j, 0, { { bfirst } });
-							
-							if(!i_set.contains(i_new))
-							{
-								i_set.push_back(i_new);
-								i_set_firsts.push_back(closure_first(i_new, g));
-								changed = true;
-							}
-						}
-					}
 					
-					if(changed)
-						break;
+						const auto i_new = item<1>(j, 0, { { bfirst } });
+						
+						if(!i_set.contains(i_new))
+							i_set.push_back(i_new);
+					}
 				}
-			} while(changed);
+			}
 
 			return i_set;
 		}
