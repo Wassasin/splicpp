@@ -99,33 +99,33 @@ namespace splicpp
 		
 		static itemset<1> closure(itemset<1> i_set, const grammar& g) //dragon book, page 261
 		{
+			std::vector<boost::optional<std::vector<stid>>> i_set_firsts;
+			for(size_t ii = 0; ii < i_set.size(); ii++)
+				i_set_firsts.push_back(closure_first(i_set[ii], g));
+		
 			bool changed;
 			do
 			{
 				changed = false;
 
-				for(const item<1> i : i_set)
+				for(size_t ii = 0; ii < i_set.size(); ii++)
 				{
-					if(i.at_end(g))
-						continue;
+					assert(i_set.size() == i_set_firsts.size());
+				
+					const item<1>& i = i_set[ii];
 
+					if(!i_set_firsts.at(ii))
+						continue;
+					
 					const stid b = i.after_dot(g);
 					
-					if(g.fetch_symbol(b)->type() != s_nlit)
-						continue;
-
-					std::vector<stid> sentence = i.next(g).remainder(g);
-					sentence.insert(sentence.end(), i.lookahead.begin(), i.lookahead.end());
-
-					const std::vector<stid> first_set = slr_parser_gen::first(sentence, g);
-
 					for(rid j = 0; j < g.rules_size(); j++)
 					{
-						const rule r = g.fetch_rule(j);
+						const rule& r = g.fetch_rule(j);
 						if(r.start != b)
 							continue;
 						
-						for(const stid bfirst : first_set)
+						for(const stid bfirst : i_set_firsts.at(ii).get())
 						{
 							if(g.fetch_symbol(bfirst)->type() != s_lit)
 								continue;
@@ -135,6 +135,7 @@ namespace splicpp
 							if(!i_set.contains(i_new))
 							{
 								i_set.push_back(i_new);
+								i_set_firsts.push_back(closure_first(i_new, g));
 								changed = true;
 							}
 						}
@@ -146,6 +147,22 @@ namespace splicpp
 			} while(changed);
 
 			return i_set;
+		}
+		
+		static boost::optional<std::vector<stid>> closure_first(const item<1>& i, const grammar& g)
+		{
+			if(i.at_end(g))
+				return boost::optional<std::vector<stid>>();
+		
+			const stid b = i.after_dot(g);
+			
+			if(g.fetch_symbol(b)->type() != s_nlit)
+				return boost::optional<std::vector<stid>>();
+		
+			std::vector<stid> sentence = i.next(g).remainder(g);
+			sentence.insert(sentence.end(), i.lookahead.begin(), i.lookahead.end());
+
+			return slr_parser_gen::first(sentence, g);
 		}
 		
 		template <size_t L>
