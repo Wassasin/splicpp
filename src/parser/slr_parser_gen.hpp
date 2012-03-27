@@ -165,6 +165,34 @@ namespace splicpp
 			return result;
 		}
 		
+		static std::vector<stid> first_cached(const std::vector<stid>& as, const std::vector<std::vector<stid>>& first_cache, const grammar& g)
+		{
+			std::vector<stid> result;
+			
+			size_t until = 1;
+			for(size_t i = 0; i < as.size() && i < until; i++)
+			{
+				const auto& first_set = first_cache[as[i]];
+				for(size_t j = 0; j < first_set.size(); j++)
+				{
+					const stid x = first_set[j];
+					if(x == g.S_EPSILON)
+					{
+						if(until == i+1)
+							until++;
+						
+						if(i == as.size()-1)
+							result.push_back(g.S_EPSILON);
+					}
+					else
+						result.push_back(x);
+				}
+			}
+			
+			remove_duplicates<stid>(result);
+			return result;
+		}
+		
 		static std::vector<stid> follow(const stid a, const grammar& g) //dragon book, page 221
 		{
 			assert(g.fetch_symbol(a)->type() == s_nlit);

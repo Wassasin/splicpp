@@ -24,7 +24,10 @@ namespace splicpp
 		{
 			const size_t terminals = g.terminals_size(), nterminals = g.nterminals_size();
 		
-			const auto c = items(g);
+			const auto pair = items(g);
+			const auto& c = pair.first;
+			const auto& forwards_to = pair.second;
+			
 			ptable result(terminals, nterminals);
 			
 			for(size_t i = 0; i < c.size(); i++)
@@ -33,10 +36,12 @@ namespace splicpp
 				std::vector<ptable::gototransition> gotorow;
 				
 				for(stid a = 0; a < g.symbols_size(); a++)
+				{
 					if(g.fetch_symbol(a)->type() == s_lit)
-						actrow.push_back(generate_act(i, c, a, g, f));
+						actrow.push_back(generate_act(i, c, forwards_to[i][a], a, g, f));
 					else if(g.fetch_symbol(a)->type() == s_nlit)
-						gotorow.push_back(generate_goto(i, c, a, g));
+						gotorow.push_back(generate_goto(forwards_to[i][a]));
+				}
 				
 				result.add_state(actrow, gotorow);
 			}
@@ -44,19 +49,16 @@ namespace splicpp
 			return result;
 		}
 		
-		static ptable::acttransition generate_act(const size_t i_set_i, const std::vector<itemset<1>>& c, const stid a, const grammar& g, const conflict_resolver f)
+		static ptable::acttransition generate_act(const size_t i_set_i, const std::vector<itemset<1>>& c, const boost::optional<stateid> forwards_to, const stid a, const grammar& g, const conflict_resolver f)
 		{
 			const itemset<1>& i_set = c[i_set_i];
 			std::vector<ptable::acttransition> result;
-		
-			const auto& goto_set = goto_f<1>(i_set, a, g);
-		
+			
 			//case 2(a)
-			for(const item<1>& i : i_set)
-				if(!i.at_end(g) && i.after_dot(g) == a)
-					for(stateid j = 0; j < c.size(); j++)
-						if(goto_set == c[j])
-							result.push_back(ptable::acttransition::shift(j));
+			if(forwards_to)
+				for(const item<1>& i : i_set)
+					if(!i.at_end(g) && i.after_dot(g) == a)
+						result.push_back(ptable::acttransition::shift(forwards_to.get()));
 			
 			//case 2(b)
 			for(const item<1>& i : i_set)
@@ -87,22 +89,20 @@ namespace splicpp
 			return result[0];
 		}
 		
-		static ptable::gototransition generate_goto(const size_t i, const std::vector<itemset<1>>& c, const stid a, const grammar& g) //dragon book, page 265
+		static ptable::gototransition generate_goto(const boost::optional<stateid> forwards_to) //dragon book, page 265
 		{
-			const auto& goto_set = goto_f<1>(c[i], a, g);
-			for(stateid j = 0; j < c.size(); j++)
-				if(goto_set == c[j])
-					return ptable::gototransition::jump(j);
+			if(forwards_to)
+				return ptable::gototransition::jump(forwards_to.get());
 			
 			return ptable::gototransition::error();
 		}
 		
-		static itemset<1> closure(itemset<1> i_set, const grammar& g) //dragon book, page 261
+		static itemset<1> closure(itemset<1> i_set, const std::vector<std::vector<stid>>& first_cache, const grammar& g) //dragon book, page 261
 		{
 			const size_t rsize = g.rules_size();
 			for(size_t i = 0; i < i_set.size(); i++) //i_set changes size, thus foreach does not cut it
 			{
-				const auto& first = closure_first(i_set[i], g);
+				const auto& first = closure_first(i_set[i], first_cache, g);
 				if(!first)
 					continue;
 				
@@ -130,7 +130,7 @@ namespace splicpp
 			return i_set;
 		}
 		
-		static boost::optional<std::vector<stid>> closure_first(const item<1> i, const grammar& g)
+		static boost::optional<std::vector<stid>> closure_first(const item<1> i, const std::vector<std::vector<stid>>& first_cache, const grammar& g)
 		{
 			if(i.at_end(g))
 				return boost::optional<std::vector<stid>>();
@@ -143,11 +143,11 @@ namespace splicpp
 			std::vector<stid> sentence = i.next(g).remainder(g);
 			sentence.insert(sentence.end(), i.lookahead.begin(), i.lookahead.end());
 
-			return slr_parser_gen::first(sentence, g);
+			return slr_parser_gen::first_cached(sentence, first_cache, g);
 		}
 		
 		template <size_t L>
-		static itemset<L> goto_f(const itemset<L>& i_set, const stid x, const grammar& g)
+		static itemset<L> goto_f(const itemset<L>& i_set, const stid x, const std::vector<std::vector<stid>>& first_cache, const grammar& g)
 		{
 			itemset<L> preselection;
 			for(size_t i = 0; i < i_set.size(); i++)
@@ -163,29 +163,62 @@ namespace splicpp
 				preselection.push_back(i_item.next(g));
 			}
 
-			return closure(preselection, g);
+			return closure(preselection, first_cache, g);
 		}
 		
-		static std::vector<itemset<1>> items(const grammar& g) //dragon book, page 261
+		static std::pair<std::vector<itemset<1>>, std::vector<std::vector<boost::optional<stateid>>>> items(const grammar& g) //dragon book, page 261
 		{
-			std::vector<itemset<1>> c = {closure({ item<1>(g.R_START, 0, { { g.L_END } }) }, g)};
+			const std::vector<std::vector<stid>>& first_cache = create_first_cache(g);
+		
+			std::vector<itemset<1>> c = {closure({ item<1>(g.R_START, 0, { { g.L_END } }) }, first_cache, g)};
+			std::vector<std::vector<boost::optional<stateid>>> f;
 			
 			//the repeat as described in the dragon book is unnecessary, already captured by the random access and c.size
-			for(size_t i = 0; i < c.size(); i++)
+			for(stateid i = 0; i < c.size(); i++)
 			{
-				const itemset<1> i_set = c.at(i);
-			
+				std::vector<boost::optional<stateid>> forwarding;
+				forwarding.reserve(g.symbols_size());
+				
 				for(stid x = 0; x < g.symbols_size(); x++)
 				{
-					auto goto_set = goto_f<1>(i_set, x, g);
-					if(goto_set.size() == 0 || goto_set.is_in(c))
+					auto goto_set = goto_f<1>(c[i], x, first_cache, g);
+					
+					if(goto_set.size() == 0)
+					{
+						forwarding.push_back(boost::optional<stateid>());
+						continue;
+					}
+					
+					bool found = false;
+					for(size_t j = 0; j < c.size(); j++)
+						if(goto_set == c[j])
+						{
+							assert(!found);
+							forwarding.push_back(j);
+							found = true;
+						}
+					
+					if(found)
 						continue;
 					
+					forwarding.push_back(c.size());
 					c.push_back(goto_set);
 				}
+				
+				f.push_back(forwarding);
 			}
 			
-			return c;
+			return std::pair<std::vector<itemset<1>>, std::vector<std::vector<boost::optional<stateid>>>>(c, f);
+		}
+		
+		static std::vector<std::vector<stid>> create_first_cache(const grammar& g)
+		{
+			std::vector<std::vector<stid>> result;
+			
+			for(stid x = 0; x < g.symbols_size(); x++)
+				result.push_back(slr_parser_gen::first(x, g));
+			
+			return result;
 		}
 	};
 }
