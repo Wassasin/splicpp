@@ -97,12 +97,12 @@ namespace splicpp
 			return ptable::gototransition::error();
 		}
 		
-		static itemset<1> closure(itemset<1> i_set, const grammar& g) //dragon book, page 261
+		static itemset<1> closure(itemset<1> i_set, const std::vector<std::vector<stid>>& first_cache, const grammar& g) //dragon book, page 261
 		{
 			const size_t rsize = g.rules_size();
 			for(size_t i = 0; i < i_set.size(); i++) //i_set changes size, thus foreach does not cut it
 			{
-				const auto& first = closure_first(i_set[i], g);
+				const auto& first = closure_first(i_set[i], first_cache, g);
 				if(!first)
 					continue;
 				
@@ -130,7 +130,7 @@ namespace splicpp
 			return i_set;
 		}
 		
-		static boost::optional<std::vector<stid>> closure_first(const item<1> i, const grammar& g)
+		static boost::optional<std::vector<stid>> closure_first(const item<1> i, const std::vector<std::vector<stid>>& first_cache, const grammar& g)
 		{
 			if(i.at_end(g))
 				return boost::optional<std::vector<stid>>();
@@ -143,11 +143,11 @@ namespace splicpp
 			std::vector<stid> sentence = i.next(g).remainder(g);
 			sentence.insert(sentence.end(), i.lookahead.begin(), i.lookahead.end());
 
-			return slr_parser_gen::first(sentence, g);
+			return slr_parser_gen::first_cached(sentence, first_cache, g);
 		}
 		
 		template <size_t L>
-		static itemset<L> goto_f(const itemset<L>& i_set, const stid x, const grammar& g)
+		static itemset<L> goto_f(const itemset<L>& i_set, const stid x, const std::vector<std::vector<stid>>& first_cache, const grammar& g)
 		{
 			itemset<L> preselection;
 			for(size_t i = 0; i < i_set.size(); i++)
@@ -163,12 +163,14 @@ namespace splicpp
 				preselection.push_back(i_item.next(g));
 			}
 
-			return closure(preselection, g);
+			return closure(preselection, first_cache, g);
 		}
 		
 		static std::pair<std::vector<itemset<1>>, std::vector<std::vector<boost::optional<stateid>>>> items(const grammar& g) //dragon book, page 261
 		{
-			std::vector<itemset<1>> c = {closure({ item<1>(g.R_START, 0, { { g.L_END } }) }, g)};
+			const std::vector<std::vector<stid>>& first_cache = create_first_cache(g);
+		
+			std::vector<itemset<1>> c = {closure({ item<1>(g.R_START, 0, { { g.L_END } }) }, first_cache, g)};
 			std::vector<std::vector<boost::optional<stateid>>> f;
 			
 			//the repeat as described in the dragon book is unnecessary, already captured by the random access and c.size
@@ -179,7 +181,7 @@ namespace splicpp
 				
 				for(stid x = 0; x < g.symbols_size(); x++)
 				{
-					auto goto_set = goto_f<1>(c[i], x, g);
+					auto goto_set = goto_f<1>(c[i], x, first_cache, g);
 					
 					if(goto_set.size() == 0)
 					{
@@ -207,6 +209,16 @@ namespace splicpp
 			}
 			
 			return std::pair<std::vector<itemset<1>>, std::vector<std::vector<boost::optional<stateid>>>>(c, f);
+		}
+		
+		static std::vector<std::vector<stid>> create_first_cache(const grammar& g)
+		{
+			std::vector<std::vector<stid>> result;
+			
+			for(stid x = 0; x < g.symbols_size(); x++)
+				result.push_back(slr_parser_gen::first(x, g));
+			
+			return result;
 		}
 	};
 }
