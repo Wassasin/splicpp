@@ -33,10 +33,18 @@ namespace splicpp
 				std::vector<ptable::gototransition> gotorow;
 				
 				for(stid a = 0; a < g.symbols_size(); a++)
+				{
+					const auto& goto_set = goto_f<1>(c[i], a, g);
+					std::vector<bool> forwards_to;
+					forwards_to.reserve(c.size());
+					for(size_t j = 0; j < c.size(); j++)
+						forwards_to.push_back(goto_set == c[j]);
+				
 					if(g.fetch_symbol(a)->type() == s_lit)
-						actrow.push_back(generate_act(i, c, a, g, f));
+						actrow.push_back(generate_act(i, c, forwards_to, a, g, f));
 					else if(g.fetch_symbol(a)->type() == s_nlit)
-						gotorow.push_back(generate_goto(i, c, a, g));
+						gotorow.push_back(generate_goto(forwards_to));
+				}
 				
 				result.add_state(actrow, gotorow);
 			}
@@ -44,18 +52,16 @@ namespace splicpp
 			return result;
 		}
 		
-		static ptable::acttransition generate_act(const size_t i_set_i, const std::vector<itemset<1>>& c, const stid a, const grammar& g, const conflict_resolver f)
+		static ptable::acttransition generate_act(const size_t i_set_i, const std::vector<itemset<1>>& c, const std::vector<bool>& forwards_to, const stid a, const grammar& g, const conflict_resolver f)
 		{
 			const itemset<1>& i_set = c[i_set_i];
 			std::vector<ptable::acttransition> result;
-		
-			const auto& goto_set = goto_f<1>(i_set, a, g);
-		
+			
 			//case 2(a)
 			for(const item<1>& i : i_set)
 				if(!i.at_end(g) && i.after_dot(g) == a)
-					for(stateid j = 0; j < c.size(); j++)
-						if(goto_set == c[j])
+					for(stateid j = 0; j < forwards_to.size(); j++)
+						if(forwards_to[j])
 							result.push_back(ptable::acttransition::shift(j));
 			
 			//case 2(b)
@@ -87,12 +93,11 @@ namespace splicpp
 			return result[0];
 		}
 		
-		static ptable::gototransition generate_goto(const size_t i, const std::vector<itemset<1>>& c, const stid a, const grammar& g) //dragon book, page 265
+		static ptable::gototransition generate_goto(const std::vector<bool>& forwards_to) //dragon book, page 265
 		{
-			const auto& goto_set = goto_f<1>(c[i], a, g);
-			for(stateid j = 0; j < c.size(); j++)
-				if(goto_set == c[j])
-					return ptable::gototransition::jump(j);
+			for(stateid i = 0; i < forwards_to.size(); i++)
+				if(forwards_to[i])
+					return ptable::gototransition::jump(i);
 			
 			return ptable::gototransition::error();
 		}
