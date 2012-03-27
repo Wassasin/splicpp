@@ -12,9 +12,6 @@
 #include "../common/errors.hpp"
 
 #include "spl.hpp"
-#include "ptable.hpp"
-#include "clr_parser_gen.hpp"
-
 #include "../ast/ast_prog.hpp"
 
 namespace splicpp
@@ -129,28 +126,7 @@ namespace splicpp
 		void print_g() const;
 		void print_t() const;
 		
-		static ptable fetch_ptable(const grammar& g)
-		{
-			const std::string filename = "cache/spl.ptable";
-			ptable result;
-			
-			if(boost::filesystem::exists(filename))
-			{
-				std::ifstream ifs(filename);
-				boost::archive::text_iarchive ia(ifs);
-				ia >> result;
-			}
-			else
-			{
-				result = splicpp::clr_parser_gen::generate(g, resolve_conflicts);
-				
-				std::ofstream ofs(filename);
-				boost::archive::text_oarchive oa(ofs);
-				oa << result;
-			}
-			
-			return result;
-		}
+		static ptable fetch_ptable(const grammar& g);
 		
 		static void resolve_conflicts(std::vector<ptable::acttransition>& transitions, const size_t i, const std::vector<itemset<1>> c, const stid a, const grammar g)
 		{

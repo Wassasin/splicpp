@@ -38,19 +38,19 @@ namespace splicpp
 			return(!((*this)==y));
 		}
 
-		bool contains(item<L> x) const
+		bool contains(const item<L> x) const
 		{
 			for(size_t i = 0; i < contents.size(); i++)
-				if(contents.at(i) == x)
+				if(contents[i] == x)
 					return true;
 
 			return false;
 		}
 
-		bool is_in(const std::vector<itemset<L>> c)
+		bool is_in(const std::vector<itemset<L>>& c)
 		{
 			for(size_t i = 0; i < c.size(); i++)
-				if((*this) == c.at(i))
+				if((*this) == c[i])
 					return true;
 
 			return false;
@@ -96,7 +96,7 @@ namespace splicpp
 			std::cout << '{';
 			for(size_t i = 0; i < contents.size(); i++)
 			{
-				contents.at(i).print(g);
+				contents[i].print(g);
 				std::cout << ", ";
 			}
 			std::cout << '}';
@@ -106,7 +106,7 @@ namespace splicpp
 		{
 			for(size_t i = 0; i < c.size(); i++)
 			{
-				c.at(i).print(g);
+				c[i].print(g);
 				std::cout << std::endl << std::endl;
 			}
 		}
