@@ -24,7 +24,10 @@ namespace splicpp
 		{
 			const size_t terminals = g.terminals_size(), nterminals = g.nterminals_size();
 		
-			const auto c = items(g);
+			const auto pair = items(g);
+			const auto& c = pair.first;
+			const auto& forwards_to = pair.second;
+			
 			ptable result(terminals, nterminals);
 			
 			for(size_t i = 0; i < c.size(); i++)
@@ -34,16 +37,10 @@ namespace splicpp
 				
 				for(stid a = 0; a < g.symbols_size(); a++)
 				{
-					const auto& goto_set = goto_f<1>(c[i], a, g);
-					std::vector<bool> forwards_to;
-					forwards_to.reserve(c.size());
-					for(size_t j = 0; j < c.size(); j++)
-						forwards_to.push_back(goto_set == c[j]);
-				
 					if(g.fetch_symbol(a)->type() == s_lit)
-						actrow.push_back(generate_act(i, c, forwards_to, a, g, f));
+						actrow.push_back(generate_act(i, c, forwards_to[i][a], a, g, f));
 					else if(g.fetch_symbol(a)->type() == s_nlit)
-						gotorow.push_back(generate_goto(forwards_to));
+						gotorow.push_back(generate_goto(forwards_to[i][a]));
 				}
 				
 				result.add_state(actrow, gotorow);
@@ -52,17 +49,16 @@ namespace splicpp
 			return result;
 		}
 		
-		static ptable::acttransition generate_act(const size_t i_set_i, const std::vector<itemset<1>>& c, const std::vector<bool>& forwards_to, const stid a, const grammar& g, const conflict_resolver f)
+		static ptable::acttransition generate_act(const size_t i_set_i, const std::vector<itemset<1>>& c, const boost::optional<stateid> forwards_to, const stid a, const grammar& g, const conflict_resolver f)
 		{
 			const itemset<1>& i_set = c[i_set_i];
 			std::vector<ptable::acttransition> result;
 			
 			//case 2(a)
-			for(const item<1>& i : i_set)
-				if(!i.at_end(g) && i.after_dot(g) == a)
-					for(stateid j = 0; j < forwards_to.size(); j++)
-						if(forwards_to[j])
-							result.push_back(ptable::acttransition::shift(j));
+			if(forwards_to)
+				for(const item<1>& i : i_set)
+					if(!i.at_end(g) && i.after_dot(g) == a)
+						result.push_back(ptable::acttransition::shift(forwards_to.get()));
 			
 			//case 2(b)
 			for(const item<1>& i : i_set)
@@ -93,11 +89,10 @@ namespace splicpp
 			return result[0];
 		}
 		
-		static ptable::gototransition generate_goto(const std::vector<bool>& forwards_to) //dragon book, page 265
+		static ptable::gototransition generate_goto(const boost::optional<stateid> forwards_to) //dragon book, page 265
 		{
-			for(stateid i = 0; i < forwards_to.size(); i++)
-				if(forwards_to[i])
-					return ptable::gototransition::jump(i);
+			if(forwards_to)
+				return ptable::gototransition::jump(forwards_to.get());
 			
 			return ptable::gototransition::error();
 		}
@@ -171,26 +166,47 @@ namespace splicpp
 			return closure(preselection, g);
 		}
 		
-		static std::vector<itemset<1>> items(const grammar& g) //dragon book, page 261
+		static std::pair<std::vector<itemset<1>>, std::vector<std::vector<boost::optional<stateid>>>> items(const grammar& g) //dragon book, page 261
 		{
 			std::vector<itemset<1>> c = {closure({ item<1>(g.R_START, 0, { { g.L_END } }) }, g)};
+			std::vector<std::vector<boost::optional<stateid>>> f;
 			
 			//the repeat as described in the dragon book is unnecessary, already captured by the random access and c.size
-			for(size_t i = 0; i < c.size(); i++)
+			for(stateid i = 0; i < c.size(); i++)
 			{
-				const itemset<1> i_set = c.at(i);
-			
+				std::vector<boost::optional<stateid>> forwarding;
+				forwarding.reserve(g.symbols_size());
+				
 				for(stid x = 0; x < g.symbols_size(); x++)
 				{
-					auto goto_set = goto_f<1>(i_set, x, g);
-					if(goto_set.size() == 0 || goto_set.is_in(c))
+					auto goto_set = goto_f<1>(c[i], x, g);
+					
+					if(goto_set.size() == 0)
+					{
+						forwarding.push_back(boost::optional<stateid>());
+						continue;
+					}
+					
+					bool found = false;
+					for(size_t j = 0; j < c.size(); j++)
+						if(goto_set == c[j])
+						{
+							assert(!found);
+							forwarding.push_back(j);
+							found = true;
+						}
+					
+					if(found)
 						continue;
 					
+					forwarding.push_back(c.size());
 					c.push_back(goto_set);
 				}
+				
+				f.push_back(forwarding);
 			}
 			
-			return c;
+			return std::pair<std::vector<itemset<1>>, std::vector<std::vector<boost::optional<stateid>>>>(c, f);
 		}
 	};
 }
