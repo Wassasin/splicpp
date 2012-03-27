@@ -1,5 +1,7 @@
 #include "bnf_parser.hpp"
 
+#include "clr_parser_gen.hpp"
+
 namespace splicpp
 {
 		stid bnf_parser::try_add_symbol(grammar& g, const std::string name) const
@@ -141,5 +143,10 @@ namespace splicpp
 			cst_element e = t.parse(l);
 			
 			parse_syntax(g, lang, e.as_node()[0]->as_node());
+		}
+		
+		ptable bnf_parser::fetch_ptable(const grammar& g)
+		{
+			return clr_parser_gen::generate(g);
 		}
 }

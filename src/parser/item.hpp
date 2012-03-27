@@ -28,7 +28,7 @@ namespace splicpp
 		, lookahead(lookahead)
 		{}
 
-		bool operator==(const item<L>& y) const
+		bool operator==(const item<L> y) const
 		{
 			if(this->rule != y.rule || this->dot != y.dot)
 				return false;
@@ -41,7 +41,7 @@ namespace splicpp
 			return true;
 		}
 
-		bool operator!=(const item<L>& y) const
+		bool operator!=(const item<L> y) const
 		{
 			return(!((*this)==y));
 		}

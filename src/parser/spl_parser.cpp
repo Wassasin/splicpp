@@ -2,7 +2,9 @@
 
 #include "../common/sloc.hpp"
 
+#include "ptable.hpp"
 #include "lexer.hpp"
+#include "clr_parser_gen.hpp"
 
 namespace splicpp
 {
@@ -24,7 +26,28 @@ namespace splicpp
 			t.print(g);
 		}
 		
-		
+		ptable spl_parser::fetch_ptable(const grammar& g)
+		{
+			const std::string filename = "cache/spl.ptable";
+			ptable result;
+			
+			if(boost::filesystem::exists(filename))
+			{
+				std::ifstream ifs(filename);
+				boost::archive::text_iarchive ia(ifs);
+				ia >> result;
+			}
+			else
+			{
+				result = splicpp::clr_parser_gen::generate(g, resolve_conflicts);
+				
+				std::ofstream ofs(filename);
+				boost::archive::text_oarchive oa(ofs);
+				oa << result;
+			}
+			
+			return result;
+		}
 		
 		
 		std::shared_ptr<ast_prog> spl_parser::parse_prog(const std::string str, const cst_node n) const
