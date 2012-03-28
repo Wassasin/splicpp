@@ -30,6 +30,7 @@ namespace splicpp
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		void assign(sid i);
 		void assign_ids(const varcontext& c);
+		sid fetch_id() const;
 		
 		std::string fetch_name() const;
 	};

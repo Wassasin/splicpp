@@ -54,8 +54,7 @@ int main(int argc, char **argv)
 	splicpp::symboltable s;
 	
 	prog->register_ids(s);
-	
-	s.print(std::cout);
+	s.check_types();
 	
 	return 0;
 }

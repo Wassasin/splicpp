@@ -21,6 +21,11 @@ namespace splicpp
 	{
 		ast_type::register_type(t, s, c);
 	}
+	
+	std::shared_ptr<sl_type> ast_var_decl::fetch_assigned_type(const typecontext& c) const
+	{
+		return t->fetch_type(c);
+	}
 
 	void ast_var_decl::pretty_print(std::ostream& s, const uint tab) const
 	{

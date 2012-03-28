@@ -15,6 +15,14 @@ namespace splicpp
 		types[i] = t;
 	}
 	
+	bool typecontext::is_registered(const sid i) const
+	{
+		if(i >= types.size())
+			return false;
+		
+		return types.at(i);
+	}
+	
 	std::shared_ptr<sl_type> typecontext::operator[](const sid i) const
 	{
 		const auto t = types.at(i);

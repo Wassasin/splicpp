@@ -24,6 +24,7 @@ namespace splicpp
 		{}
 		
 		void register_type(const sid i, const std::shared_ptr<sl_type> t);
+		bool is_registered(const sid i) const;
 		std::shared_ptr<sl_type> operator[](const sid i) const;
 		std::shared_ptr<sl_type_unbound> create_fresh();
 	};

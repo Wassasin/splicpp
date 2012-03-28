@@ -30,6 +30,11 @@ namespace splicpp
 		assign(c[name]);
 	}
 	
+	sid ast_id::fetch_id() const
+	{
+		return id.get();
+	}
+	
 	std::string ast_id::fetch_name() const
 	{
 		return name;

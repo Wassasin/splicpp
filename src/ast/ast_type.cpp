@@ -1,5 +1,11 @@
 #include "ast_type.hpp"
 
+#include "../typing/typecontext.hpp"
+#include "../typing/types/sl_type_int.hpp"
+#include "../typing/types/sl_type_bool.hpp"
+#include "../typing/types/sl_type_tuple.hpp"
+#include "../typing/types/sl_type_array.hpp"
+
 namespace splicpp
 {
 	void ast_type::register_type(const std::shared_ptr<ast_type> t, symboltable& s, varcontext& c)
@@ -29,6 +35,11 @@ namespace splicpp
 		s << "Int";
 	}
 	
+	std::shared_ptr<sl_type> ast_type_int::fetch_type(const typecontext&) const
+	{
+		return std::shared_ptr<sl_type>(new sl_type_int());
+	}
+	
 	/* ast_type_bool */
 	
 	ast_type::ast_type_type ast_type_bool::type() const
@@ -39,6 +50,11 @@ namespace splicpp
 	void ast_type_bool::pretty_print(std::ostream& s, const uint) const
 	{
 		s << "Bool";
+	}
+	
+	std::shared_ptr<sl_type> ast_type_bool::fetch_type(const typecontext&) const
+	{
+		return std::shared_ptr<sl_type>(new sl_type_bool());
 	}
 	
 	/* ast_type_tuple */
@@ -63,6 +79,11 @@ namespace splicpp
 		s << ")";
 	}
 	
+	std::shared_ptr<sl_type> ast_type_tuple::fetch_type(const typecontext& c) const
+	{
+		return std::shared_ptr<sl_type>(new sl_type_tuple(t_left->fetch_type(c), t_right->fetch_type(c)));
+	}
+	
 	/* ast_type_array */
 	
 	ast_type::ast_type_type ast_type_array::type() const
@@ -80,6 +101,11 @@ namespace splicpp
 		s << "[";
 		t->pretty_print(s, tab);
 		s << "]";
+	}
+	
+	std::shared_ptr<sl_type> ast_type_array::fetch_type(const typecontext& c) const
+	{
+		return std::shared_ptr<sl_type>(new sl_type_array(t->fetch_type(c)));
 	}
 	
 	/* ast_type_id */
@@ -102,5 +128,10 @@ namespace splicpp
 	void ast_type_id::pretty_print(std::ostream& s, const uint tab) const
 	{
 		id->pretty_print(s, tab);
+	}
+	
+	std::shared_ptr<sl_type> ast_type_id::fetch_type(const typecontext& c) const
+	{
+		return c[id->fetch_id()];
 	}
 }

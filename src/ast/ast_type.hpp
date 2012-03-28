@@ -19,6 +19,8 @@ namespace splicpp
 	class ast_type_id;
 	class symboltable;
 	class varcontext;
+	class sl_type;
+	class typecontext;
 
 	class ast_type : public ast
 	{
@@ -41,6 +43,8 @@ namespace splicpp
 		virtual ast_type_type type() const = 0;
 		virtual void pretty_print(std::ostream& s, const uint tab) const = 0;
 		
+		virtual std::shared_ptr<sl_type> fetch_type(const typecontext& c) const = 0;
+		
 		static void register_type(const std::shared_ptr<ast_type> t, symboltable& s, varcontext& c);
 	};
 	
@@ -53,6 +57,7 @@ namespace splicpp
 	
 		virtual ast_type_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
+		virtual std::shared_ptr<sl_type> fetch_type(const typecontext& c) const;
 	};
 	
 	class ast_type_bool : public ast_type
@@ -64,6 +69,7 @@ namespace splicpp
 	
 		virtual ast_type_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
+		virtual std::shared_ptr<sl_type> fetch_type(const typecontext& c) const;
 	};
 	
 	class ast_type_tuple : public ast_type
@@ -82,6 +88,7 @@ namespace splicpp
 	
 		virtual ast_type_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
+		virtual std::shared_ptr<sl_type> fetch_type(const typecontext& c) const;
 	};
 	
 	class ast_type_array : public ast_type
@@ -98,6 +105,7 @@ namespace splicpp
 		
 		virtual ast_type_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
+		virtual std::shared_ptr<sl_type> fetch_type(const typecontext& c) const;
 	};
 	
 	class ast_type_id : public ast_type
@@ -115,6 +123,7 @@ namespace splicpp
 		
 		virtual ast_type_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
+		virtual std::shared_ptr<sl_type> fetch_type(const typecontext& c) const;
 	};
 }
 

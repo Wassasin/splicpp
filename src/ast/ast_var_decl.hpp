@@ -18,6 +18,8 @@ namespace splicpp
 	class varcontext;
 	class ast_type;
 	class ast_exp;
+	class sl_type;
+	class typecontext;
 
 	class ast_var_decl : public ast
 	{
@@ -38,6 +40,8 @@ namespace splicpp
 		
 		void assign_ids(const varcontext& c);
 		void register_types(symboltable& s, varcontext& c);
+		
+		std::shared_ptr<sl_type> fetch_assigned_type(const typecontext& c) const;
 		
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};

@@ -20,6 +20,7 @@ namespace splicpp
 	class ast_var_decl;
 	class ast_f_arg;
 	class ast_type_id;
+	class typecontext;
 
 	class symboltable
 	{
@@ -52,8 +53,10 @@ namespace splicpp
 		std::vector<std::shared_ptr<ast_var_decl>> local_vars;
 		std::vector<std::shared_ptr<ast_type_id>> types;
 	
-		sid create_entry(symbolref::symbolreftype t, size_t i);
-	
+		sid create_entry(const symbolref::symbolreftype t, const size_t i);
+		std::vector<sid> select_all(const symbolref::symbolreftype t) const;
+		
+		void print_name(const sid i, std::ostream& s) const;
 	public:
 		symboltable()
 		: index()
@@ -72,7 +75,9 @@ namespace splicpp
 		sid reg_lvar(std::shared_ptr<ast_var_decl> lv);
 		sid reg_type(std::shared_ptr<ast_type_id> t);
 		
+		void check_types() const;
 		void print(std::ostream& s) const;
+		void print(const typecontext& c, std::ostream& s) const;
 	};
 }
 
