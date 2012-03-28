@@ -33,7 +33,8 @@ namespace splicpp
 			type_bool,
 			type_tuple,
 			type_array,
-			type_id
+			type_id,
+			type_void
 		};
 		
 		ast_type(const sloc sl)
@@ -121,6 +122,18 @@ namespace splicpp
 		void assign(sid i);
 		std::string fetch_name() const;
 		
+		virtual ast_type_type type() const;
+		virtual void pretty_print(std::ostream& s, const uint tab) const;
+		virtual std::shared_ptr<sl_type> fetch_type(const typecontext& c) const;
+	};
+	
+	class ast_type_void : public ast_type
+	{
+	public:
+		ast_type_void(const sloc sl)
+		: ast_type(sl)
+		{}
+	
 		virtual ast_type_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		virtual std::shared_ptr<sl_type> fetch_type(const typecontext& c) const;

@@ -109,19 +109,16 @@ namespace splicpp
 			n[5]->assert_token(g, "l_cbracket_left");
 			n[8]->assert_token(g, "l_cbracket_right");
 			
-			boost::optional<std::shared_ptr<ast_type>> rtype;
+			std::shared_ptr<ast_type> rtype;
 			if(n[0]->is_node(g, "nl_type"))
 				rtype = parse_type(str, n[0]->as_node());
-			else if(!n[0]->is_token(g, "l_void"))
+			else if(n[0]->is_token(g, "l_void"))
+				rtype = std::shared_ptr<ast_type>(new ast_type_void(n[0]->as_token().as_sloc()));
+			else
 				throw unexpected_element(n[0]);
 			
 			auto id = parse_id(str, n[1]);
-			
-			std::shared_ptr<ast_fun_decl> result;
-			if(rtype)
-				result = decltype(result)(new ast_fun_decl(rtype.get(), id, n.sl()));
-			else
-				result = decltype(result)(new ast_fun_decl(id, n.sl()));
+			std::shared_ptr<ast_fun_decl> result(new ast_fun_decl(rtype, id, n.sl()));
 			
 			auto args = autoparse_opt<std::vector<std::shared_ptr<ast_f_arg>>>(str, n[3]->as_node(), &spl_parser::parse_f_args);
 			auto decls = autoparse_kleene<std::shared_ptr<ast_var_decl>>(str, n[6]->as_node(), &spl_parser::parse_var_decl);

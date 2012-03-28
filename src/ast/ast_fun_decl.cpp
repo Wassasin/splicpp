@@ -1,5 +1,7 @@
 #include "ast_fun_decl.hpp"
 
+#include "../typing/types/sl_type_function.hpp"
+
 namespace splicpp
 {
 	void ast_fun_decl::add_arg(std::shared_ptr<ast_f_arg> arg)
@@ -32,8 +34,7 @@ namespace splicpp
 		varcontext cvar = c;
 		varcontext ctype; //Fresh context
 		
-		if(t)
-			ast_type::register_type(t.get(), s, ctype);
+		ast_type::register_type(t, s, ctype);
 		
 		for(auto arg : args)
 		{
@@ -49,21 +50,20 @@ namespace splicpp
 		
 		for(auto stmt : stmts)
 			stmt->assign_ids(cvar);
-		/*
-		std::cout << id->fetch_name() << ": " << std::endl;
-		cvar.print(std::cout);
+	}
+	
+	std::shared_ptr<sl_type> ast_fun_decl::fetch_assigned_type(const typecontext& c) const
+	{
+		std::vector<std::shared_ptr<sl_type>> t_args;
+		for(const auto arg : args)
+			t_args.push_back(arg->fetch_assigned_type(c));
 		
-		std::cout << id->fetch_name() << " (types): " << std::endl;
-		ctype.print(std::cout);
-		*/
+		return(std::shared_ptr<sl_type>(new sl_type_function(t_args, this->t->fetch_type(c))));
 	}
 	
 	void ast_fun_decl::pretty_print(std::ostream& s, const uint tab) const
 	{
-		if(t)
-			t.get()->pretty_print(s, tab);
-		else
-			s << "Void";
+		t->pretty_print(s, tab);
 		
 		s << ' ';
 		id->pretty_print(s, tab);

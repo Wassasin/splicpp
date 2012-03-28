@@ -16,6 +16,11 @@ namespace splicpp
 	{
 		ast_type::register_type(t, s, c);
 	}
+	
+	std::shared_ptr<sl_type> ast_f_arg::fetch_assigned_type(const typecontext& c) const
+	{
+		return t->fetch_type(c);
+	}
 
 	void ast_f_arg::pretty_print(std::ostream& s, const uint tab) const
 	{

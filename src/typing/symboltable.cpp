@@ -81,6 +81,9 @@ namespace splicpp
 		for(const sid i : select_all(symbolref::symbolreftype::t_var))
 			c.register_type(i, vars[index[i].i]->fetch_assigned_type(c));
 		
+		for(const sid i : select_all(symbolref::symbolreftype::t_fun))
+			c.register_type(i, funs[index[i].i]->fetch_assigned_type(c));
+		
 		print(c, std::cout);
 	}
 	

@@ -5,6 +5,7 @@
 #include "../typing/types/sl_type_bool.hpp"
 #include "../typing/types/sl_type_tuple.hpp"
 #include "../typing/types/sl_type_array.hpp"
+#include "../typing/types/sl_type_void.hpp"
 
 namespace splicpp
 {
@@ -133,5 +134,22 @@ namespace splicpp
 	std::shared_ptr<sl_type> ast_type_id::fetch_type(const typecontext& c) const
 	{
 		return c[id->fetch_id()];
+	}
+	
+	/* ast_type_void */
+	
+	ast_type::ast_type_type ast_type_void::type() const
+	{
+		return type_void;
+	}
+	
+	void ast_type_void::pretty_print(std::ostream& s, const uint) const
+	{
+		s << "Void";
+	}
+	
+	std::shared_ptr<sl_type> ast_type_void::fetch_type(const typecontext&) const
+	{
+		return std::shared_ptr<sl_type>(new sl_type_void());
 	}
 }

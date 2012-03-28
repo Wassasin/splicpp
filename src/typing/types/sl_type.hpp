@@ -23,7 +23,8 @@ namespace splicpp
 			t_array,
 			t_unbound,
 			t_int,
-			t_bool
+			t_bool,
+			t_void
 		};
 		
 		virtual ~sl_type() {}
