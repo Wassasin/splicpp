@@ -1,6 +1,7 @@
 #include "sl_type_unbound.hpp"
 
 #include "sl_type.hpp"
+#include "../unification_error.hpp"
 
 namespace splicpp
 {
@@ -22,6 +23,19 @@ namespace splicpp
 	void sl_type_unbound::print(std::ostream& s) const
 	{
 		s << "t" << id;
+	}
+	
+	substitution sl_type_unbound::unify(const std::shared_ptr<sl_type> t, typecontext&) const
+	{
+		const std::shared_ptr<sl_type_unbound> copy(new sl_type_unbound(*this));
+	
+		for(const auto tx : t->tv())
+			if(copy->equals(tx))
+				throw unification_error(std::static_pointer_cast<sl_type>(copy), t);
+		
+		substitution s;
+		s.add(copy, t);
+		return s;
 	}
 	
 	std::vector<std::shared_ptr<sl_type_unbound>> sl_type_unbound::tv() const

@@ -12,7 +12,7 @@ namespace splicpp
 		virtual void print(std::ostream& s) const;
 		
 		virtual std::vector<std::shared_ptr<sl_type_unbound>> tv() const;
-		//virtual substitution unify(const std::shared_ptr<sl_type> t, typecontext& c) const; //TODO
+		virtual substitution unify(const std::shared_ptr<sl_type> t, typecontext& c) const;
 		virtual std::shared_ptr<sl_type> apply(const substitution& s) const;
 	};
 }

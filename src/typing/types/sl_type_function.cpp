@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include "../../common/utils.hpp"
+#include "../unification_error.hpp"
 
 namespace splicpp
 {	
@@ -40,7 +41,23 @@ namespace splicpp
 		return result;
 	}
 	
-	//substitution sl_type_function::unify(const std::shared_ptr<sl_type> t, typecontext& c) const; //TODO
+	substitution sl_type_function::unify(const std::shared_ptr<sl_type> t, typecontext& c) const
+	{
+		if(t->type() != t_function)
+			throw unification_error(this, t.get());
+		
+		std::shared_ptr<sl_type_function> tf = std::dynamic_pointer_cast<sl_type_function>(t);
+		
+		if(args.size() != tf->args.size())
+			throw unification_error(this, tf.get());
+			
+		substitution s;
+		for(size_t i = 0; i < args.size(); i++)
+			s = s.composite(args[i]->unify(tf->args[i], c));
+		
+		return s.composite(r->unify(tf->r, c));
+	}
+	
 	std::shared_ptr<sl_type> sl_type_function::apply(const substitution& s) const
 	{
 		std::vector<std::shared_ptr<sl_type>> newargs;

@@ -36,6 +36,11 @@ namespace splicpp
 		return result;
 	}
 	
+	substitution sl_type_universal::unify(const std::shared_ptr<sl_type> t, typecontext& c) const
+	{
+		return t->unify(t, c);
+	}
+	
 	std::shared_ptr<sl_type> sl_type_universal::apply(const substitution& s) const
 	{
 		const auto tt = t->apply(s);
