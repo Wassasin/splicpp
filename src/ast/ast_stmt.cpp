@@ -1,5 +1,9 @@
 #include "ast_stmt.hpp"
 
+#include "ast_id.hpp"
+#include "ast_exp.hpp"
+#include "ast_fun_call.hpp"
+
 namespace splicpp
 {
 	/* ast_stmt_stmts */

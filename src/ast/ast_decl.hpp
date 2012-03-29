@@ -5,14 +5,13 @@
 
 #include "ast.hpp"
 
-#include "ast_fun_decl.hpp"
-#include "ast_var_decl.hpp"
-
 namespace splicpp
 {
 	class symboltable;
 	class varcontext;
-
+	class ast_fun_decl;
+	class ast_var_decl;
+	
 	class ast_decl : public ast
 	{
 	public:

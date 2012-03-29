@@ -6,12 +6,6 @@
 
 #include "ast.hpp"
 
-#include "ast_id.hpp"
-#include "ast_exp.hpp"
-
-#include "../typing/symboltable.hpp"
-#include "../typing/varcontext.hpp"
-
 namespace splicpp
 {
 	class symboltable;

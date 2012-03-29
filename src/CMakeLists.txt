@@ -19,6 +19,7 @@ add_executable(splicpp
 	parser/lexer.cpp
 	parser/ptable.cpp
 	parser/spl_parser.cpp
+	parser/clr_parser_gen.cpp
 	
 	ast/ast.cpp
 	ast/ast_construct.cpp

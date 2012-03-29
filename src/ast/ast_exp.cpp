@@ -1,5 +1,8 @@
 #include "ast_exp.hpp"
 
+#include "ast_id.hpp"
+#include "ast_fun_call.hpp"
+
 namespace splicpp
 {
 	/* ast_exp_id */

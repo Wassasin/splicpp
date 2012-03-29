@@ -1,11 +1,17 @@
 #ifndef AST_PROG_H
 #define AST_PROG_H
 
+#include <vector>
+#include <memory>
+
 #include "ast.hpp"
-#include "ast_decl.hpp"
 
 namespace splicpp
 {
+	class ast_decl;
+	class symboltable;
+	class varcontext;
+	
 	class ast_prog : public ast
 	{
 		std::vector<std::shared_ptr<ast_decl>> decls;

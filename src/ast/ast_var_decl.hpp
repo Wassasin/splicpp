@@ -5,21 +5,17 @@
 
 #include "ast.hpp"
 
-#include "ast_type.hpp"
-#include "ast_id.hpp"
-#include "ast_exp.hpp"
-
-#include "../typing/symboltable.hpp"
-#include "../typing/varcontext.hpp"
+#include "../common/typedefs.hpp"
 
 namespace splicpp
 {
-	class symboltable;
-	class varcontext;
 	class ast_type;
 	class ast_exp;
-	class sl_type;
+	class ast_id;
+	class symboltable;
+	class varcontext;
 	class typecontext;
+	class sl_type;
 
 	class ast_var_decl : public ast
 	{

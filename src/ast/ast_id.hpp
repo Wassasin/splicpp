@@ -7,9 +7,6 @@
 
 #include "ast.hpp"
 
-#include "../typing/symboltable.hpp"
-#include "../typing/varcontext.hpp"
-
 namespace splicpp
 {
 	class symboltable;

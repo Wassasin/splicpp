@@ -1,8 +1,9 @@
 #include "ast_id.hpp"
 
-#include "../common/errors.hpp"
-
 #include <sstream>
+
+#include "../common/errors.hpp"
+#include "../typing/varcontext.hpp"
 
 namespace splicpp
 {

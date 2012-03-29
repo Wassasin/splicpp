@@ -1,5 +1,8 @@
 #include "ast_f_arg.hpp"
 
+#include "ast_id.hpp"
+#include "ast_type.hpp"
+
 namespace splicpp
 {
 	void ast_f_arg::assign(sid i)

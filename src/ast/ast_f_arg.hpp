@@ -5,12 +5,6 @@
 
 #include "ast.hpp"
 
-#include "ast_type.hpp"
-#include "ast_id.hpp"
-
-#include "../typing/symboltable.hpp"
-#include "../typing/varcontext.hpp"
-
 namespace splicpp
 {
 	class ast_type;

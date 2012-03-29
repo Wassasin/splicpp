@@ -6,6 +6,15 @@
 #include "lexer.hpp"
 #include "clr_parser_gen.hpp"
 
+#include "../ast/ast_decl.hpp"
+#include "../ast/ast_type.hpp"
+#include "../ast/ast_stmt.hpp"
+#include "../ast/ast_fun_call.hpp"
+#include "../ast/ast_var_decl.hpp"
+#include "../ast/ast_fun_decl.hpp"
+#include "../ast/ast_f_arg.hpp"
+#include "../ast/ast_id.hpp"
+
 namespace splicpp
 {
 		std::shared_ptr<ast_prog> spl_parser::parse(std::string str) const

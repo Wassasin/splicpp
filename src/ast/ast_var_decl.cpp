@@ -1,5 +1,9 @@
 #include "ast_var_decl.hpp"
 
+#include "ast_id.hpp"
+#include "ast_exp.hpp"
+#include "ast_type.hpp"
+
 namespace splicpp
 {
 	void ast_var_decl::assign(sid i)

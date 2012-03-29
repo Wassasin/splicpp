@@ -7,17 +7,14 @@
 
 #include "ast.hpp"
 
-#include "ast_id.hpp"
-#include "ast_fun_call.hpp"
-
-#include "../typing/symboltable.hpp"
-#include "../typing/varcontext.hpp"
-
 namespace splicpp
 {
+	class ast_id;
 	class ast_fun_call;
 	class symboltable;
 	class varcontext;
+	class sl_type;
+	class typecontext;
 
 	class ast_exp : public ast
 	{

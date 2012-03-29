@@ -13,9 +13,18 @@
 
 #include "spl.hpp"
 #include "../ast/ast_prog.hpp"
+#include "../ast/ast_exp.hpp"
 
 namespace splicpp
 {
+	class ast_type;
+	class ast_f_arg;
+	class ast_stmt;
+	class ast_fun_call;
+	class ast_id;
+	class ast_fun_decl;
+	class ast_var_decl;
+	
 	class spl_parser
 	{
 		static const char sep = ' ';

@@ -6,6 +6,8 @@
 
 #include "../common/rule.hpp"
 #include "../common/typedefs.hpp"
+#include "../common/generic.hpp"
+#include "../common/grammar.hpp"
 
 namespace splicpp
 {

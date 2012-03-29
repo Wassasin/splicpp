@@ -1,5 +1,9 @@
 #include "ast_type.hpp"
 
+#include "ast_id.hpp"
+
+#include "../typing/symboltable.hpp"
+#include "../typing/varcontext.hpp"
 #include "../typing/typecontext.hpp"
 #include "../typing/types/sl_type_int.hpp"
 #include "../typing/types/sl_type_bool.hpp"

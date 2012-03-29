@@ -4,6 +4,7 @@
 #include "common/io.hpp"
 #include "parser/spl_parser.hpp"
 #include "ast/ast_prog.hpp"
+#include "typing/symboltable.hpp"
 
 int main(int argc, char **argv)
 {

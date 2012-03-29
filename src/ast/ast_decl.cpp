@@ -1,5 +1,10 @@
 #include "ast_decl.hpp"
 
+#include "../typing/varcontext.hpp"
+#include "../typing/symboltable.hpp"
+
+#include "ast_var_decl.hpp"
+
 namespace splicpp
 {
 	/* ast_decl_var */

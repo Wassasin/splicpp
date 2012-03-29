@@ -1,5 +1,8 @@
 #include "ast_fun_call.hpp"
 
+#include "ast_id.hpp"
+#include "ast_exp.hpp"
+
 namespace splicpp
 {
 	void ast_fun_call::add_arg(std::shared_ptr<ast_exp> exp)

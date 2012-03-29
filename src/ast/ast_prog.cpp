@@ -1,5 +1,10 @@
 #include "ast_prog.hpp"
 
+#include "../typing/varcontext.hpp"
+#include "../typing/symboltable.hpp"
+
+#include "ast_decl.hpp"
+
 namespace splicpp
 {
 	void ast_prog::add_decl(std::shared_ptr<ast_decl> decl)

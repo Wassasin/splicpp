@@ -1,6 +1,13 @@
 #include "ast_fun_decl.hpp"
 
+#include "../typing/varcontext.hpp"
+#include "../typing/symboltable.hpp"
+
 #include "../typing/types/sl_type_function.hpp"
+
+#include "ast_id.hpp"
+#include "ast_f_arg.hpp"
+#include "ast_stmt.hpp"
 
 namespace splicpp
 {

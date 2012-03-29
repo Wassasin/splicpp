@@ -2,25 +2,24 @@
 #define AST_FUN_DECL_H
 
 #include <boost/optional.hpp>
+#include <memory>
+#include <vector>
 
 #include "ast.hpp"
 
-#include "ast_type.hpp"
-#include "ast_id.hpp"
-#include "ast_f_arg.hpp"
-#include "ast_var_decl.hpp"
-#include "ast_stmt.hpp"
-
-#include "../typing/symboltable.hpp"
-#include "../typing/varcontext.hpp"
+#include "../common/typedefs.hpp"
 
 namespace splicpp
 {
 	class ast_f_arg;
 	class ast_var_decl;
 	class ast_stmt;
+	class ast_type;
+	class ast_id;
 	class symboltable;
 	class varcontext;
+	class sl_type;
+	class typecontext;
 
 	class ast_fun_decl : public ast
 	{

@@ -5,16 +5,16 @@
 
 #include "ast.hpp"
 
-#include "ast_id.hpp"
-#include "ast_exp.hpp"
-#include "ast_fun_call.hpp"
-
-#include "../typing/symboltable.hpp"
-#include "../typing/varcontext.hpp"
+#include <memory>
+#include <vector>
 
 namespace splicpp
 {
+	class ast_id;
+	class ast_exp;
 	class ast_fun_call;
+	class symboltable;
+	class varcontext;
 
 	class ast_stmt : public ast
 	{
