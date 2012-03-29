@@ -75,6 +75,9 @@ namespace splicpp
 	{
 		typecontext c;
 		
+		for(const sid i : select_all(symbolref::symbolreftype::t_construct))
+			c.register_type(i, conss[index[i].i]->fetch_type(c));
+		
 		for(const sid i : select_all(symbolref::symbolreftype::t_type))
 			c.register_type(i, std::static_pointer_cast<sl_type>(c.create_fresh()));
 		
@@ -89,7 +92,6 @@ namespace splicpp
 		
 		for(const sid i : select_all(symbolref::symbolreftype::t_local_var))
 			c.register_type(i, local_vars[index[i].i]->fetch_assigned_type(c));
-		
 		
 		print(c, std::cout);
 	}
