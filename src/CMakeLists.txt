@@ -63,7 +63,7 @@ endmacro()
 add_grammar(bnf.bnf)
 add_grammar(spl.bnf)
 
-add_definitions("-Wall -Wextra -Weffc++ -std=c++0x -pedantic -g3 -fno-inline")
+add_definitions("-Wall -Wextra -Weffc++ -std=c++0x -pedantic -g3 -O3")
 
 find_package(Boost COMPONENTS system program_options regex filesystem serialization REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
