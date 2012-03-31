@@ -24,7 +24,8 @@ namespace splicpp
 			t_unbound,
 			t_int,
 			t_bool,
-			t_void
+			t_void,
+			t_universal
 		};
 		
 		virtual ~sl_type() {}
@@ -34,7 +35,7 @@ namespace splicpp
 		virtual void print(std::ostream& s) const = 0;
 		
 		virtual std::vector<std::shared_ptr<sl_type_unbound>> tv() const = 0;
-		virtual substitution unify(const std::shared_ptr<sl_type> t, typecontext& c) const = 0;
+		virtual substitution unify(const std::shared_ptr<sl_type> t) const = 0;
 		virtual std::shared_ptr<sl_type> apply(const substitution& s) const = 0;
 	};
 }

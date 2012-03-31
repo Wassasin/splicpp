@@ -27,13 +27,13 @@ namespace splicpp
 		return result;
 	}
 	
-	substitution sl_type_tuple::unify(const std::shared_ptr<sl_type> t, typecontext& c) const
+	substitution sl_type_tuple::unify(const std::shared_ptr<sl_type> t) const
 	{
 		if(t->type() != t_tuple)
 			throw unification_error(this, t.get());
 		
 		std::shared_ptr<sl_type_tuple> tt = std::dynamic_pointer_cast<sl_type_tuple>(t);
-		return t_left->unify(tt->t_left, c).composite(t_right->unify(tt->t_right, c));
+		return t_left->unify(tt->t_left).composite(t_right->unify(tt->t_right));
 	}
 	
 	std::shared_ptr<sl_type> sl_type_tuple::apply(const substitution& s) const

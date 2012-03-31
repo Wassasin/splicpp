@@ -3,16 +3,27 @@
 #include "sl_type.hpp"
 #include "sl_type_unbound.hpp"
 
+#include "../typecontext.hpp"
+
 namespace splicpp
 {	
 	void sl_type_universal::bind(std::shared_ptr<sl_type_unbound> t)
 	{
 		bindings.push_back(t);
 	}
+	
+	std::shared_ptr<sl_type> sl_type_universal::unbind(const typecontext& c) const
+	{
+		substitution s;
+		for(const auto binding : bindings)
+			s.add(binding, c.create_fresh());
+		
+		return t->apply(s);
+	}
 
 	sl_type::sl_type_type sl_type_universal::type() const
 	{
-		return t_unbound;
+		return t_universal;
 	}
 	
 	void sl_type_universal::print(std::ostream& s) const
@@ -36,9 +47,9 @@ namespace splicpp
 		return result;
 	}
 	
-	substitution sl_type_universal::unify(const std::shared_ptr<sl_type> t, typecontext& c) const
+	substitution sl_type_universal::unify(const std::shared_ptr<sl_type> t) const
 	{
-		return t->unify(t, c);
+		return this->t->unify(t);
 	}
 	
 	std::shared_ptr<sl_type> sl_type_universal::apply(const substitution& s) const

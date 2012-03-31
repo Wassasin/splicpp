@@ -25,7 +25,7 @@ namespace splicpp
 		s << "t" << id;
 	}
 	
-	substitution sl_type_unbound::unify(const std::shared_ptr<sl_type> t, typecontext&) const
+	substitution sl_type_unbound::unify(const std::shared_ptr<sl_type> t) const
 	{
 		const std::shared_ptr<sl_type_unbound> copy(new sl_type_unbound(*this));
 	

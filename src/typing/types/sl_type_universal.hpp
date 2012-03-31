@@ -20,12 +20,13 @@ namespace splicpp
 		{}
 		
 		void bind(std::shared_ptr<sl_type_unbound> t);
+		std::shared_ptr<sl_type> unbind(const typecontext& c) const;
 		
 		virtual sl_type_type type() const;
 		virtual void print(std::ostream& s) const;
 		
 		virtual std::vector<std::shared_ptr<sl_type_unbound>> tv() const;
-		virtual substitution unify(const std::shared_ptr<sl_type> t, typecontext& c) const;
+		virtual substitution unify(const std::shared_ptr<sl_type> t) const;
 		virtual std::shared_ptr<sl_type> apply(const substitution& s) const;
 	};
 }

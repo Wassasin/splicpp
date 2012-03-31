@@ -32,8 +32,19 @@ namespace splicpp
 		return t.get();
 	}
 	
-	std::shared_ptr<sl_type_unbound> typecontext::create_fresh()
+	std::shared_ptr<sl_type_unbound> typecontext::create_fresh() const
 	{
-		return std::shared_ptr<sl_type_unbound>(new sl_type_unbound(ft_count++));
+		return std::shared_ptr<sl_type_unbound>(new sl_type_unbound((*ft_count)++));
+	}
+	
+	typecontext typecontext::apply(const substitution& s) const
+	{
+		typecontext c = *this;
+		
+		for(size_t i = 0; i < c.types.size(); i++)
+			if(c.types[i])
+				c.types[i] = c.types[i].get()->apply(s);
+		
+		return c;
 	}
 }

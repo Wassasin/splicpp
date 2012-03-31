@@ -43,7 +43,7 @@ namespace splicpp
 		return result;
 	}
 	
-	substitution sl_type_function::unify(const std::shared_ptr<sl_type> t, typecontext& c) const
+	substitution sl_type_function::unify(const std::shared_ptr<sl_type> t) const
 	{
 		if(t->type() != t_function)
 			throw unification_error(this, t.get());
@@ -55,9 +55,9 @@ namespace splicpp
 			
 		substitution s;
 		for(size_t i = 0; i < args.size(); i++)
-			s = s.composite(args[i]->unify(tf->args[i], c));
+			s = s.composite(args[i]->unify(tf->args[i]));
 		
-		return s.composite(r->unify(tf->r, c));
+		return s.composite(r->unify(tf->r));
 	}
 	
 	std::shared_ptr<sl_type> sl_type_function::apply(const substitution& s) const
