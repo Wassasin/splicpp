@@ -2,8 +2,11 @@
 
 #include <sstream>
 
+#include "../../common/generic.hpp"
 #include "../../common/utils.hpp"
 #include "../unification_error.hpp"
+
+#include "sl_type_unbound.hpp"
 
 namespace splicpp
 {	
@@ -35,10 +38,12 @@ namespace splicpp
 		std::vector<std::shared_ptr<sl_type_unbound>> result;
 		for(const auto arg : args)
 			for(const auto u : arg->tv())
-				result.push_back(u);
+				if(!is_in_ptr<sl_type_unbound>(u, result))
+					result.push_back(u);
 		
 		for(const auto u : r->tv())
-			result.push_back(u);
+			if(!is_in_ptr<sl_type_unbound>(u, result))
+				result.push_back(u);
 		
 		return result;
 	}

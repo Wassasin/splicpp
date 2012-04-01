@@ -1,5 +1,7 @@
 #include "ast_var_decl.hpp"
 
+#include "../typing/types/sl_type.hpp"
+
 #include "ast_id.hpp"
 #include "ast_exp.hpp"
 #include "ast_type.hpp"
@@ -28,7 +30,7 @@ namespace splicpp
 	
 	std::shared_ptr<sl_type> ast_var_decl::fetch_assigned_type(const typecontext& c) const
 	{
-		return t->fetch_type(c);
+		return t->fetch_type(c)->qualify(c);
 	}
 
 	void ast_var_decl::pretty_print(std::ostream& s, const uint tab) const

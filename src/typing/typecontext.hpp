@@ -29,6 +29,7 @@ namespace splicpp
 		std::shared_ptr<sl_type> operator[](const sid i) const;
 		std::shared_ptr<sl_type_unbound> create_fresh() const;
 		typecontext apply(const substitution& s) const;
+		std::vector<std::shared_ptr<sl_type_unbound>> fv() const;
 	};
 }
 

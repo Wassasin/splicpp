@@ -20,6 +20,11 @@ namespace splicpp
 		return(id == y->id);
 	}
 	
+	bool sl_type_unbound::operator==(const std::shared_ptr<sl_type_unbound> y) const
+	{
+		return equals(y);
+	}
+	
 	void sl_type_unbound::print(std::ostream& s) const
 	{
 		s << "t" << id;

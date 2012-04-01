@@ -2,6 +2,8 @@
 
 #include <stdexcept>
 
+#include "../common/generic.hpp"
+
 #include "types/sl_type.hpp"
 #include "types/sl_type_unbound.hpp"
 
@@ -46,5 +48,17 @@ namespace splicpp
 				c.types[i] = c.types[i].get()->apply(s);
 		
 		return c;
+	}
+	
+	std::vector<std::shared_ptr<sl_type_unbound>> typecontext::fv() const
+	{
+		std::vector<std::shared_ptr<sl_type_unbound>> result;
+		for(const auto t : types)
+			if(t)
+				for(const std::shared_ptr<sl_type_unbound> tv : t.get()->tv())
+					if(!is_in_ptr<sl_type_unbound>(tv, result))
+						result.push_back(tv);
+		
+		return result;
 	}
 }

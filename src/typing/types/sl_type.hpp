@@ -28,6 +28,8 @@ namespace splicpp
 			t_universal
 		};
 		
+		std::shared_ptr<sl_type> qualify(const typecontext& c) const;
+		
 		virtual ~sl_type() {}
 		virtual bool is_unbound() const;
 		

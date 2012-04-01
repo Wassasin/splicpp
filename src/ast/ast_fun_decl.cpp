@@ -1,8 +1,11 @@
 #include "ast_fun_decl.hpp"
 
+#include "../typing/typecontext.hpp"
+
 #include "../typing/varcontext.hpp"
 #include "../typing/symboltable.hpp"
 
+#include "../typing/types/sl_type.hpp"
 #include "../typing/types/sl_type_function.hpp"
 
 #include "ast_id.hpp"
@@ -65,7 +68,8 @@ namespace splicpp
 		for(const auto arg : args)
 			t_args.push_back(arg->fetch_assigned_type(c));
 		
-		return(std::shared_ptr<sl_type>(new sl_type_function(t_args, this->t->fetch_type(c))));
+		typecontext ctmp; //Qualify with a new typecontext
+		return std::shared_ptr<sl_type>(new sl_type_function(t_args, this->t->fetch_type(c)))->qualify(ctmp);
 	}
 	
 	void ast_fun_decl::pretty_print(std::ostream& s, const uint tab) const

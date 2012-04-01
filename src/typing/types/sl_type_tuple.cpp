@@ -1,6 +1,9 @@
 #include "sl_type_tuple.hpp"
 
+#include "../../common/generic.hpp"
 #include "../unification_error.hpp"
+
+#include "sl_type_unbound.hpp"
 
 namespace splicpp
 {	
@@ -22,7 +25,8 @@ namespace splicpp
 	{
 		auto result = t_left->tv();
 		for(const auto x : t_right->tv())
-			result.push_back(x);
+			if(!is_in_ptr<sl_type_unbound>(x, result))
+				result.push_back(x);
 		
 		return result;
 	}
