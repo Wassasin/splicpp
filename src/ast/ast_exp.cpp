@@ -5,7 +5,6 @@
 
 #include "../typing/typecontext.hpp"
 #include "../typing/types/sl_type.hpp"
-#include "../typing/types/sl_type_universal.hpp"
 #include "../typing/types/sl_type_int.hpp"
 #include "../typing/types/sl_type_bool.hpp"
 #include "../typing/types/sl_type_array.hpp"
@@ -33,12 +32,7 @@ namespace splicpp
 	
 	substitution ast_exp_id::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
 	{
-		std::shared_ptr<sl_type> xt = c[id->fetch_id()];
-		
-		if(xt->type() == sl_type::t_universal)
-			xt = std::dynamic_pointer_cast<sl_type_universal>(xt)->unbind(c);
-		
-		return xt->unify(t);
+		return id->infer_type(c, t);
 	}
 	
 	/* ast_exp_op2 */
@@ -237,7 +231,7 @@ namespace splicpp
 	
 	substitution ast_exp_fun_call::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
 	{
-		return substitution::id(); //TODO
+		return this->c->infer_type(c, t);
 	}
 	
 	/* ast_exp_nil */

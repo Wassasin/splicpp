@@ -7,10 +7,13 @@
 
 #include "ast.hpp"
 
+#include "../typing/substitution.hpp"
+
 namespace splicpp
 {
 	class symboltable;
 	class varcontext;
+	class typecontext;
 
 	class ast_id : public ast
 	{
@@ -30,6 +33,7 @@ namespace splicpp
 		sid fetch_id() const;
 		
 		std::string fetch_name() const;
+		substitution infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const;
 	};
 }
 

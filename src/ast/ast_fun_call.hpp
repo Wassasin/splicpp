@@ -6,10 +6,13 @@
 
 #include "ast.hpp"
 
+#include "../typing/substitution.hpp"
+
 namespace splicpp
 {
 	class symboltable;
 	class varcontext;
+	class typecontext;
 	class ast_id;
 	class ast_exp;
 
@@ -28,6 +31,7 @@ namespace splicpp
 		void add_arg(std::shared_ptr<ast_exp> exp);
 		
 		void assign_ids(const varcontext& c);
+		substitution infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const;
 		
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};

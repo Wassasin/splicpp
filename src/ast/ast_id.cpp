@@ -4,6 +4,10 @@
 
 #include "../common/errors.hpp"
 #include "../typing/varcontext.hpp"
+#include "../typing/typecontext.hpp"
+
+#include "../typing/types/sl_type.hpp"
+#include "../typing/types/sl_type_universal.hpp"
 
 namespace splicpp
 {
@@ -39,5 +43,15 @@ namespace splicpp
 	std::string ast_id::fetch_name() const
 	{
 		return name;
+	}
+	
+	substitution ast_id::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
+	{
+		std::shared_ptr<sl_type> xt = c[fetch_id()];
+		
+		if(xt->type() == sl_type::t_universal)
+			xt = std::dynamic_pointer_cast<sl_type_universal>(xt)->unbind(c);
+		
+		return xt->unify(t);
 	}
 }

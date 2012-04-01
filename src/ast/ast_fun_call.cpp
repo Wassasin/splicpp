@@ -3,6 +3,11 @@
 #include "ast_id.hpp"
 #include "ast_exp.hpp"
 
+#include "../typing/typecontext.hpp"
+#include "../typing/types/sl_type.hpp"
+#include "../typing/types/sl_type_function.hpp"
+#include "../typing/types/sl_type_unbound.hpp"
+
 namespace splicpp
 {
 	void ast_fun_call::add_arg(std::shared_ptr<ast_exp> exp)
@@ -15,6 +20,21 @@ namespace splicpp
 		id->assign_ids(c);
 		for(auto arg : args)
 			arg->assign_ids(c);
+	}
+	
+	substitution ast_fun_call::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
+	{
+		std::vector<std::shared_ptr<sl_type>> targs;
+		for(size_t i = 0; i < args.size(); i++)
+			targs.push_back(std::static_pointer_cast<sl_type>(c.create_fresh()));
+		
+		std::shared_ptr<sl_type_function> ft(new sl_type_function(targs, t));
+		substitution s = id->infer_type(c, ft);
+		
+		for(size_t i = 0; i < args.size(); i++)
+			s = args[i]->infer_type(c.apply(s), targs[i]->apply(s)).composite(s);
+		
+		return s;
 	}
 
 	void ast_fun_call::pretty_print(std::ostream& s, const uint tab) const
