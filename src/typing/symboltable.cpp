@@ -92,6 +92,10 @@ namespace splicpp
 		
 		for(const sid i : select_all(symbolref::symbolreftype::t_local_var))
 			c.register_type(i, local_vars[index[i].i]->fetch_assigned_type(c));
+			
+		//Set inferred types
+		for(const sid i : select_all(symbolref::symbolreftype::t_var))
+			c.register_type(i, c[i]->apply(vars[index[i].i]->infer_type(c)));
 		
 		print(c, std::cout);
 	}

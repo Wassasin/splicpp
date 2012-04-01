@@ -32,6 +32,11 @@ namespace splicpp
 	{
 		return t->fetch_type(c)->qualify(c);
 	}
+	
+	substitution ast_var_decl::infer_type(const typecontext& c) const
+	{
+		return exp->infer_type(c, t->fetch_type(c));
+	}
 
 	void ast_var_decl::pretty_print(std::ostream& s, const uint tab) const
 	{
