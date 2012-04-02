@@ -74,10 +74,23 @@ namespace splicpp
 	void symboltable::check_types() const
 	{
 		typecontext c;
+		substitution s;
+		
+		std::vector<std::shared_ptr<sl_type_unbound>> init_types;
+		for(size_t i = 0; i < index.size(); i++)
+		{
+			const std::shared_ptr<sl_type_unbound> u = c.create_fresh();
+			init_types.push_back(u);
+			c.register_type(i, u);
+		}
 		
 		for(const sid i : select_all(symbolref::symbolreftype::t_construct))
-			c.register_type(i, conss[index[i].i]->fetch_type(c));
+			s = conss[index[i].i]->infer_type(c, init_types[i]).composite(s);
 		
+		for(const sid i : select_all(symbolref::symbolreftype::t_var))
+			s = vars[index[i].i]->infer_type(c, init_types[i]).composite(s);
+		
+		/*
 		for(const sid i : select_all(symbolref::symbolreftype::t_type))
 			c.register_type(i, std::static_pointer_cast<sl_type>(c.create_fresh()));
 		
@@ -96,6 +109,12 @@ namespace splicpp
 		//Set inferred types
 		for(const sid i : select_all(symbolref::symbolreftype::t_var))
 			c.register_type(i, c[i]->apply(vars[index[i].i]->infer_type(c)));
+		*/
+		
+		c = c.apply(s);
+		
+		for(const sid i : select_all(symbolref::symbolreftype::t_var))
+			c[i]->unify(vars[index[i].i]->fetch_assigned_type(c));
 		
 		print(c, std::cout);
 	}

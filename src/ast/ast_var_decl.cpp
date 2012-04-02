@@ -33,9 +33,11 @@ namespace splicpp
 		return t->fetch_type(c);
 	}
 	
-	substitution ast_var_decl::infer_type(const typecontext& c) const
+	substitution ast_var_decl::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
 	{
-		return exp->infer_type(c, t->fetch_type(c));
+		const substitution result = t->unify(fetch_assigned_type(c));
+		return exp->infer_type(c, t->apply(result)).composite(result);
+		//return fetch_assigned_type(c)->unify(t->apply(result)).composite(result);
 	}
 
 	void ast_var_decl::pretty_print(std::ostream& s, const uint tab) const

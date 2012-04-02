@@ -12,12 +12,17 @@ namespace splicpp
 {
 	void substitution::add(const std::shared_ptr<sl_type_unbound> x, const std::shared_ptr<sl_type> y)
 	{
+		if(y->type() == sl_type::t_unbound)
+			if(x->equals(std::dynamic_pointer_cast<sl_type_unbound>(y)))
+				return;
+	
 		if(subs.size() > 0) //To break recursion of s.add below
 		{
 			for(const auto p : subs)
 				if(p.first->equals(x))
-					throw std::logic_error("Already contains substitution from x to y"); //TODO
-		
+					return; //Already contained in substitution, thus should always already be mapped to something else
+					//throw std::logic_error("Already contains substitution from x to y");
+			
 			substitution s;
 			s.add(x, y);
 		
