@@ -84,8 +84,12 @@ namespace splicpp
 			c.register_type(i, u);
 		}
 		
+		print(c, std::cout << std::endl << "Typecontext initial: " << std::endl);
+		
 		for(const sid i : select_all(symbolref::symbolreftype::t_construct))
 			s = conss[index[i].i]->infer_type(c, init_types[i]).composite(s);
+		
+		s.print(std::cout << std::endl << "Substitutions: " << std::endl);
 		
 		for(const sid i : select_all(symbolref::symbolreftype::t_var))
 			s = vars[index[i].i]->infer_type(c, init_types[i]).composite(s);
@@ -116,7 +120,9 @@ namespace splicpp
 		for(const sid i : select_all(symbolref::symbolreftype::t_var))
 			c[i]->unify(vars[index[i].i]->fetch_assigned_type(c));
 		
-		print(c, std::cout);
+		s.print(std::cout << std::endl << "Substitutions: " << std::endl);
+		
+		print(c, std::cout << std::endl << "Typecontext final: " << std::endl);
 	}
 	
 	void symboltable::print(std::ostream& s) const

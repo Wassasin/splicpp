@@ -29,6 +29,19 @@ namespace splicpp
 		
 		return std::static_pointer_cast<sl_type>(result);
 	}
+	
+	std::shared_ptr<sl_type> sl_type::force_qualify() const
+	{
+		const auto b = tv();
+		if(b.size() == 0)
+			return apply(substitution::id()); //Hack to return this
+		
+		std::shared_ptr<sl_type_universal> result(new sl_type_universal(apply(substitution::id())));
+		for(const auto x : b)
+			result->bind(x);
+		
+		return std::static_pointer_cast<sl_type>(result);
+	}
 
 	bool sl_type::is_unbound() const
 	{

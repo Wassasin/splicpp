@@ -20,6 +20,7 @@ namespace splicpp
 		{}
 		
 		void add(const std::shared_ptr<sl_type_unbound> x, const std::shared_ptr<sl_type> y);
+		void set(const std::shared_ptr<sl_type_unbound> x, const std::shared_ptr<sl_type> y);
 		
 		std::shared_ptr<sl_type> substitute(const std::shared_ptr<sl_type_unbound> x) const;
 		substitution composite(const substitution& s) const;

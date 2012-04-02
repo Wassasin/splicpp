@@ -12,23 +12,48 @@ namespace splicpp
 {
 	void substitution::add(const std::shared_ptr<sl_type_unbound> x, const std::shared_ptr<sl_type> y)
 	{
-		if(y->type() == sl_type::t_unbound)
-			if(x->equals(std::dynamic_pointer_cast<sl_type_unbound>(y)))
-				return;
+		if(y->type() == sl_type::t_unbound && x->equals(std::dynamic_pointer_cast<sl_type_unbound>(y)))
+			return;
 	
-		if(subs.size() > 0) //To break recursion of s.add below
+		for(const auto p : subs)
+			if(p.first->equals(x))
+			{
+				std::stringstream s;
+				s << "Already contains substitution ";
+				p.first->print(s);
+				s << " => ";
+				p.second->print(s);
+				s << " (Tried to add => ";
+				y->print(s);
+				s << ")";
+				
+				throw std::logic_error(s.str());
+			}
+	
+		set(x, y);
+	}
+	
+	void substitution::set(const std::shared_ptr<sl_type_unbound> x, const std::shared_ptr<sl_type> y)
+	{
+		if(y->type() == sl_type::t_unbound && x->equals(std::dynamic_pointer_cast<sl_type_unbound>(y)))
+			return;
+	
+		if(subs.size() > 0) //To break recursion of s.set below
 		{
-			for(const auto p : subs)
-				if(p.first->equals(x))
-					return; //Already contained in substitution, thus should always already be mapped to something else
-					//throw std::logic_error("Already contains substitution from x to y");
-			
 			substitution s;
-			s.add(x, y);
+			s.set(x, y);
 		
 			for(auto& p : subs)
 				p.second = p.second->apply(s); //Rewrite [z -> x] with [x -> y] to [z -> y]
+			
+			for(size_t i = 0; i < subs.size(); i++)
+				if(subs[i].second->type() == sl_type::t_unbound && subs[i].first->equals(std::dynamic_pointer_cast<sl_type_unbound>(subs[i].second)))
+					subs.erase(subs.begin() + i);
 		}
+		
+		for(size_t i = 0; i < subs.size(); i++)
+			if(subs[i].first->equals(x))
+				subs.erase(subs.begin() + i);
 		
 		subs.push_back(std::pair<std::shared_ptr<sl_type_unbound>, std::shared_ptr<sl_type>>(x, y)); //Unique, because of precondition as logic_error above
 	}
@@ -58,7 +83,7 @@ namespace splicpp
 	void substitution::print(std::ostream& s) const
 	{
 		s << '[';
-		delim_printer p(", ", s);
+		delim_printer p(",\n", s);
 		
 		for(const auto sub : subs)
 		{

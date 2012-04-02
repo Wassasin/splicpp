@@ -1,6 +1,9 @@
 #include "ast_var_decl.hpp"
 
+#include "../typing/typecontext.hpp"
+
 #include "../typing/types/sl_type.hpp"
+#include "../typing/types/sl_type_unbound.hpp"
 
 #include "ast_id.hpp"
 #include "ast_exp.hpp"
@@ -35,8 +38,16 @@ namespace splicpp
 	
 	substitution ast_var_decl::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
 	{
-		const substitution result = t->unify(fetch_assigned_type(c));
-		return exp->infer_type(c, t->apply(result)).composite(result);
+		std::shared_ptr<sl_type_unbound> a = std::dynamic_pointer_cast<sl_type_unbound>(c[id->fetch_id()]);
+		substitution s = t->unify(fetch_assigned_type(c));
+		
+		s = exp->infer_type(c, t->apply(s)).composite(s);
+		s.set(a, a->apply(s)->force_qualify());
+		
+		return s;
+	
+		/*const substitution result = t->unify(fetch_assigned_type(c));
+		return exp->infer_type(c, t->apply(result)).composite(result);*/
 		//return fetch_assigned_type(c)->unify(t->apply(result)).composite(result);
 	}
 
