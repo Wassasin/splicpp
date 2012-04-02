@@ -9,6 +9,14 @@
 
 namespace splicpp
 {
+	substitution sl_type::unify(const std::shared_ptr<sl_type> t) const
+	{
+		if(t->type() == t_unbound)
+			return t->unify_partial(apply(substitution::id()));
+		else
+			return unify_partial(t);
+	}
+	
 	std::shared_ptr<sl_type> sl_type::qualify(const typecontext& c) const
 	{
 		const auto b = subtract_ptr<sl_type_unbound>(tv(), c.fv());

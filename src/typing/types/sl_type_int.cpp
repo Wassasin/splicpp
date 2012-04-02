@@ -19,7 +19,7 @@ namespace splicpp
 		return std::vector<std::shared_ptr<sl_type_unbound>>();
 	}
 	
-	substitution sl_type_int::unify(const std::shared_ptr<sl_type> t) const
+	substitution sl_type_int::unify_partial(const std::shared_ptr<sl_type> t) const
 	{
 		if(t->type() != t_int)
 			throw unification_error(this, t.get());

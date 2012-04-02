@@ -47,7 +47,7 @@ namespace splicpp
 		return result;
 	}
 	
-	substitution sl_type_universal::unify(const std::shared_ptr<sl_type> t) const
+	substitution sl_type_universal::unify_partial(const std::shared_ptr<sl_type> t) const
 	{
 		return this->t->unify(t);
 	}

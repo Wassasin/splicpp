@@ -48,7 +48,7 @@ namespace splicpp
 		return result;
 	}
 	
-	substitution sl_type_function::unify(const std::shared_ptr<sl_type> t) const
+	substitution sl_type_function::unify_partial(const std::shared_ptr<sl_type> t) const
 	{
 		if(t->type() != t_function)
 			throw unification_error(this, t.get());

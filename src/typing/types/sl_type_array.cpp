@@ -21,7 +21,7 @@ namespace splicpp
 		return t->tv();
 	}
 	
-	substitution sl_type_array::unify(const std::shared_ptr<sl_type> t) const
+	substitution sl_type_array::unify_partial(const std::shared_ptr<sl_type> t) const
 	{
 		if(t->type() != t_array)
 			throw unification_error(this, t.get());

@@ -30,7 +30,7 @@ namespace splicpp
 	
 	std::shared_ptr<sl_type> ast_var_decl::fetch_assigned_type(const typecontext& c) const
 	{
-		return t->fetch_type(c)->qualify(c);
+		return t->fetch_type(c);
 	}
 	
 	substitution ast_var_decl::infer_type(const typecontext& c) const
