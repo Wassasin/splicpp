@@ -8,7 +8,7 @@
 
 int main(int argc, char **argv)
 {
-	std::string f = "../src/tests/parser/fac.spl";
+	std::string f = "../tests/parser/fac.spl";
 
 	boost::program_options::options_description options("Options");
 

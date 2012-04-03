@@ -36,6 +36,11 @@ namespace splicpp
 		s << '}';
 	}
 	
+	substitution ast_stmt_stmts::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
+	{
+		return substitution::id(); //TODO
+	}
+	
 	/* ast_stmt_if */
 	
 	void ast_stmt_if::assign_ids(const varcontext& c)
@@ -69,6 +74,11 @@ namespace splicpp
 		}
 	}
 	
+	substitution ast_stmt_if::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
+	{
+		return substitution::id(); //TODO
+	}
+	
 	/* ast_stmt_while */
 	
 	void ast_stmt_while::assign_ids(const varcontext& c)
@@ -89,6 +99,11 @@ namespace splicpp
 		s << ')';
 		ast::print_newline(s, tab);
 		stmt->pretty_print(s, tab);
+	}
+	
+	substitution ast_stmt_while::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
+	{
+		return substitution::id(); //TODO
 	}
 	
 	/* ast_stmt_assignment */
@@ -112,6 +127,11 @@ namespace splicpp
 		s << ';';
 	}
 	
+	substitution ast_stmt_assignment::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
+	{
+		return substitution::id(); //TODO
+	}
+	
 	/* ast_stmt_fun_call */
 	
 	void ast_stmt_fun_call::assign_ids(const varcontext& c)
@@ -128,6 +148,11 @@ namespace splicpp
 	{
 		f->pretty_print(s, tab);
 		s << ';';
+	}
+	
+	substitution ast_stmt_fun_call::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
+	{
+		return substitution::id(); //TODO
 	}
 	
 	/* ast_stmt_return */
@@ -152,5 +177,10 @@ namespace splicpp
 			exp.get()->pretty_print(s, tab);
 		}
 		s << ';';
+	}
+	
+	substitution ast_stmt_return::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
+	{
+		return substitution::id(); //TODO
 	}
 }

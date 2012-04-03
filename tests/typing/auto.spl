@@ -1,6 +1,6 @@
 auto a = 5;
 
-Bool f(auto x)
+Bool f(auto arg)
 {
 	return True;
 }

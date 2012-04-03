@@ -94,6 +94,12 @@ namespace splicpp
 		for(const sid i : select_all(symbolref::symbolreftype::t_var))
 			s = vars[index[i].i]->infer_type(c, init_types[i]).composite(s);
 		
+		for(const sid i : select_all(symbolref::symbolreftype::t_fun))
+			s = funs[index[i].i]->infer_type(c, init_types[i]).composite(s);
+		
+		//for(const sid i : select_all(symbolref::symbolreftype::t_local_var))
+		//	s = local_vars[index[i].i]->infer_type(c, init_types[i]).composite(s);
+		
 		/*
 		for(const sid i : select_all(symbolref::symbolreftype::t_type))
 			c.register_type(i, std::static_pointer_cast<sl_type>(c.create_fresh()));

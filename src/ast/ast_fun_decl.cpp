@@ -7,6 +7,7 @@
 
 #include "../typing/types/sl_type.hpp"
 #include "../typing/types/sl_type_function.hpp"
+#include "../typing/types/sl_type_unbound.hpp"
 
 #include "ast_id.hpp"
 #include "ast_f_arg.hpp"
@@ -69,6 +70,29 @@ namespace splicpp
 			t_args.push_back(arg->fetch_assigned_type(c));
 		
 		return std::shared_ptr<sl_type>(new sl_type_function(t_args, this->t->fetch_type(c)));
+	}
+	
+	substitution ast_fun_decl::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
+	{
+		std::shared_ptr<sl_type_unbound> r = c.create_fresh();
+		std::vector<std::shared_ptr<sl_type>> t_args;
+		for(size_t i = 0; i < args.size(); i++)
+			t_args.push_back(std::static_pointer_cast<sl_type>(c.create_fresh()));
+		
+		std::shared_ptr<sl_type_function> ft(new sl_type_function(t_args, r));
+		
+		substitution s = ft->unify(fetch_assigned_type(c));
+		
+		for(size_t i = 0; i < args.size(); i++)
+			s = args[i]->infer_type(c.apply(s), t_args[i]).composite(s);
+		
+		for(const auto decl : decls)
+			s = decl->infer_type(c.apply(s), c.create_fresh()).composite(s);
+		
+		for(const auto stmt : stmts)
+			s = stmt->infer_type(c.apply(s), r).composite(s);
+		
+		return t->unify(ft->apply(s)).composite(s);
 	}
 	
 	void ast_fun_decl::pretty_print(std::ostream& s, const uint tab) const

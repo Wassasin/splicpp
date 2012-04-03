@@ -17,7 +17,8 @@ namespace splicpp
 	
 		for(const auto p : subs)
 			if(p.first->equals(x))
-			{
+				return;
+			/*{
 				std::stringstream s;
 				s << "Already contains substitution ";
 				p.first->print(s);
@@ -28,7 +29,7 @@ namespace splicpp
 				s << ")";
 				
 				throw std::logic_error(s.str());
-			}
+			}*/
 	
 		set(x, y);
 	}

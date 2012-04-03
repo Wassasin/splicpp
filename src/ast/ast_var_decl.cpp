@@ -42,13 +42,9 @@ namespace splicpp
 		substitution s = t->unify(fetch_assigned_type(c));
 		
 		s = exp->infer_type(c, t->apply(s)).composite(s);
-		s.set(a, a->apply(s)->force_qualify());
+		s.set(a, t->apply(s)->qualify(c.apply(s)));
 		
 		return s;
-	
-		/*const substitution result = t->unify(fetch_assigned_type(c));
-		return exp->infer_type(c, t->apply(result)).composite(result);*/
-		//return fetch_assigned_type(c)->unify(t->apply(result)).composite(result);
 	}
 
 	void ast_var_decl::pretty_print(std::ostream& s, const uint tab) const
