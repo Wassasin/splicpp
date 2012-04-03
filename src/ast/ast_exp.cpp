@@ -109,8 +109,7 @@ namespace splicpp
 		}
 		
 		const substitution s1 = e_left->infer_type(c, t1);
-		const typecontext c2 = c.apply(s1);
-		const substitution s2 = e_right->infer_type(c2, t2).composite(s1);
+		const substitution s2 = e_right->infer_type(c.apply(s1), t2).composite(s1);
 		
 		return t->apply(s2)->unify(r).composite(s2);
 		

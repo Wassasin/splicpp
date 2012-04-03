@@ -4,6 +4,12 @@
 #include "ast_exp.hpp"
 #include "ast_fun_call.hpp"
 
+#include "../typing/typecontext.hpp"
+#include "../typing/types/sl_type.hpp"
+#include "../typing/types/sl_type_bool.hpp"
+#include "../typing/types/sl_type_unbound.hpp"
+#include "../typing/types/sl_type_void.hpp"
+
 namespace splicpp
 {
 	/* ast_stmt_stmts */
@@ -38,7 +44,11 @@ namespace splicpp
 	
 	substitution ast_stmt_stmts::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
 	{
-		return substitution::id(); //TODO
+		substitution s;
+		for(const auto stmt : stmts)
+			s = stmt->infer_type(c.apply(s), t->apply(s)).composite(s);
+		
+		return s;
 	}
 	
 	/* ast_stmt_if */
@@ -76,7 +86,13 @@ namespace splicpp
 	
 	substitution ast_stmt_if::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
 	{
-		return substitution::id(); //TODO
+		substitution s = exp->infer_type(c, std::shared_ptr<sl_type>(new sl_type_bool()));
+		s = stmt_true->infer_type(c.apply(s), t->apply(s)).composite(s);
+		
+		if(stmt_false)
+			s = stmt_false.get()->infer_type(c.apply(s), t->apply(s)).composite(s);
+		
+		return s;
 	}
 	
 	/* ast_stmt_while */
@@ -103,7 +119,8 @@ namespace splicpp
 	
 	substitution ast_stmt_while::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
 	{
-		return substitution::id(); //TODO
+		substitution s = exp->infer_type(c, std::shared_ptr<sl_type>(new sl_type_bool()));
+		return stmt->infer_type(c.apply(s), t->apply(s)).composite(s);
 	}
 	
 	/* ast_stmt_assignment */
@@ -152,7 +169,7 @@ namespace splicpp
 	
 	substitution ast_stmt_fun_call::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
 	{
-		return substitution::id(); //TODO
+		return f->infer_type(c, c.create_fresh());
 	}
 	
 	/* ast_stmt_return */
@@ -181,6 +198,9 @@ namespace splicpp
 	
 	substitution ast_stmt_return::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
 	{
-		return substitution::id(); //TODO
+		if(exp)
+			return exp.get()->infer_type(c, t);
+		else
+			return t->unify(std::shared_ptr<sl_type>(new sl_type_void()));
 	}
 }
