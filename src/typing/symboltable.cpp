@@ -87,15 +87,15 @@ namespace splicpp
 		print(c, std::cout << std::endl << "Typecontext initial: " << std::endl);
 		
 		for(const sid i : select_all(symbolref::symbolreftype::t_construct))
-			s = conss[index[i].i]->infer_type(c, init_types[i]).composite(s);
+			s = conss[index[i].i]->infer_type(c.apply(s), init_types[i]).composite(s);
 		
 		s.print(std::cout << std::endl << "Substitutions: " << std::endl);
 		
 		for(const sid i : select_all(symbolref::symbolreftype::t_var))
-			s = vars[index[i].i]->infer_type(c, init_types[i]).composite(s);
+			s = vars[index[i].i]->infer_type(c.apply(s), init_types[i]).composite(s);
 		
 		for(const sid i : select_all(symbolref::symbolreftype::t_fun))
-			s = funs[index[i].i]->infer_type(c, init_types[i]).composite(s);
+			s = funs[index[i].i]->infer_type(c.apply(s), init_types[i]).composite(s);
 		
 		//for(const sid i : select_all(symbolref::symbolreftype::t_local_var))
 		//	s = local_vars[index[i].i]->infer_type(c, init_types[i]).composite(s);

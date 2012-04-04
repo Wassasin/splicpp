@@ -68,7 +68,7 @@ nl_exp6			:== nl_exp7
 				|	l_negation nl_exp6
 				
 nl_exp7			:== nl_exp8
-				|	nl_exp7 l_colon nl_exp8
+				|	nl_exp8 l_colon nl_exp7
 
 nl_exp8			:== nl_fun_call
 				|	nl_digit

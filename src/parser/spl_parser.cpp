@@ -470,7 +470,7 @@ namespace splicpp
 			else if(n.size() == 3)
 			{
 				n[1]->assert_token(g, "l_colon");
-				return std::shared_ptr<ast_exp>(new ast_exp_op2(parse_exp7(str, n[0]->as_node()), ast_exp_op2::op_cons, parse_exp8(str, n[2]->as_node()), n.sl()));
+				return std::shared_ptr<ast_exp>(new ast_exp_op2(parse_exp8(str, n[0]->as_node()), ast_exp_op2::op_cons, parse_exp7(str, n[2]->as_node()), n.sl()));
 			}
 			else
 				throw parse_error("unexpected rule");

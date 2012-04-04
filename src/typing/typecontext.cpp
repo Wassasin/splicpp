@@ -61,4 +61,18 @@ namespace splicpp
 		
 		return result;
 	}
+	
+	void typecontext::print(std::ostream& s) const
+	{
+		for(size_t i = 0; i < types.size(); i++)
+		{
+			s << i << ": ";
+			if(types[i])
+				types[i].get()->print(s);
+			else
+				s << "undef";
+			
+			s << std::endl;
+		}
+	}
 }
