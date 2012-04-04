@@ -82,6 +82,7 @@ namespace splicpp
 		std::shared_ptr<sl_type_function> ft(new sl_type_function(t_args, r));
 		
 		substitution s = ft->unify(fetch_assigned_type(c));
+		s = t->unify(ft->apply(s)).composite(s);
 		
 		for(size_t i = 0; i < args.size(); i++)
 			s = args[i]->infer_type(c.apply(s), t_args[i]).composite(s);
@@ -90,9 +91,9 @@ namespace splicpp
 			s = decl->infer_type(c.apply(s), c.create_fresh()).composite(s);
 		
 		for(const auto stmt : stmts)
-			s = stmt->infer_type(c.apply(s), r).composite(s);
+			s = stmt->infer_type(c.apply(s), r->apply(s)).composite(s);
 		
-		return t->unify(ft->apply(s)).composite(s);
+		return s;
 	}
 	
 	void ast_fun_decl::pretty_print(std::ostream& s, const uint tab) const
