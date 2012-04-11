@@ -160,21 +160,43 @@ namespace splicpp
 	size_t grammar::translate_lit(const stid id) const
 	{
 		size_t result = 0;
-		for(size_t i = 0; i < id; i++)
+		for(stid i = 0; i < id; i++)
 			if(symbols.at(i)->type() == s_lit)
 				result++;
 		
 		return result;
 	}
 	
+	stid grammar::rtranslate_lit(const size_t id) const
+	{
+		size_t tmp = 0;
+	
+		for(stid i = 0; i < symbols.size(); i++)
+			if(symbols.at(i)->type() == s_lit && tmp++ == id)
+				return i;
+		
+		throw std::runtime_error("overflow");
+	}
+	
 	size_t grammar::translate_nlit(const stid id) const
 	{
 		size_t result = 0;
-		for(size_t i = 0; i < id; i++)
+		for(stid i = 0; i < id; i++)
 			if(symbols.at(i)->type() == s_nlit)
 				result++;
 		
 		return result;
+	}
+	
+	stid grammar::rtranslate_nlit(const size_t id) const
+	{
+		size_t tmp = 0;
+	
+		for(stid i = 0; i < symbols.size(); i++)
+			if(symbols.at(i)->type() == s_nlit && tmp++ == id)
+				return i;
+		
+		throw std::runtime_error("overflow");
 	}
 	
 	void grammar::check() const

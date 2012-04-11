@@ -85,7 +85,7 @@ namespace splicpp
 				return x;
 			}
 			
-			void print() const;
+			std::string str() const;
 			bool operator==(const acttransition x) const;
 		};
 		
@@ -123,7 +123,7 @@ namespace splicpp
 				return x;
 			}
 			
-			void print() const;
+			std::string str() const;
 		};
 
 	private:
@@ -141,6 +141,8 @@ namespace splicpp
 		    ar & acttable;
 		    ar & gototable;
 		}
+		
+		void print_spaces(const size_t n) const;
 
 	public:
 		ptable()

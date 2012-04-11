@@ -2,30 +2,35 @@
 
 #include <stack>
 #include <sstream>
+#include <boost/lexical_cast.hpp>
 
 #include "../common/utils.hpp"
 
 namespace splicpp
 {
-	void ptable::acttransition::print() const
+	std::string ptable::acttransition::str() const
 	{
+		std::stringstream ss;
+	
 		switch(t)
 		{
 			case t_error:
 				//std::cout << "err";
 			break;
 			case t_accept:
-				std::cout << "acc";
+				ss << "acc";
 			break;
 			case t_shift:
-				std::cout << "s" << state;
+				ss << "s" << state;
 			break;
 			case t_reduce:
-				std::cout << "r" << rule;
+				ss << "r" << rule;
 			break;
 			default:
 				throw std::runtime_error("unexpected transitiontype");
 		}
+		
+		return ss.str();
 	}
 	
 	bool ptable::acttransition::operator==(const acttransition x) const
@@ -44,19 +49,23 @@ namespace splicpp
 		return true;
 	}
 	
-	void ptable::gototransition::print() const
+	std::string ptable::gototransition::str() const
 	{
+		std::stringstream ss;
+		
 		switch(t)
 		{
 			case t_error:
 				//std::cout << "err";
 			break;
 			case t_jump:
-				std::cout << state;
+				ss << state;
 			break;
 			default:
 				throw std::runtime_error("unexpected transitiontype");
 		}
+		
+		return ss.str();
 	}
 
 	void ptable::add_state(const std::vector<acttransition> actrow, const std::vector<gototransition> gotorow)
@@ -154,13 +163,32 @@ namespace splicpp
 	
 	void ptable::print(const grammar g) const
 	{
-		std::cout << "\t|";
+		const size_t num_size = 4;
+		const size_t min_name_size = 4;
+		
+		print_spaces(num_size);
+		std::cout << "|";
+		
+		std::vector<size_t> spacing;
+		spacing.reserve(g.symbols_size());
+		
+		for(size_t i = 0; i < g.symbols_size(); i++)
+		{
+			const auto s = g.fetch_symbol(i);
+			if(s->name.size() > min_name_size)
+				spacing.push_back(s->name.size());
+			else
+				spacing.push_back(min_name_size);
+		}
 		
 		for(size_t i = 0; i < g.symbols_size(); i++)
 		{
 			const auto s = g.fetch_symbol(i);
 			if(s->type() == s_lit)
-				std::cout << " " << s->name << "\t";
+			{
+				std::cout << ' ' << s->name;
+				print_spaces(spacing.at(i) - s->name.size());
+			}
 		}
 		
 		std::cout << "|";
@@ -169,30 +197,44 @@ namespace splicpp
 		{
 			const auto s = g.fetch_symbol(i);
 			if(s->type() == s_nlit)
-				std::cout << " " << s->name << "\t";
+			{
+				std::cout << ' ' << s->name;
+				print_spaces(spacing.at(i) - s->name.size());
+			}
 		}
 		
 		std::cout << std::endl << std::endl;
 		
 		for(size_t i = 0; i < acttable.size(); i++)
 		{
-			std::cout << i << "\t|";
+			std::string i_str(boost::lexical_cast<std::string>(i));
+			print_spaces(num_size - i_str.length());
+			std::cout << i_str << "|";
 			
-			for(size_t j = 0; j < acttable[i].size(); j++)
+			const auto blaat = gototable.at(i);
+			for(size_t j = 0; j < acttable.at(i).size(); j++)
 			{
-				acttable[i][j].print();
-				std::cout << "\t";
+				std::string str = acttable[i][j].str();
+				std::cout << ' ' << str;
+				print_spaces(spacing.at(g.rtranslate_lit(j)) - str.size());
 			}
 			
 			std::cout << "|";
 			
 			for(size_t j = 0; j < gototable[i].size(); j++)
 			{
-				gototable[i][j].print();
-				std::cout << "\t";
+				std::string str = gototable[i][j].str();
+				std::cout << ' ' << str;
+				print_spaces(spacing.at(g.rtranslate_nlit(j)) - str.size());
 			}
 			
 			std::cout << std::endl;
 		}
+	}
+	
+	void ptable::print_spaces(const size_t n) const
+	{
+		for(size_t i = 0; i < n; i++)
+			std::cout << ' ';
 	}
 }
