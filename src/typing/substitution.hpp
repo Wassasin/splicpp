@@ -1,7 +1,7 @@
 #ifndef SUBSTITUTION_H
 #define SUBSTITUTION_H
 
-#include <vector>
+#include <map>
 #include <memory>
 #include <ostream>
 
@@ -12,14 +12,23 @@ namespace splicpp
 
 	class substitution
 	{
-		std::vector<std::pair<std::shared_ptr<sl_type_unbound>, std::shared_ptr<sl_type>>> subs;
+		template<class T> 
+		struct pointer_less
+		{
+			bool operator()( const std::shared_ptr<T>& lhs, const std::shared_ptr<T>& rhs ) const
+			{
+				return lhs->operator<(rhs);
+			}
+		};
+	
+		std::map<std::shared_ptr<sl_type_unbound>, std::shared_ptr<sl_type>, pointer_less<sl_type_unbound>> subs;
 		
 	public:
 		substitution()
 		: subs()
 		{}
 		
-		void add(const std::shared_ptr<sl_type_unbound> x, const std::shared_ptr<sl_type> y);
+		void add(const std::shared_ptr<sl_type_unbound> x, std::shared_ptr<sl_type> y);
 		void set(const std::shared_ptr<sl_type_unbound> x, const std::shared_ptr<sl_type> y);
 		
 		std::shared_ptr<sl_type> substitute(const std::shared_ptr<sl_type_unbound> x) const;

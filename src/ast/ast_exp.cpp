@@ -106,10 +106,13 @@ namespace splicpp
 				r = decltype(r)(new sl_type_array(t1));
 				break;
 			}
-		}
+		}	
 		
 		const substitution s1 = e_left->infer_type(c, t1);
 		const substitution s2 = e_right->infer_type(c.apply(s1), t2).composite(s1);
+		
+		if(optype() == op_times)
+			s1.print(std::cout);
 		
 		return t->apply(s2)->unify(r).composite(s2);
 		

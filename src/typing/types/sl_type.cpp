@@ -12,7 +12,12 @@ namespace splicpp
 	substitution sl_type::unify(const std::shared_ptr<sl_type> t) const
 	{
 		if(t->type() == t_unbound)
-			return t->unify_partial(apply(substitution::id()));
+		{
+			if(type() == t_unbound)
+				return unify_partial(t);
+			else
+				return t->unify_partial(apply(substitution::id()));
+		}
 		else
 			return unify_partial(t);
 	}

@@ -29,11 +29,11 @@ namespace splicpp
 		return t->fetch_type(c);
 	}
 	
-	substitution ast_f_arg::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
+	std::shared_ptr<sl_type> ast_f_arg::declare_type(typecontext& c) const
 	{
-		substitution s = t->unify(fetch_assigned_type(c));
-		s.set(std::dynamic_pointer_cast<sl_type_unbound>(c[id->fetch_id()]), t->apply(s));
-		return s;
+		std::shared_ptr<sl_type> t = c.create_fresh();
+		c.register_type(id->fetch_id(), t);
+		return t;
 	}
 
 	void ast_f_arg::pretty_print(std::ostream& s, const uint tab) const

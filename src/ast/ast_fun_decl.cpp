@@ -55,6 +55,7 @@ namespace splicpp
 		
 		for(auto decl : decls)
 		{
+			decl->assign_ids(cvar);
 			cvar.assign(decl->fetch_name(), s.reg_lvar(decl));
 			decl->register_types(s, ctype);
 		}
@@ -72,26 +73,29 @@ namespace splicpp
 		return std::shared_ptr<sl_type>(new sl_type_function(t_args, this->t->fetch_type(c)));
 	}
 	
-	substitution ast_fun_decl::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
+	substitution ast_fun_decl::declare_type(typecontext& c) const
 	{
+		typecontext cold = c; //Copy typecontext for qualification
+	
 		std::shared_ptr<sl_type_unbound> r = c.create_fresh();
 		std::vector<std::shared_ptr<sl_type>> t_args;
 		for(size_t i = 0; i < args.size(); i++)
-			t_args.push_back(std::static_pointer_cast<sl_type>(c.create_fresh()));
+			t_args.push_back(args[i]->declare_type(c));
 		
 		std::shared_ptr<sl_type_function> ft(new sl_type_function(t_args, r));
 		
-		substitution s = ft->unify(fetch_assigned_type(c));
-		s = t->unify(ft->apply(s)).composite(s);
-		
-		for(size_t i = 0; i < args.size(); i++)
-			s = args[i]->infer_type(c.apply(s), t_args[i]).composite(s);
-		
+		substitution s;
 		for(const auto decl : decls)
-			s = decl->infer_type(c.apply(s), c.create_fresh()).composite(s);
+		{
+			c = c.apply(s);
+			s = decl->declare_type(c).composite(s);
+		}
 		
+		c = c.apply(s);
 		for(const auto stmt : stmts)
 			s = stmt->infer_type(c.apply(s), r->apply(s)).composite(s);
+		
+		c.register_type(id->fetch_id(), ft->apply(s)->qualify(cold));
 		
 		return s;
 	}

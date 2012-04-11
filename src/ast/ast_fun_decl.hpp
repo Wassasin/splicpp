@@ -51,7 +51,7 @@ namespace splicpp
 		void register_locals(symboltable& s, varcontext& c);
 		
 		std::shared_ptr<sl_type> fetch_assigned_type(const typecontext& c) const;
-		substitution infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const;
+		substitution declare_type(typecontext& c) const;
 		
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};

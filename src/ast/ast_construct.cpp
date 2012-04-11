@@ -17,9 +17,18 @@ namespace splicpp
 		s << "__INTERNAL__";
 	}
 	
-	substitution ast_construct::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
+	void ast_construct::assign(const sid i)
 	{
-		return t->unify(fetch_type(c));
+		id = i;
+	}
+	
+	substitution ast_construct::declare_type(typecontext& c) const
+	{
+		std::shared_ptr<sl_type> oldt = c[id.get()];
+		std::shared_ptr<sl_type> newt = fetch_type(c);
+		
+		c.register_type(id.get(), newt);
+		return oldt->unify(newt);
 	}
 	
 	/* print, isEmpty, head, tail, fst, and snd */

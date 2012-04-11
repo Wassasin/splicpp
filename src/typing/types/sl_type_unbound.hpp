@@ -24,6 +24,7 @@ namespace splicpp
 		
 		virtual sl_type_type type() const;
 		bool equals(const std::shared_ptr<sl_type_unbound> y) const;
+		bool operator<(const std::shared_ptr<sl_type_unbound> y) const;
 		bool operator==(const std::shared_ptr<sl_type_unbound> y) const;
 		virtual void print(std::ostream& s) const;
 		

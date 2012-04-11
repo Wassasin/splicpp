@@ -8,55 +8,54 @@
 #include "types/sl_type.hpp"
 #include "types/sl_type_unbound.hpp"
 
+#include "unification_error.hpp"
+
 namespace splicpp
 {
 	void substitution::add(const std::shared_ptr<sl_type_unbound> x, const std::shared_ptr<sl_type> y)
 	{
-		if(y->type() == sl_type::t_unbound && x->equals(std::dynamic_pointer_cast<sl_type_unbound>(y)))
+		if(y->type() == sl_type::t_unbound && x->equals(std::dynamic_pointer_cast<sl_type_unbound>(y))) // a == a
 			return;
 	
-		for(const auto p : subs)
-			if(p.first->equals(x))
-				return;
-			/*{
-				std::stringstream s;
-				s << "Already contains substitution ";
-				p.first->print(s);
-				s << " => ";
-				p.second->print(s);
-				s << " (Tried to add => ";
-				y->print(s);
-				s << ")";
-				
-				throw std::logic_error(s.str());
-			}*/
-	
-		set(x, y);
+		if(subs.find(x) != subs.end()) // There already is a [x -> ?]
+		{
+			std::cout << "!!! ";
+			x->print(std::cout);
+			std::cout << " => ";
+			y->print(std::cout);
+			std::cout << std::endl;
+			return;
+		}
+		
+		substitution s;
+		s.subs[x] = y;
+		
+		decltype(subs) newsubs;
+		
+		for(const auto& p : subs)
+		{
+			newsubs[p.first] = p.second->apply(s); //Rewrite [z -> x] with [x -> y] to [z -> y]
+			
+			if(y->type() == sl_type::t_unbound && p.first->equals(x)) //Rewrite [z->a] [a->y] to [y->z]; aliasing
+				newsubs[std::dynamic_pointer_cast<sl_type_unbound>(y)] = p.first->apply(s);
+		}
+		
+		for(auto i = newsubs.begin(); i != newsubs.end(); ++i)
+		{
+			const auto& p = *i;
+			if(p.second->type() == sl_type::t_unbound && p.first->equals(std::dynamic_pointer_cast<sl_type_unbound>(p.second)))
+				newsubs.erase(i);
+		}
+		
+		if(newsubs.find(x) == newsubs.end()) // If there is not yet a [x -> ?]
+			newsubs[x] = y;
+		
+		subs = newsubs;
 	}
 	
 	void substitution::set(const std::shared_ptr<sl_type_unbound> x, const std::shared_ptr<sl_type> y)
 	{
-		if(y->type() == sl_type::t_unbound && x->equals(std::dynamic_pointer_cast<sl_type_unbound>(y)))
-			return;
-	
-		if(subs.size() > 0) //To break recursion of s.set below
-		{
-			substitution s;
-			s.set(x, y);
-		
-			for(auto& p : subs)
-				p.second = p.second->apply(s); //Rewrite [z -> x] with [x -> y] to [z -> y]
-			
-			for(size_t i = 0; i < subs.size(); i++)
-				if(subs[i].second->type() == sl_type::t_unbound && subs[i].first->equals(std::dynamic_pointer_cast<sl_type_unbound>(subs[i].second)))
-					subs.erase(subs.begin() + i);
-		}
-		
-		for(size_t i = 0; i < subs.size(); i++)
-			if(subs[i].first->equals(x))
-				subs.erase(subs.begin() + i);
-		
-		subs.push_back(std::pair<std::shared_ptr<sl_type_unbound>, std::shared_ptr<sl_type>>(x, y)); //Unique, because of precondition as logic_error above
+		add(x, y);
 	}
 	
 	std::shared_ptr<sl_type> substitution::substitute(const std::shared_ptr<sl_type_unbound> x) const
@@ -65,7 +64,7 @@ namespace splicpp
 			if(p.first->equals(x))
 				return p.second;
 		
-		return std::static_pointer_cast<sl_type>(x);
+		return x;
 	}
 	
 	substitution substitution::composite(const substitution& s) const

@@ -1,10 +1,11 @@
 #ifndef AST_CONSTRUCT_H
 #define AST_CONSTRUCT_H
 
-#include "ast.hpp"
-
 #include <memory>
+#include <boost/optional.hpp>
 
+#include "ast.hpp"
+#include "../common/typedefs.hpp"
 #include "../typing/substitution.hpp"
 
 namespace splicpp
@@ -14,14 +15,18 @@ namespace splicpp
 
 	class ast_construct : public ast
 	{
+		boost::optional<sid> id;
+	
 	protected:
 		virtual std::shared_ptr<sl_type> fetch_type(const typecontext& c) const = 0;
 	public:
 		ast_construct()
 		: ast(sloc(0, 0)) //Bogus sLoc
+		, id()
 		{}
 		
-		substitution infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const;
+		void assign(const sid i);
+		substitution declare_type(typecontext& c) const;
 		
 		virtual std::string fetch_name() const = 0;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;

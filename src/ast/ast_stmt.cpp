@@ -146,7 +146,9 @@ namespace splicpp
 	
 	substitution ast_stmt_assignment::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
 	{
-		return substitution::id(); //TODO
+		const std::shared_ptr<sl_type> a = c.create_fresh();
+		const substitution s = id->infer_type(c, a);
+		return exp->infer_type(c, a->apply(s)).composite(s);
 	}
 	
 	/* ast_stmt_fun_call */

@@ -36,14 +36,11 @@ namespace splicpp
 		return t->fetch_type(c);
 	}
 	
-	substitution ast_var_decl::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
+	substitution ast_var_decl::declare_type(typecontext& c) const
 	{
-		std::shared_ptr<sl_type_unbound> a = std::dynamic_pointer_cast<sl_type_unbound>(c[id->fetch_id()]);
-		substitution s = t->unify(fetch_assigned_type(c));
-		
-		s = exp->infer_type(c, t->apply(s)).composite(s);
-		s.set(a, t->apply(s)->qualify(c.apply(s)));
-		
+		const std::shared_ptr<sl_type_unbound> a = c.create_fresh();
+		substitution s = exp->infer_type(c, a);
+		c.register_type(id->fetch_id(), a->apply(s));
 		return s;
 	}
 

@@ -1,5 +1,7 @@
 #include "symboltable.hpp"
 
+#include <map>
+
 #include "typecontext.hpp"
 
 #include "types/sl_type_unbound.hpp"
@@ -34,7 +36,7 @@ namespace splicpp
 	sid symboltable::reg_cons(std::shared_ptr<ast_construct> cons)
 	{
 		sid i = create_entry(symbolref::t_construct, conss.size());
-		//cons->assign(i); // assignment unnecessary
+		cons->assign(i);
 		conss.push_back(cons);
 		return i;
 	}	
@@ -76,26 +78,46 @@ namespace splicpp
 		typecontext c;
 		substitution s;
 		
-		std::vector<std::shared_ptr<sl_type_unbound>> init_types;
+		std::map<sid, std::shared_ptr<sl_type_unbound>> init_types;
 		for(size_t i = 0; i < index.size(); i++)
-		{
-			const std::shared_ptr<sl_type_unbound> u = c.create_fresh();
-			init_types.push_back(u);
-			c.register_type(i, u);
-		}
+			if(index[i].t != symbolref::t_type && index[i].t != symbolref::t_arg && index[i].t != symbolref::t_local_var)
+			{
+				const std::shared_ptr<sl_type_unbound> t = c.create_fresh();
+				init_types[i] = t;
+				c.register_type(i, t);
+			}
 		
 		print(c, std::cout << std::endl << "Typecontext initial: " << std::endl);
 		
 		for(const sid i : select_all(symbolref::symbolreftype::t_construct))
-			s = conss[index[i].i]->infer_type(c.apply(s), init_types[i]).composite(s);
+		{
+			c = c.apply(s);
+			std::shared_ptr<sl_type_unbound> t = init_types[i];
+			s = conss[index[i].i]->declare_type(c).composite(s);
+			s.add(t, c[i]->apply(s));
+		}
 		
-		s.print(std::cout << std::endl << "Substitutions: " << std::endl);
+		//s.print(std::cout << std::endl << "Substitutions: " << std::endl);
 		
 		for(const sid i : select_all(symbolref::symbolreftype::t_var))
-			s = vars[index[i].i]->infer_type(c.apply(s), init_types[i]).composite(s);
+		{
+			c = c.apply(s);
+			std::shared_ptr<sl_type_unbound> t = init_types[i];
+			s = vars[index[i].i]->declare_type(c).composite(s);
+			substitution snew;
+			snew.add(t, c[i]);
+			s = s.composite(snew);
+		}
 		
 		for(const sid i : select_all(symbolref::symbolreftype::t_fun))
-			s = funs[index[i].i]->infer_type(c.apply(s), init_types[i]).composite(s);
+		{
+			c = c.apply(s);
+			std::shared_ptr<sl_type_unbound> t = init_types[i];
+			s = funs[index[i].i]->declare_type(c).composite(s);
+			substitution snew;
+			snew.add(t, c[i]);
+			s = s.composite(snew);
+		}
 		
 		//for(const sid i : select_all(symbolref::symbolreftype::t_local_var))
 		//	s = local_vars[index[i].i]->infer_type(c, init_types[i]).composite(s);
@@ -123,9 +145,12 @@ namespace splicpp
 		
 		c = c.apply(s);
 		
-		for(const sid i : select_all(symbolref::symbolreftype::t_var))
+		/*for(const sid i : select_all(symbolref::symbolreftype::t_var))
 			c[i]->unify(vars[index[i].i]->fetch_assigned_type(c));
 		
+		for(const sid i : select_all(symbolref::symbolreftype::t_fun))
+			c[i]->unify(funs[index[i].i]->fetch_assigned_type(c));
+		*/
 		s.print(std::cout << std::endl << "Substitutions: " << std::endl);
 		
 		print(c, std::cout << std::endl << "Typecontext final: " << std::endl);
