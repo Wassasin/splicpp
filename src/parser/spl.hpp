@@ -39,10 +39,8 @@ namespace splicpp
 		, L_SBRACKET_RIGHT(add_symbol(		new static_literal("l_sbracket_right", "]")))
 		, L_COMMA(add_symbol(				new static_literal("l_comma", ",")))
 
-		, L_ID(add_symbol(					new regex_literal("l_id", "([a-zA-Z][a-zA-Z0-9]*[\\_]?)")))
+		, L_ID(add_symbol(					new regex_literal("l_id", "([a-zA-Z][a-zA-Z0-9\\_]*)")))
 		, L_DIGIT(add_symbol(				new regex_literal("l_digit", "(0|[1-9][0-9]*)")))
-		
-		, L_UNDERSCORE(add_symbol(			new static_literal("l_underscore", "_")))
 		
 		, L_MINUS(add_symbol(				new static_literal("l_minus", "-")))
 		, L_PLUS(add_symbol(				new static_literal("l_plus", "+")))
