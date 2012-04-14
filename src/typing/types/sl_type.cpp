@@ -11,24 +11,30 @@ namespace splicpp
 {
 	substitution sl_type::unify(const std::shared_ptr<sl_type> t) const
 	{
-		if(t->type() == t_unbound)
-		{
-			if(type() == t_unbound)
-				return unify_partial(t);
-			else
-				return t->unify_partial(apply(substitution::id()));
-		}
-		else
-			return unify_partial(t);
+		std::shared_ptr<sl_type> x = apply(substitution::id());
+		std::shared_ptr<sl_type> y = t;
+		
+		//Assume unbound in case of unification for type declaration; ast_id takes care of proper unbinding in case of function-usage and type inference.
+		if(x->type() == t_universal)
+			x = std::dynamic_pointer_cast<sl_type_universal>(x)->unbind_naive();
+		
+		if(y->type() == t_universal)
+			y = std::dynamic_pointer_cast<sl_type_universal>(y)->unbind_naive();
+		
+		if(x->type() != t_unbound && y->type() == t_unbound)
+			return y->unify_partial(x);
+		
+		return x->unify_partial(y);
 	}
 	
 	std::shared_ptr<sl_type> sl_type::qualify(const typecontext& c) const
 	{
 		const auto b = subtract_ptr<sl_type_unbound>(tv(), c.fv());
+		const auto id = apply(substitution::id()); //Hack to return this
 		if(b.size() == 0)
-			return apply(substitution::id()); //Hack to return this
+			return id;
 		
-		std::shared_ptr<sl_type_universal> result(new sl_type_universal(apply(substitution::id())));
+		std::shared_ptr<sl_type_universal> result(new sl_type_universal(id));
 		for(const auto x : b)
 			result->bind(x);
 		
@@ -51,5 +57,11 @@ namespace splicpp
 	bool sl_type::is_unbound() const
 	{
 		return false;
+	}
+	
+	void sl_type::print_debug() const
+	{
+		this->print(std::cout);
+		std::cout << std::endl;
 	}
 }

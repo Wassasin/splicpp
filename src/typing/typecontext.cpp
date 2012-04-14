@@ -75,4 +75,9 @@ namespace splicpp
 			s << std::endl;
 		}
 	}
+	
+	void typecontext::print_debug() const
+	{
+		print(std::cout);
+	}
 }

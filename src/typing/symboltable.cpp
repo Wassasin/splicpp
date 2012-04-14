@@ -94,7 +94,7 @@ namespace splicpp
 			c = c.apply(s);
 			std::shared_ptr<sl_type_unbound> t = init_types[i];
 			s = conss[index[i].i]->declare_type(c).composite(s);
-			s.add(t, c[i]->apply(s));
+			s = init_types[i]->apply(s)->unify(c[i]->apply(s)).composite(s);
 		}
 		
 		//s.print(std::cout << std::endl << "Substitutions: " << std::endl);
@@ -104,19 +104,14 @@ namespace splicpp
 			c = c.apply(s);
 			std::shared_ptr<sl_type_unbound> t = init_types[i];
 			s = vars[index[i].i]->declare_type(c).composite(s);
-			substitution snew;
-			snew.add(t, c[i]);
-			s = s.composite(snew);
+			s = init_types[i]->apply(s)->unify(c[i]->apply(s)).composite(s);
 		}
 		
 		for(const sid i : select_all(symbolref::symbolreftype::t_fun))
 		{
 			c = c.apply(s);
-			std::shared_ptr<sl_type_unbound> t = init_types[i];
 			s = funs[index[i].i]->declare_type(c).composite(s);
-			substitution snew;
-			snew.add(t, c[i]);
-			s = s.composite(snew);
+			s = init_types[i]->apply(s)->unify(c[i]->apply(s)).composite(s);
 		}
 		
 		//for(const sid i : select_all(symbolref::symbolreftype::t_local_var))

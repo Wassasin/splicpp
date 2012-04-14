@@ -49,9 +49,25 @@ namespace splicpp
 	{
 		std::shared_ptr<sl_type> xt = c[fetch_id()];
 		
+		std::cout << std::endl;
+		std::cout << std::endl << "ast_id::infer_type name: " << name;
+		std::cout << std::endl << "ast_id::infer_type xt (pre-unbind): ";
+		xt->print(std::cout);
+		
 		if(xt->type() == sl_type::t_universal)
 			xt = std::dynamic_pointer_cast<sl_type_universal>(xt)->unbind(c);
 		
-		return xt->unify(t);
+		std::cout << std::endl << "ast_id::infer_type xt: ";
+		xt->print(std::cout);
+		std::cout << std::endl << "ast_id::infer_type t: ";
+		t->print(std::cout);
+		
+		const substitution s = xt->unify(t);
+		
+		std::cout << std::endl << "ast_id::infer_type s: ";
+		s.print(std::cout);
+		std::cout << std::endl;
+		
+		return s;
 	}
 }

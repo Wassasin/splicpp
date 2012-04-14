@@ -58,11 +58,11 @@ namespace splicpp
 		if(args.size() != tf->args.size())
 			throw unification_error(this, tf.get());
 			
-		substitution s;
+		substitution s = r->unify(tf->r);
 		for(size_t i = 0; i < args.size(); i++)
-			s = s.composite(args[i]->unify(tf->args[i]));
+			s = args.at(args.size()-(i+1))->apply(s)->unify(tf->args.at(args.size()-(i+1))->apply(s)).composite(s);
 		
-		return s.composite(r->unify(tf->r));
+		return s;
 	}
 	
 	std::shared_ptr<sl_type> sl_type_function::apply(const substitution& s) const

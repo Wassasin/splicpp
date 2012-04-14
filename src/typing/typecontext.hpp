@@ -31,6 +31,7 @@ namespace splicpp
 		typecontext apply(const substitution& s) const;
 		std::vector<std::shared_ptr<sl_type_unbound>> fv() const;
 		void print(std::ostream& s) const;
+		void print_debug() const;
 	};
 }
 

@@ -19,12 +19,15 @@ namespace splicpp
 	
 		if(subs.find(x) != subs.end()) // There already is a [x -> ?]
 		{
-			std::cout << "!!! ";
-			x->print(std::cout);
-			std::cout << " => ";
-			y->print(std::cout);
-			std::cout << std::endl;
-			return;
+			std::stringstream ss;
+			ss << "Substitution already contains ";
+			x->print(ss);
+			ss << " => ";
+			subs[x]->print(ss);
+			ss << " (tried to add => ";
+			y->print(ss);
+			ss << ')' << std::endl;
+			throw std::runtime_error(ss.str());
 		}
 		
 		substitution s;
@@ -83,7 +86,7 @@ namespace splicpp
 	void substitution::print(std::ostream& s) const
 	{
 		s << '[';
-		delim_printer p(",\n", s);
+		delim_printer p(", ", s);
 		
 		for(const auto sub : subs)
 		{

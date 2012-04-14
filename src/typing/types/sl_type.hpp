@@ -34,6 +34,7 @@ namespace splicpp
 		std::shared_ptr<sl_type> qualify(const typecontext& c) const;
 		std::shared_ptr<sl_type> force_qualify() const;
 		substitution unify(const std::shared_ptr<sl_type> t) const;
+		void print_debug() const;
 		
 		virtual ~sl_type() {}
 		virtual bool is_unbound() const;

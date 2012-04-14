@@ -25,6 +25,7 @@ namespace splicpp
 		
 		void bind(std::shared_ptr<sl_type_unbound> t);
 		std::shared_ptr<sl_type> unbind(const typecontext& c) const;
+		std::shared_ptr<sl_type> unbind_naive() const;
 		
 		virtual sl_type_type type() const;
 		virtual void print(std::ostream& s) const;

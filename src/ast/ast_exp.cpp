@@ -109,12 +109,9 @@ namespace splicpp
 		}	
 		
 		const substitution s1 = e_left->infer_type(c, t1);
-		const substitution s2 = e_right->infer_type(c.apply(s1), t2).composite(s1);
+		const substitution s2 = e_right->infer_type(c.apply(s1), t2->apply(s1)).composite(s1);
 		
-		if(optype() == op_times)
-			s1.print(std::cout);
-		
-		return t->apply(s2)->unify(r).composite(s2);
+		return t->apply(s2)->unify(r->apply(s2)).composite(s2);
 		
 	}
 	

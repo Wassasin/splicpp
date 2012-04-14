@@ -34,6 +34,18 @@ namespace splicpp
 		for(size_t i = 0; i < args.size(); i++)
 			s = args[i]->infer_type(c.apply(s), targs[i]->apply(s)).composite(s);
 		
+		std::cout << std::endl;
+		std::cout << std::endl << "ast_fun_call::infer_type s: ";
+		s.print(std::cout);
+		
+		std::cout << std::endl << "ast_fun_call::infer_type t: ";
+		t->print(std::cout);
+		
+		std::cout << std::endl << "ast_fun_call::infer_type ft: ";
+		ft->print(std::cout);
+		
+		std::cout << std::endl;
+		
 		return s;
 	}
 

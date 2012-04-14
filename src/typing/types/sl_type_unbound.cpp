@@ -40,10 +40,6 @@ namespace splicpp
 	substitution sl_type_unbound::unify_partial(const std::shared_ptr<sl_type> t) const
 	{
 		const std::shared_ptr<sl_type_unbound> copy(new sl_type_unbound(*this));
-	
-		if(t->type() == t_unbound)
-			std::cout << "# " << id << " => " << std::dynamic_pointer_cast<sl_type_unbound>(t)->id << std::endl;
-		
 		if(t->type() == t_unbound && equals(std::dynamic_pointer_cast<sl_type_unbound>(t)))
 			return substitution::id();
 	

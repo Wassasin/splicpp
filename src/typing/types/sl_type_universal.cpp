@@ -1,5 +1,7 @@
 #include "sl_type_universal.hpp"
 
+#include <stdexcept>
+
 #include "sl_type.hpp"
 #include "sl_type_unbound.hpp"
 
@@ -20,6 +22,11 @@ namespace splicpp
 		
 		return t->apply(s);
 	}
+	
+	std::shared_ptr<sl_type> sl_type_universal::unbind_naive() const
+	{
+		return t;
+	}
 
 	sl_type::sl_type_type sl_type_universal::type() const
 	{
@@ -28,11 +35,12 @@ namespace splicpp
 	
 	void sl_type_universal::print(std::ostream& s) const
 	{
-		s << "forall";
+		s << "(forall";
 		for(const auto b : bindings)
 			b->print(s << ' ');
 		
 		t->print(s << " . ");
+		s << ')';
 	}
 	
 	std::vector<std::shared_ptr<sl_type_unbound>> sl_type_universal::tv() const
@@ -47,9 +55,10 @@ namespace splicpp
 		return result;
 	}
 	
-	substitution sl_type_universal::unify_partial(const std::shared_ptr<sl_type> t) const
+	substitution sl_type_universal::unify_partial(const std::shared_ptr<sl_type>) const
 	{
-		return this->t->unify(t);
+		throw std::runtime_error("Should never unify universal types");
+		//return this->t->unify(t);
 	}
 	
 	std::shared_ptr<sl_type> sl_type_universal::apply(const substitution& s) const

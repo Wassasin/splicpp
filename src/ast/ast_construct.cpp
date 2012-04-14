@@ -24,11 +24,8 @@ namespace splicpp
 	
 	substitution ast_construct::declare_type(typecontext& c) const
 	{
-		std::shared_ptr<sl_type> oldt = c[id.get()];
-		std::shared_ptr<sl_type> newt = fetch_type(c);
-		
-		c.register_type(id.get(), newt);
-		return oldt->unify(newt);
+		c.register_type(id.get(), fetch_type(c));
+		return substitution::id();
 	}
 	
 	/* print, isEmpty, head, tail, fst, and snd */
