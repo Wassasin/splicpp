@@ -8,6 +8,7 @@
 #include "../typing/types/sl_type.hpp"
 #include "../typing/types/sl_type_bool.hpp"
 #include "../typing/types/sl_type_unbound.hpp"
+#include "../typing/types/sl_type_universal.hpp"
 #include "../typing/types/sl_type_void.hpp"
 
 namespace splicpp
@@ -144,11 +145,31 @@ namespace splicpp
 		s << ';';
 	}
 	
-	substitution ast_stmt_assignment::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
+	substitution ast_stmt_assignment::infer_type(const typecontext& c, const std::shared_ptr<sl_type>) const
 	{
-		const std::shared_ptr<sl_type> a = c.create_fresh();
-		const substitution s = id->infer_type(c, a);
-		return exp->infer_type(c, a->apply(s)).composite(s);
+		const std::shared_ptr<sl_type_unbound> a = c.create_fresh();
+		substitution s = exp->infer_type(c, a);
+		
+		auto torig = c[id->fetch_id()]->apply(s);
+		if(torig->type() == sl_type::t_universal)
+			torig = std::dynamic_pointer_cast<sl_type_universal>(torig)->unbind_naive(); //Remove universal qualifier, because when assigning refreshment of bound variables is not desired (type constraints propagate back to definition)
+		
+		const substitution result = a->apply(s)->unify(torig).composite(s);
+		
+		std::cout << std::endl;
+		std::cout << std::endl << "ast_stmt_assignment::infer_type name: " << id->fetch_name();
+		std::cout << std::endl << "ast_stmt_assignment::infer_type a: ";
+		a->print(std::cout);
+		std::cout << std::endl << "ast_stmt_assignment::infer_type c[" << id->fetch_id() << "]: ";
+		c[id->fetch_id()]->apply(s)->print(std::cout);
+		std::cout << std::endl << "ast_stmt_assignment::infer_type c[" << id->fetch_id() << "]->unbind_naive(): ";
+		torig->print(std::cout);
+		std::cout << std::endl << "ast_stmt_assignment::infer_type s: ";
+		s.print(std::cout);
+		std::cout << std::endl << "ast_stmt_assignment::infer_type unify: ";
+		result.print(std::cout);
+		
+		return result;
 	}
 	
 	/* ast_stmt_fun_call */
@@ -169,7 +190,7 @@ namespace splicpp
 		s << ';';
 	}
 	
-	substitution ast_stmt_fun_call::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
+	substitution ast_stmt_fun_call::infer_type(const typecontext& c, const std::shared_ptr<sl_type>) const
 	{
 		return f->infer_type(c, c.create_fresh());
 	}

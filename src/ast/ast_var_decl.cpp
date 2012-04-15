@@ -40,7 +40,7 @@ namespace splicpp
 	{
 		const std::shared_ptr<sl_type_unbound> a = c.create_fresh();
 		substitution s = exp->infer_type(c, a);
-		c.register_type(id->fetch_id(), a->apply(s));
+		c.register_type(id->fetch_id(), a->apply(s)->qualify(c.apply(s)));
 		return s;
 	}
 

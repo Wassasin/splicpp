@@ -75,7 +75,7 @@ namespace splicpp
 	
 	substitution ast_fun_decl::declare_type(typecontext& c) const
 	{
-		typecontext cold = c; //Copy typecontext for qualification
+		typecontext ccopy = c; //Copy typecontext for qualification
 	
 		std::shared_ptr<sl_type_unbound> r = c.create_fresh();
 		std::vector<std::shared_ptr<sl_type>> t_args;
@@ -95,7 +95,7 @@ namespace splicpp
 		for(const auto stmt : stmts)
 			s = stmt->infer_type(c.apply(s), r->apply(s)).composite(s);
 		
-		c.register_type(id->fetch_id(), ft->apply(s)->qualify(cold));
+		c.register_type(id->fetch_id(), ft->apply(s)->qualify(c));
 		
 		return s;
 	}
