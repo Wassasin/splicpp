@@ -10,7 +10,7 @@ namespace splicpp
 		std::shared_ptr<sl_type> t;
 
 	protected:
-		virtual substitution unify_partial(const std::shared_ptr<sl_type> t) const;
+		virtual boost::optional<substitution> unify_partial(const std::shared_ptr<sl_type> t) const;
 	
 	public:
 		sl_type_array(const std::shared_ptr<sl_type> t)

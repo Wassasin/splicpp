@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <ostream>
+#include <boost/optional.hpp>
 
 #include "../substitution.hpp"
 
@@ -16,7 +17,7 @@ namespace splicpp
 	class sl_type
 	{
 	protected:
-		virtual substitution unify_partial(const std::shared_ptr<sl_type> t) const = 0;
+		virtual boost::optional<substitution> unify_partial(const std::shared_ptr<sl_type> t) const = 0;
 		
 	public:
 		enum sl_type_type
@@ -33,7 +34,10 @@ namespace splicpp
 		
 		std::shared_ptr<sl_type> qualify(const typecontext& c) const;
 		std::shared_ptr<sl_type> force_qualify() const;
+		
 		substitution unify(const std::shared_ptr<sl_type> t) const;
+		boost::optional<substitution> unify_internal(const std::shared_ptr<sl_type> t) const;
+		
 		void print_debug() const;
 		
 		virtual ~sl_type() {}

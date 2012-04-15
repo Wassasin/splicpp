@@ -55,9 +55,11 @@ namespace splicpp
 		return result;
 	}
 	
-	substitution sl_type_universal::unify_partial(const std::shared_ptr<sl_type>) const
+	boost::optional<substitution> sl_type_universal::unify_partial(const std::shared_ptr<sl_type> t) const
 	{
-		throw std::runtime_error("Should never unify universal types");
+		return boost::optional<substitution>(); //Always fails, polymorphic unification does not exist
+		//return this->t->unify_internal(t);
+		//throw std::runtime_error("Should never unify universal types");
 		//return this->t->unify(t);
 	}
 	

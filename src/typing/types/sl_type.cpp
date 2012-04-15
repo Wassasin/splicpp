@@ -3,28 +3,35 @@
 #include "../../common/generic.hpp"
 #include "../typecontext.hpp"
 #include "../substitution.hpp"
+#include "../unification_error.hpp"
 
 #include "sl_type_universal.hpp"
 #include "sl_type_unbound.hpp"
 
 namespace splicpp
 {
-	substitution sl_type::unify(const std::shared_ptr<sl_type> t) const
+	boost::optional<substitution> sl_type::unify_internal(const std::shared_ptr<sl_type> t) const
 	{
-		std::shared_ptr<sl_type> x = apply(substitution::id());
-		std::shared_ptr<sl_type> y = t;
+		const std::shared_ptr<sl_type> x = apply(substitution::id());
+		const std::shared_ptr<sl_type> y = t;
 		
-		//Assume unbound in case of unification for type declaration; ast_id takes care of proper unbinding in case of function-usage and type inference.
-		if(x->type() == t_universal)
-			x = std::dynamic_pointer_cast<sl_type_universal>(x)->unbind_naive();
+		const boost::optional<substitution> u = x->unify_partial(y);
+		if(u)
+			return u;
 		
-		if(y->type() == t_universal)
-			y = std::dynamic_pointer_cast<sl_type_universal>(y)->unbind_naive();
-		
-		if(x->type() != t_unbound && y->type() == t_unbound)
+		if(y->type() == t_unbound) //Special unbound exception
 			return y->unify_partial(x);
 		
-		return x->unify_partial(y);
+		return boost::optional<substitution>();
+	}
+
+	substitution sl_type::unify(const std::shared_ptr<sl_type> t) const
+	{
+		boost::optional<substitution> u = unify_internal(t);
+		if(!u)
+			throw unification_error(this, t.get());
+		
+		return u.get();
 	}
 	
 	std::shared_ptr<sl_type> sl_type::qualify(const typecontext& c) const

@@ -14,7 +14,7 @@ namespace splicpp
 		std::shared_ptr<sl_type> r;
 		
 	protected:
-		virtual substitution unify_partial(const std::shared_ptr<sl_type> t) const;
+		virtual boost::optional<substitution> unify_partial(const std::shared_ptr<sl_type> t) const;
 	
 	public:
 		sl_type_function(const std::vector<std::shared_ptr<sl_type>> args, const std::shared_ptr<sl_type> r)

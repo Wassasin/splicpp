@@ -37,7 +37,7 @@ namespace splicpp
 		s << "t" << id;
 	}
 	
-	substitution sl_type_unbound::unify_partial(const std::shared_ptr<sl_type> t) const
+	boost::optional<substitution> sl_type_unbound::unify_partial(const std::shared_ptr<sl_type> t) const
 	{
 		const std::shared_ptr<sl_type_unbound> copy(new sl_type_unbound(*this));
 		if(t->type() == t_unbound && equals(std::dynamic_pointer_cast<sl_type_unbound>(t)))
@@ -45,7 +45,7 @@ namespace splicpp
 	
 		for(const auto tx : t->tv())
 			if(copy->equals(tx))
-				throw unification_error(std::static_pointer_cast<sl_type>(copy), t);
+				throw boost::optional<substitution>();
 		
 		substitution s;
 		s.add(copy, t);
