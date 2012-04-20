@@ -5,10 +5,10 @@
 #include "ast_fun_call.hpp"
 
 #include "../typing/typecontext.hpp"
+#include "../typing/types/sl_polytype.hpp"
 #include "../typing/types/sl_type.hpp"
 #include "../typing/types/sl_type_bool.hpp"
 #include "../typing/types/sl_type_unbound.hpp"
-#include "../typing/types/sl_type_universal.hpp"
 #include "../typing/types/sl_type_void.hpp"
 
 namespace splicpp
@@ -147,29 +147,19 @@ namespace splicpp
 	
 	substitution ast_stmt_assignment::infer_type(const typecontext& c, const std::shared_ptr<sl_type>) const
 	{
-		const std::shared_ptr<sl_type_unbound> a = c.create_fresh();
-		substitution s = exp->infer_type(c, a);
-		
-		auto torig = c[id->fetch_id()]->apply(s);
-		if(torig->type() == sl_type::t_universal)
-			torig = std::dynamic_pointer_cast<sl_type_universal>(torig)->unbind_naive(); //Remove universal qualifier, because when assigning refreshment of bound variables is not desired (type constraints propagate back to definition)
-		
-		const substitution result = a->apply(s)->unify(torig).composite(s);
+		const std::shared_ptr<sl_type> t = c[id->fetch_id()]->unbind_maintain();
+		substitution s = exp->infer_type(c, t);
 		
 		std::cout << std::endl;
 		std::cout << std::endl << "ast_stmt_assignment::infer_type name: " << id->fetch_name();
-		std::cout << std::endl << "ast_stmt_assignment::infer_type a: ";
-		a->print(std::cout);
 		std::cout << std::endl << "ast_stmt_assignment::infer_type c[" << id->fetch_id() << "]: ";
-		c[id->fetch_id()]->apply(s)->print(std::cout);
-		std::cout << std::endl << "ast_stmt_assignment::infer_type c[" << id->fetch_id() << "]->unbind_naive(): ";
-		torig->print(std::cout);
+		c[id->fetch_id()]->print(std::cout);
+		std::cout << std::endl << "ast_stmt_assignment::infer_type c[" << id->fetch_id() << "]->unbind_maintain(c): ";
+		t->print(std::cout);
 		std::cout << std::endl << "ast_stmt_assignment::infer_type s: ";
 		s.print(std::cout);
-		std::cout << std::endl << "ast_stmt_assignment::infer_type unify: ";
-		result.print(std::cout);
 		
-		return result;
+		return s;
 	}
 	
 	/* ast_stmt_fun_call */

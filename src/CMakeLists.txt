@@ -35,10 +35,12 @@ add_executable(splicpp
 	ast/ast_var_decl.cpp
 	
 	typing/typecontext.cpp
+	typing/ltypecontext.cpp
 	typing/substitution.cpp
 	typing/symboltable.cpp
 	typing/varcontext.cpp
 	
+	typing/types/sl_polytype.cpp
 	typing/types/sl_type.cpp
 	typing/types/sl_type_array.cpp
 	typing/types/sl_type_bool.cpp
@@ -46,7 +48,6 @@ add_executable(splicpp
 	typing/types/sl_type_int.cpp
 	typing/types/sl_type_tuple.cpp
 	typing/types/sl_type_unbound.cpp
-	typing/types/sl_type_universal.cpp
 	typing/types/sl_type_void.cpp
 )
 

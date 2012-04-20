@@ -1,10 +1,12 @@
 #include "ast_fun_decl.hpp"
 
 #include "../typing/typecontext.hpp"
+#include "../typing/ltypecontext.hpp"
 
 #include "../typing/varcontext.hpp"
 #include "../typing/symboltable.hpp"
 
+#include "../typing/types/sl_polytype.hpp"
 #include "../typing/types/sl_type.hpp"
 #include "../typing/types/sl_type_function.hpp"
 #include "../typing/types/sl_type_unbound.hpp"
@@ -73,29 +75,39 @@ namespace splicpp
 		return std::shared_ptr<sl_type>(new sl_type_function(t_args, this->t->fetch_type(c)));
 	}
 	
-	substitution ast_fun_decl::declare_type(typecontext& c) const
+	substitution ast_fun_decl::declare_type(ltypecontext& c) const
 	{
-		typecontext ccopy = c; //Copy typecontext for qualification
+		ltypecontext clocal = c;
 	
 		std::shared_ptr<sl_type_unbound> r = c.create_fresh();
 		std::vector<std::shared_ptr<sl_type>> t_args;
 		for(size_t i = 0; i < args.size(); i++)
-			t_args.push_back(args[i]->declare_type(c));
+			t_args.push_back(args[i]->declare_type(clocal));
 		
 		std::shared_ptr<sl_type_function> ft(new sl_type_function(t_args, r));
 		
 		substitution s;
 		for(const auto decl : decls)
 		{
-			c = c.apply(s);
-			s = decl->declare_type(c).composite(s);
+			clocal = clocal.apply(s);
+			s = decl->declare_type(clocal).composite(s);
 		}
 		
-		c = c.apply(s);
 		for(const auto stmt : stmts)
-			s = stmt->infer_type(c.apply(s), r->apply(s)).composite(s);
+		{
+			std::cout << std::endl << "BLAAT";
+			clocal.apply(s).print(std::cout << std::endl);
+			s = stmt->infer_type(clocal.apply(s), r->apply(s)).composite(s);
+		}
 		
-		c.register_type(id->fetch_id(), ft->apply(s)->qualify(c));
+		std::cout << std::endl;
+		std::cout << std::endl << "ast_fun_decl::declare_type register_type: ";
+		sl_polytype::qualify(c.apply(s), ft->apply(s))->print(std::cout);
+		
+		c.register_type(id->fetch_id(), sl_polytype::qualify(c.apply(s), ft->apply(s)));
+		
+		std::cout << std::endl << "ast_fun_decl::declare_type c: ";
+		c.print(std::cout);
 		
 		return s;
 	}

@@ -16,6 +16,7 @@ namespace splicpp
 	class symboltable;
 	class varcontext;
 	class typecontext;
+	class ltypecontext;
 	class sl_type;
 
 	class ast_var_decl : public ast
@@ -39,7 +40,7 @@ namespace splicpp
 		void register_types(symboltable& s, varcontext& c);
 		
 		std::shared_ptr<sl_type> fetch_assigned_type(const typecontext& c) const;
-		substitution declare_type(typecontext& c) const;
+		substitution declare_type(ltypecontext& c) const;
 		
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};

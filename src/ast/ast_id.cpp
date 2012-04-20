@@ -6,8 +6,8 @@
 #include "../typing/varcontext.hpp"
 #include "../typing/typecontext.hpp"
 
+#include "../typing/types/sl_polytype.hpp"
 #include "../typing/types/sl_type.hpp"
-#include "../typing/types/sl_type_universal.hpp"
 
 namespace splicpp
 {
@@ -47,23 +47,17 @@ namespace splicpp
 	
 	substitution ast_id::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
 	{
-		std::shared_ptr<sl_type> xt = c[fetch_id()];
+		const std::shared_ptr<sl_type> xt = c[fetch_id()]->unbind(c);
+		const substitution s = xt->unify(t);
 		
 		std::cout << std::endl;
 		std::cout << std::endl << "ast_id::infer_type name: " << name;
 		std::cout << std::endl << "ast_id::infer_type xt (pre-unbind): ";
-		xt->print(std::cout);
-		
-		if(xt->type() == sl_type::t_universal)
-			xt = std::dynamic_pointer_cast<sl_type_universal>(xt)->unbind(c);
-		
+		c[fetch_id()]->print(std::cout);
 		std::cout << std::endl << "ast_id::infer_type xt: ";
 		xt->print(std::cout);
 		std::cout << std::endl << "ast_id::infer_type t: ";
 		t->print(std::cout);
-		
-		const substitution s = xt->unify(t);
-		
 		std::cout << std::endl << "ast_id::infer_type s: ";
 		s.print(std::cout);
 		std::cout << std::endl;

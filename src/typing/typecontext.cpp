@@ -4,12 +4,12 @@
 
 #include "../common/generic.hpp"
 
-#include "types/sl_type.hpp"
+#include "types/sl_polytype.hpp"
 #include "types/sl_type_unbound.hpp"
 
 namespace splicpp
 {
-	void typecontext::register_type(const sid i, const std::shared_ptr<sl_type> t)
+	void typecontext::register_type(const sid i, const std::shared_ptr<sl_polytype> t)
 	{
 		if(i >= types.size())
 			types.resize(i+1);
@@ -25,7 +25,7 @@ namespace splicpp
 		return types.at(i);
 	}
 	
-	std::shared_ptr<sl_type> typecontext::operator[](const sid i) const
+	std::shared_ptr<sl_polytype> typecontext::operator[](const sid i) const
 	{
 		const auto t = types.at(i);
 		if(!t)
@@ -45,8 +45,23 @@ namespace splicpp
 		
 		for(size_t i = 0; i < c.types.size(); i++)
 			if(c.types[i])
-				c.types[i] = c.types[i].get()->apply(s);
+				c.types[i] = c.types[i].get()->apply(c, s); //Original context
 		
+		return c;
+	}
+	
+	typecontext typecontext::apply_maintain(const substitution& s) const
+	{
+		typecontext c = *this;
+		
+		for(size_t i = 0; i < c.types.size(); i++)
+			if(c.types[i])
+			{
+				typecontext ctmp(ft_count);
+				ctmp.register_type(i, types[i].get());
+				c.types[i] = c.types[i].get()->apply(ctmp, s); //Maintain qualifications by creating an artificial empty typecontext
+			}
+			
 		return c;
 	}
 	

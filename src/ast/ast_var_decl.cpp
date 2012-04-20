@@ -1,7 +1,9 @@
 #include "ast_var_decl.hpp"
 
 #include "../typing/typecontext.hpp"
+#include "../typing/ltypecontext.hpp"
 
+#include "../typing/types/sl_polytype.hpp"
 #include "../typing/types/sl_type.hpp"
 #include "../typing/types/sl_type_unbound.hpp"
 
@@ -36,11 +38,13 @@ namespace splicpp
 		return t->fetch_type(c);
 	}
 	
-	substitution ast_var_decl::declare_type(typecontext& c) const
+	substitution ast_var_decl::declare_type(ltypecontext& c) const
 	{
 		const std::shared_ptr<sl_type_unbound> a = c.create_fresh();
-		substitution s = exp->infer_type(c, a);
-		c.register_type(id->fetch_id(), a->apply(s)->qualify(c.apply(s)));
+		const substitution s = exp->infer_type(c, a);
+		const std::shared_ptr<sl_polytype> t = sl_polytype::qualify(c.apply(s), a->apply(s));
+		
+		c.register_type(id->fetch_id(), t);
 		return s;
 	}
 

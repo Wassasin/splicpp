@@ -4,6 +4,7 @@
 #include "ast_type.hpp"
 
 #include "../typing/typecontext.hpp"
+#include "../typing/types/sl_polytype.hpp"
 #include "../typing/types/sl_type.hpp"
 #include "../typing/types/sl_type_unbound.hpp"
 
@@ -19,6 +20,11 @@ namespace splicpp
 		return id->fetch_name();
 	}
 	
+	sid ast_f_arg::fetch_id() const
+	{
+		return id->fetch_id();
+	}
+	
 	void ast_f_arg::register_types(symboltable& s, varcontext& c)
 	{
 		ast_type::register_type(t, s, c);
@@ -29,10 +35,10 @@ namespace splicpp
 		return t->fetch_type(c);
 	}
 	
-	std::shared_ptr<sl_type> ast_f_arg::declare_type(typecontext& c) const
+	std::shared_ptr<sl_type_unbound> ast_f_arg::declare_type(typecontext& c) const
 	{
-		std::shared_ptr<sl_type> t = c.create_fresh();
-		c.register_type(id->fetch_id(), t);
+		const auto t = c.create_fresh();
+		c.register_type(id->fetch_id(), sl_polytype::not_qualify(t)); //t is fresh, thus would always be qualified
 		return t;
 	}
 

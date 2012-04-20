@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "../typing/typecontext.hpp"
+#include "../typing/types/sl_polytype.hpp"
 #include "../typing/types/sl_type_array.hpp"
 #include "../typing/types/sl_type_bool.hpp"
 #include "../typing/types/sl_type_function.hpp"
@@ -24,7 +25,7 @@ namespace splicpp
 	
 	substitution ast_construct::declare_type(typecontext& c) const
 	{
-		c.register_type(id.get(), fetch_type(c));
+		c.register_type(id.get(), sl_polytype::qualify(c, fetch_type(c)));
 		return substitution::id();
 	}
 	
@@ -40,7 +41,7 @@ namespace splicpp
 		const std::vector<std::shared_ptr<sl_type>> args({ std::static_pointer_cast<sl_type>(c.create_fresh()) });
 		const std::shared_ptr<sl_type> r(new sl_type_void());
 		
-		return std::shared_ptr<sl_type>(new sl_type_function(args, r))->qualify(c);
+		return std::shared_ptr<sl_type>(new sl_type_function(args, r));
 	}
 	
 	std::string ast_construct_is_empty::fetch_name() const
@@ -53,7 +54,7 @@ namespace splicpp
 		const std::vector<std::shared_ptr<sl_type>> args({ std::shared_ptr<sl_type>(new sl_type_array(std::static_pointer_cast<sl_type>(c.create_fresh()))) });
 		const std::shared_ptr<sl_type> r(new sl_type_bool());
 		
-		return std::shared_ptr<sl_type>(new sl_type_function(args, r))->qualify(c);
+		return std::shared_ptr<sl_type>(new sl_type_function(args, r));
 	}
 	
 	std::string ast_construct_head::fetch_name() const
@@ -66,7 +67,7 @@ namespace splicpp
 		const std::shared_ptr<sl_type> a = std::static_pointer_cast<sl_type>(c.create_fresh());
 		const std::vector<std::shared_ptr<sl_type>> args({ std::shared_ptr<sl_type>(new sl_type_array(a)) });
 		
-		return std::shared_ptr<sl_type>(new sl_type_function(args, a))->qualify(c);
+		return std::shared_ptr<sl_type>(new sl_type_function(args, a));
 	}
 	
 	std::string ast_construct_tail::fetch_name() const
@@ -79,7 +80,7 @@ namespace splicpp
 		const std::shared_ptr<sl_type> r(new sl_type_array(c.create_fresh()));
 		const std::vector<std::shared_ptr<sl_type>> args({ std::shared_ptr<sl_type>(r) });
 		
-		return std::shared_ptr<sl_type>(new sl_type_function(args, r))->qualify(c);
+		return std::shared_ptr<sl_type>(new sl_type_function(args, r));
 	}
 	
 	std::string ast_construct_fst::fetch_name() const
@@ -94,7 +95,7 @@ namespace splicpp
 		
 		const std::vector<std::shared_ptr<sl_type>> args({ std::shared_ptr<sl_type>(new sl_type_tuple(a1, a2)) });
 		
-		return std::shared_ptr<sl_type>(new sl_type_function(args, a1))->qualify(c);
+		return std::shared_ptr<sl_type>(new sl_type_function(args, a1));
 	}
 	
 	std::string ast_construct_snd::fetch_name() const
@@ -109,6 +110,6 @@ namespace splicpp
 		
 		const std::vector<std::shared_ptr<sl_type>> args({ std::shared_ptr<sl_type>(new sl_type_tuple(a1, a2)) });
 		
-		return std::shared_ptr<sl_type>(new sl_type_function(args, a2))->qualify(c);
+		return std::shared_ptr<sl_type>(new sl_type_function(args, a2));
 	}
 }

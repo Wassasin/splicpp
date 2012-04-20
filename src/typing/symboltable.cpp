@@ -3,7 +3,9 @@
 #include <map>
 
 #include "typecontext.hpp"
+#include "ltypecontext.hpp"
 
+#include "types/sl_polytype.hpp"
 #include "types/sl_type_unbound.hpp"
 
 namespace splicpp
@@ -75,7 +77,8 @@ namespace splicpp
 	
 	void symboltable::check_types() const
 	{
-		typecontext c;
+		std::shared_ptr<typecontext> global(new typecontext());
+		ltypecontext c(global);
 		substitution s;
 		
 		std::map<sid, std::shared_ptr<sl_type_unbound>> init_types;
@@ -84,7 +87,7 @@ namespace splicpp
 			{
 				const std::shared_ptr<sl_type_unbound> t = c.create_fresh();
 				init_types[i] = t;
-				c.register_type(i, t);
+				c.register_type(i, sl_polytype::qualify(c, t));
 			}
 		
 		print(c, std::cout << std::endl << "Typecontext initial: " << std::endl);
@@ -94,7 +97,7 @@ namespace splicpp
 			c = c.apply(s);
 			std::shared_ptr<sl_type_unbound> t = init_types[i];
 			s = conss[index[i].i]->declare_type(c).composite(s);
-			s = init_types[i]->apply(s)->unify(c[i]->apply(s)).composite(s);
+			//s = init_types[i]->apply(s)->unify(c[i]->apply(c, s)->unbind_maintain()).composite(s);
 		}
 		
 		//s.print(std::cout << std::endl << "Substitutions: " << std::endl);
@@ -104,14 +107,16 @@ namespace splicpp
 			c = c.apply(s);
 			std::shared_ptr<sl_type_unbound> t = init_types[i];
 			s = vars[index[i].i]->declare_type(c).composite(s);
-			s = init_types[i]->apply(s)->unify(c[i]->apply(s)).composite(s);
+			s = init_types[i]->apply(s)->unify(c[i]->apply(c, s)->unbind_maintain()).composite(s);
 		}
 		
 		for(const sid i : select_all(symbolref::symbolreftype::t_fun))
 		{
 			c = c.apply(s);
 			s = funs[index[i].i]->declare_type(c).composite(s);
-			s = init_types[i]->apply(s)->unify(c[i]->apply(s)).composite(s);
+			//c = c.apply(s);
+			
+			s = init_types[i]->apply(s)->unify(c[i]->apply(c, s)->unbind_maintain()).composite(s);
 		}
 		
 		//for(const sid i : select_all(symbolref::symbolreftype::t_local_var))
@@ -138,8 +143,6 @@ namespace splicpp
 			c.register_type(i, c[i]->apply(vars[index[i].i]->infer_type(c)));
 		*/
 		
-		c = c.apply(s);
-		
 		/*for(const sid i : select_all(symbolref::symbolreftype::t_var))
 			c[i]->unify(vars[index[i].i]->fetch_assigned_type(c));
 		
@@ -148,7 +151,8 @@ namespace splicpp
 		*/
 		s.print(std::cout << std::endl << "Substitutions: " << std::endl);
 		
-		print(c, std::cout << std::endl << "Typecontext final: " << std::endl);
+		print(global->apply_maintain(substitution::id()), std::cout << std::endl << "Typecontext pre-final: " << std::endl);
+		print(global->apply_maintain(s), std::cout << std::endl << "Typecontext final: " << std::endl);
 	}
 	
 	void symboltable::print(std::ostream& s) const

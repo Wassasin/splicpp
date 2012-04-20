@@ -21,6 +21,7 @@ namespace splicpp
 	class varcontext;
 	class sl_type;
 	class typecontext;
+	class ltypecontext;
 
 	class ast_fun_decl : public ast
 	{
@@ -51,7 +52,7 @@ namespace splicpp
 		void register_locals(symboltable& s, varcontext& c);
 		
 		std::shared_ptr<sl_type> fetch_assigned_type(const typecontext& c) const;
-		substitution declare_type(typecontext& c) const;
+		substitution declare_type(ltypecontext& c) const;
 		
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};

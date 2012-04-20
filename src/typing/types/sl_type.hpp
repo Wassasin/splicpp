@@ -32,9 +32,6 @@ namespace splicpp
 			t_universal
 		};
 		
-		std::shared_ptr<sl_type> qualify(const typecontext& c) const;
-		std::shared_ptr<sl_type> force_qualify() const;
-		
 		substitution unify(const std::shared_ptr<sl_type> t) const;
 		boost::optional<substitution> unify_internal(const std::shared_ptr<sl_type> t) const;
 		

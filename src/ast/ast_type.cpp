@@ -5,6 +5,7 @@
 #include "../typing/symboltable.hpp"
 #include "../typing/varcontext.hpp"
 #include "../typing/typecontext.hpp"
+#include "../typing/types/sl_polytype.hpp"
 #include "../typing/types/sl_type_int.hpp"
 #include "../typing/types/sl_type_bool.hpp"
 #include "../typing/types/sl_type_tuple.hpp"
@@ -137,7 +138,7 @@ namespace splicpp
 	
 	std::shared_ptr<sl_type> ast_type_id::fetch_type(const typecontext& c) const
 	{
-		return c[id->fetch_id()];
+		return c[id->fetch_id()]->unbind_maintain(); //Should be monomorph in any case
 	}
 	
 	/* ast_type_void */

@@ -11,6 +11,7 @@
 namespace splicpp
 {
 	class sl_type;
+	class sl_polytype;
 	class typecontext;
 
 	class ast_construct : public ast
