@@ -8,12 +8,12 @@
 
 namespace splicpp
 {
-	void sl_polytype::bind(std::shared_ptr<sl_type_unbound> t)
+	void sl_polytype_forall::bind(std::shared_ptr<sl_type_unbound> t)
 	{
 		bindings.push_back(t);
 	}
 	
-	std::shared_ptr<sl_type> sl_polytype::unbind(const typecontext& c) const
+	std::shared_ptr<sl_type> sl_polytype_forall::unbind(const typecontext& c) const
 	{
 		substitution s;
 		for(const auto binding : bindings)
@@ -22,20 +22,20 @@ namespace splicpp
 		return t->apply(s);
 	}
 	
-	std::shared_ptr<sl_type> sl_polytype::unbind_maintain() const
+	std::shared_ptr<sl_type> sl_polytype_forall::unbind_maintain() const
 	{
 		return t;
 	}
 	
-	std::vector<std::shared_ptr<sl_type_unbound>> sl_polytype::tv() const
+	std::vector<std::shared_ptr<sl_type_unbound>> sl_polytype_forall::tv() const
 	{
 		return subtract_ptr<sl_type_unbound>(t->tv(), bindings);
 	}
 	
-	std::shared_ptr<sl_polytype> sl_polytype::apply(const typecontext& c, const substitution& s) const
+	std::shared_ptr<sl_polytype> sl_polytype_forall::apply(const typecontext& c, const substitution& s) const
 	{
 		const std::shared_ptr<sl_type> tt = t->apply(s);
-		const std::shared_ptr<sl_polytype> result = not_qualify(tt);
+		const std::shared_ptr<sl_polytype_forall> result = sl_polytype_forall::not_qualify(tt);
 		
 		std::vector<std::shared_ptr<sl_type_unbound>> fvs;
 		for(const std::shared_ptr<sl_type_unbound> fvtmp : c.fv())
@@ -54,10 +54,10 @@ namespace splicpp
 			}
 		}
 		
-		return result;
+		return std::static_pointer_cast<sl_polytype>(result);
 	}
 	
-	void sl_polytype::print(std::ostream& s) const
+	void sl_polytype_forall::print(std::ostream& s) const
 	{
 		if(bindings.size() > 0)
 		{
@@ -74,7 +74,17 @@ namespace splicpp
 	
 	std::shared_ptr<sl_polytype> sl_polytype::qualify(const typecontext& c, const std::shared_ptr<sl_type> t)
 	{
-		const auto result = std::shared_ptr<sl_polytype>(new sl_polytype(t));
+		return std::static_pointer_cast<sl_polytype>(sl_polytype_forall::qualify(c, t));
+	}
+	
+	std::shared_ptr<sl_polytype> sl_polytype::not_qualify(const std::shared_ptr<sl_type> t)
+	{
+		return std::static_pointer_cast<sl_polytype>(sl_polytype_forall::not_qualify(t));
+	}
+	
+	std::shared_ptr<sl_polytype_forall> sl_polytype_forall::qualify(const typecontext& c, const std::shared_ptr<sl_type> t)
+	{
+		const auto result = std::shared_ptr<sl_polytype_forall>(new sl_polytype_forall(t));
 		
 		for(const auto x : subtract_ptr<sl_type_unbound>(t->tv(), c.fv()))
 			result->bind(x);
@@ -82,8 +92,8 @@ namespace splicpp
 		return result;
 	}
 	
-	std::shared_ptr<sl_polytype> sl_polytype::not_qualify(const std::shared_ptr<sl_type> t)
+	std::shared_ptr<sl_polytype_forall> sl_polytype_forall::not_qualify(const std::shared_ptr<sl_type> t)
 	{
-		return std::shared_ptr<sl_polytype>(new sl_polytype(t));
+		return std::shared_ptr<sl_polytype_forall>(new sl_polytype_forall(t));
 	}
 }
