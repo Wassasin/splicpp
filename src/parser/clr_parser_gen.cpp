@@ -109,7 +109,8 @@ namespace splicpp
 					if(g.fetch_symbol(bfirst)->type() != s_lit)
 						continue;
 	
-					const auto i_new = item<1>(j, 0, { { bfirst } });
+					const boost::array<stid, 1> l = { { bfirst } };
+					const auto i_new = item<1>(j, 0, l);
 		
 					if(!i_set.contains(i_new))
 						i_set.push_back(i_new);
@@ -159,7 +160,8 @@ namespace splicpp
 	{
 		const std::vector<std::vector<stid>>& first_cache = create_first_cache(g);
 
-		std::vector<itemset<1>> c = {closure({ item<1>(g.R_START, 0, { { g.L_END } }) }, first_cache, g)};
+		boost::array<stid, 1> l = { { g.L_END } };
+		std::vector<itemset<1>> c = create_vector<itemset<1>>(closure(itemset<1>(item<1>(g.R_START, 0, l)), first_cache, g));
 		std::vector<std::vector<boost::optional<stateid>>> f;
 
 		//the repeat as described in the dragon book is unnecessary, already captured by the random access and c.size

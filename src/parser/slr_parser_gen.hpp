@@ -256,7 +256,11 @@ namespace splicpp
 		
 		static std::vector<itemset<0>> items(const grammar& g) //dragon book, page 246
 		{
-			std::vector<itemset<0>> c = { closure<0>({ item<0>(g.R_START, 0) }, g) };
+			std::vector<itemset<0>> c(
+				create_vector<itemset<0>>(
+					closure<0>(itemset<0>(item<0>(g.R_START, 0)), g)
+				)
+			);
 			
 			bool changed;
 			do

@@ -76,15 +76,12 @@ namespace splicpp
 			
 			if(n.size() == 1)
 			{
-				std::shared_ptr<ast_decl> result;
 				if(n[0]->is_node(g, "nl_var_decl"))
-					result = decltype(result)(new ast_decl_var(parse_var_decl(str, n[0]->as_node()), n.sl()));
+					return std::shared_ptr<ast_decl>(new ast_decl_var(parse_var_decl(str, n[0]->as_node()), n.sl()));
 				else if(n[0]->is_node(g, "nl_fun_decl"))
-					result = decltype(result)(new ast_decl_fun(parse_fun_decl(str, n[0]->as_node()), n.sl()));
+					return std::shared_ptr<ast_decl>(new ast_decl_fun(parse_fun_decl(str, n[0]->as_node()), n.sl()));
 				else
 					throw parse_error("unexpected rule");				
-				
-				return result;
 			}
 			else
 				throw parse_error("unexpected rule");
@@ -154,11 +151,11 @@ namespace splicpp
 			if(n.size() == 1)
 			{
 				if(n[0]->is_token(g, "l_int"))
-					result = decltype(result)(new ast_type_int(n.sl()));
+					return std::shared_ptr<ast_type>(new ast_type_int(n.sl()));
 				else if(n[0]->is_token(g, "l_bool"))
-					result = decltype(result)(new ast_type_bool(n.sl()));
+					return std::shared_ptr<ast_type>(new ast_type_bool(n.sl()));
 				else if(n[0]->is_token(g, "l_id"))
-					result = decltype(result)(new ast_type_id(parse_id(str, n[0]), n.sl()));
+					return std::shared_ptr<ast_type>(new ast_type_id(parse_id(str, n[0]), n.sl()));
 				else
 					throw unexpected_element(n[0]);
 			}
@@ -167,7 +164,7 @@ namespace splicpp
 				n[0]->assert_token(g, "l_sbracket_left");
 				n[2]->assert_token(g, "l_sbracket_right");
 				
-				result = decltype(result)(new ast_type_array(parse_type(str, n[1]->as_node()), n.sl()));
+				return std::shared_ptr<ast_type>(new ast_type_array(parse_type(str, n[1]->as_node()), n.sl()));
 			}
 			else if(n.size() == 5)
 			{
@@ -175,7 +172,7 @@ namespace splicpp
 				n[2]->assert_token(g, "l_comma");
 				n[4]->assert_token(g, "l_bracket_right");
 				
-				result = decltype(result)(new ast_type_tuple(parse_type(str, n[1]->as_node()), parse_type(str, n[3]->as_node()), n.sl()));
+				return std::shared_ptr<ast_type>(new ast_type_tuple(parse_type(str, n[1]->as_node()), parse_type(str, n[3]->as_node()), n.sl()));
 			}
 			else
 				throw parse_error("unexpected rule");
@@ -188,10 +185,7 @@ namespace splicpp
 			n.assert_stid(g, "nl_f_args");
 			
 			if(n.size() == 2)
-			{
-				std::shared_ptr<ast_f_arg> arg(new ast_f_arg(parse_type(str, n[0]->as_node()), parse_id(str, n[1]), n.sl()));
-				return std::vector<decltype(arg)>({ arg });
-			}
+				return create_vector_ptr<ast_f_arg>(std::shared_ptr<ast_f_arg>(new ast_f_arg(parse_type(str, n[0]->as_node()), parse_id(str, n[1]), n.sl())));
 			else if(n.size() == 4)
 			{
 				n[1]->assert_token(g, "l_comma");
@@ -210,11 +204,10 @@ namespace splicpp
 		{
 			n.assert_stid(g, "nl_stmt");
 			
-			std::shared_ptr<ast_stmt> result;
 			if(n.size() == 2)
 			{
 				n[1]->assert_token(g, "l_semicolon");
-				result = decltype(result)(new ast_stmt_fun_call(parse_fun_call(str, n[0]->as_node()), n.sl()));
+				return std::shared_ptr<ast_stmt>(new ast_stmt_fun_call(parse_fun_call(str, n[0]->as_node()), n.sl()));
 			}
 			else if(n.size() == 3)
 			{
@@ -223,11 +216,11 @@ namespace splicpp
 					n[0]->assert_token(g, "l_cbracket_left");
 					n[2]->assert_token(g, "l_cbracket_right");
 				
-					auto ptr = new ast_stmt_stmts(n.sl());
-					result = decltype(result)(ptr);
-					
+					std::shared_ptr<ast_stmt_stmts> result(new ast_stmt_stmts(n.sl()));
 					for(auto stmt : autoparse_kleene<std::shared_ptr<ast_stmt>>(str, n[1]->as_node(), &spl_parser::parse_stmt))
-						ptr->add_stmt(stmt);
+						result->add_stmt(stmt);
+						
+					return std::static_pointer_cast<ast_stmt>(result);
 				}
 				else if(n[0]->is_token(g, "l_return"))
 				{
@@ -236,9 +229,9 @@ namespace splicpp
 					
 					auto opt_decl = autoparse_opt<std::shared_ptr<ast_exp>>(str, n[1]->as_node(), &spl_parser::parse_exp);
 					if(opt_decl)
-						result = decltype(result)(new ast_stmt_return(opt_decl.get(), n.sl()));
+						return std::shared_ptr<ast_stmt>(new ast_stmt_return(opt_decl.get(), n.sl()));
 					else
-						result = decltype(result)(new ast_stmt_return(n.sl()));
+						return std::shared_ptr<ast_stmt>(new ast_stmt_return(n.sl()));
 				}
 				else
 					throw unexpected_element(n[0]);
@@ -249,7 +242,7 @@ namespace splicpp
 				n[1]->assert_token(g, "l_assignment");
 				n[3]->assert_token(g, "l_semicolon");
 				
-				result = decltype(result)(new ast_stmt_assignment(parse_id(str, n[0]), parse_exp(str, n[2]->as_node()), n.sl()));
+				return std::shared_ptr<ast_stmt>(new ast_stmt_assignment(parse_id(str, n[0]), parse_exp(str, n[2]->as_node()), n.sl()));
 			}
 			else if(n.size() == 5)
 			{
@@ -259,7 +252,7 @@ namespace splicpp
 					n[1]->assert_token(g, "l_bracket_left");
 					n[3]->assert_token(g, "l_bracket_right");
 					
-					result = decltype(result)(new ast_stmt_while(parse_exp(str, n[2]->as_node()), parse_stmt(str, n[4]->as_node()), n.sl()));
+					return std::shared_ptr<ast_stmt>(new ast_stmt_while(parse_exp(str, n[2]->as_node()), parse_stmt(str, n[4]->as_node()), n.sl()));
 				}
 				else if(n[0]->is_token(g, "l_if"))
 				{
@@ -267,7 +260,7 @@ namespace splicpp
 					n[1]->assert_token(g, "l_bracket_left");
 					n[3]->assert_token(g, "l_bracket_right");
 					
-					result = decltype(result)(new ast_stmt_if(parse_exp(str, n[2]->as_node()), parse_stmt(str, n[4]->as_node()), n.sl()));
+					return std::shared_ptr<ast_stmt>(new ast_stmt_if(parse_exp(str, n[2]->as_node()), parse_stmt(str, n[4]->as_node()), n.sl()));
 				}
 				else
 					throw parse_error("unexpected rule");
@@ -279,12 +272,10 @@ namespace splicpp
 				n[3]->assert_token(g, "l_bracket_right");
 				n[5]->assert_token(g, "l_else");
 				
-				result = decltype(result)(new ast_stmt_if(parse_exp(str, n[2]->as_node()), parse_stmt(str, n[4]->as_node()), parse_stmt(str, n[6]->as_node()), n.sl()));
+				return std::shared_ptr<ast_stmt>(new ast_stmt_if(parse_exp(str, n[2]->as_node()), parse_stmt(str, n[4]->as_node()), parse_stmt(str, n[6]->as_node()), n.sl()));
 			}
 			else
 					throw parse_error("unexpected rule");
-			
-			return result;
 		}
 		
 		std::shared_ptr<ast_fun_call> spl_parser::parse_fun_call(const std::string str, const cst_node n) const
@@ -319,7 +310,7 @@ namespace splicpp
 			
 			if(n.size() == 1)
 			{
-				return { parse_exp(str, n[0]->as_node()) };
+				return create_vector_ptr<ast_exp>(parse_exp(str, n[0]->as_node()));
 			}
 			else if(n.size() == 3)
 			{
@@ -480,19 +471,18 @@ namespace splicpp
 		{
 			n.assert_stid(g, "nl_exp8");
 			
-			std::shared_ptr<ast_exp> result;
 			if(n.size() == 1)
 			{
 				if(n[0]->is_node(g, "nl_fun_call"))
-					result = decltype(result)(new ast_exp_fun_call(parse_fun_call(str, n[0]->as_node()), n.sl()));
+					return std::shared_ptr<ast_exp>(new ast_exp_fun_call(parse_fun_call(str, n[0]->as_node()), n.sl()));
 				else if(n[0]->is_node(g, "nl_digit"))
-					result = parse_digit(str, n[0]->as_node());
+					return parse_digit(str, n[0]->as_node());
 				else if(n[0]->is_token(g, "l_id"))
-					result = decltype(result)(new ast_exp_id(parse_id(str, n[0]), n.sl()));
+					return std::shared_ptr<ast_exp>(new ast_exp_id(parse_id(str, n[0]), n.sl()));
 				else if(n[0]->is_token(g, "l_true"))
-					result = decltype(result)(new ast_exp_bool(true, n.sl()));
+					return std::shared_ptr<ast_exp>(new ast_exp_bool(true, n.sl()));
 				else if(n[0]->is_token(g, "l_false"))
-					result = decltype(result)(new ast_exp_bool(false, n.sl()));
+					return std::shared_ptr<ast_exp>(new ast_exp_bool(false, n.sl()));
 				else
 					throw parse_error("unexpected rule");
 			}
@@ -501,14 +491,14 @@ namespace splicpp
 				n[0]->assert_token(g, "l_sbracket_left");
 				n[1]->assert_token(g, "l_sbracket_right");
 				
-				result = decltype(result)(new ast_exp_nil(n.sl()));
+				return std::shared_ptr<ast_exp>(new ast_exp_nil(n.sl()));
 			}
 			else if(n.size() == 3)
 			{
 				n[0]->assert_token(g, "l_bracket_left");
 				n[2]->assert_token(g, "l_bracket_right");
 				
-				result = parse_exp(str, n[1]->as_node());
+				return parse_exp(str, n[1]->as_node());
 			}
 			else if(n.size() == 5)
 			{
@@ -516,12 +506,10 @@ namespace splicpp
 				n[2]->assert_token(g, "l_comma");
 				n[4]->assert_token(g, "l_bracket_right");
 				
-				result = decltype(result)(new ast_exp_tuple(parse_exp(str, n[1]->as_node()), parse_exp(str, n[3]->as_node()), n.sl()));
+				return std::shared_ptr<ast_exp>(new ast_exp_tuple(parse_exp(str, n[1]->as_node()), parse_exp(str, n[3]->as_node()), n.sl()));
 			}
 			else
 				throw parse_error("unexpected rule");
-			
-			return result;
 		}
 		
 		std::shared_ptr<ast_exp_int> spl_parser::parse_digit(const std::string str, const cst_node n) const

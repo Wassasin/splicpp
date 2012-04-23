@@ -17,9 +17,11 @@ namespace splicpp
 		: contents()
 		{}
 		
-		itemset(std::initializer_list<item<L>> list)
-		: contents(list)
-		{}
+		itemset(const item<L> i)
+		: contents()
+		{
+			contents.push_back(i);
+		}
 		
 		bool operator==(const itemset<L>& i_set) const
 		{

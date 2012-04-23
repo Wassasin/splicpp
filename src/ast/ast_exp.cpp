@@ -71,9 +71,9 @@ namespace splicpp
 			case op_divides:
 			case op_mod:
 			{
-				t1 = decltype(t1)(new sl_type_int());
-				t2 = decltype(t2)(new sl_type_int());
-				r = decltype(r)(new sl_type_int());
+				t1 = std::shared_ptr<sl_type>(new sl_type_int());
+				t2 = std::shared_ptr<sl_type>(new sl_type_int());
+				r = std::shared_ptr<sl_type>(new sl_type_int());
 				break;
 			}
 			
@@ -84,26 +84,26 @@ namespace splicpp
 			case op_geq:
 			case op_neq:
 			{
-				t1 = decltype(t1)(new sl_type_int());
-				t2 = decltype(t2)(new sl_type_int());
-				r = decltype(r)(new sl_type_bool());
+				t1 = std::shared_ptr<sl_type>(new sl_type_int());
+				t2 = std::shared_ptr<sl_type>(new sl_type_int());
+				r = std::shared_ptr<sl_type>(new sl_type_bool());
 				break;
 			}	
 			
 			case op_conjunction:
 			case op_disjunction:
 			{
-				t1 = decltype(t1)(new sl_type_bool());
-				t2 = decltype(t2)(new sl_type_bool());
-				r = decltype(r)(new sl_type_bool());
+				t1 = std::shared_ptr<sl_type>(new sl_type_bool());
+				t2 = std::shared_ptr<sl_type>(new sl_type_bool());
+				r = std::shared_ptr<sl_type>(new sl_type_bool());
 				break;
 			}
 			
 			case op_cons:
 			{
 				t1 = std::static_pointer_cast<sl_type>(c.create_fresh());
-				t2 = decltype(t2)(new sl_type_array(t1));
-				r = decltype(r)(new sl_type_array(t1));
+				t2 = std::shared_ptr<sl_type>(new sl_type_array(t1));
+				r = std::shared_ptr<sl_type>(new sl_type_array(t1));
 				break;
 			}
 		}	

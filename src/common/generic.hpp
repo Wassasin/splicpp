@@ -73,6 +73,20 @@ namespace splicpp
 		
 		return result;
 	}
+	
+	template <typename T>
+	static std::vector<T> create_vector(const T x)
+	{
+		std::vector<T> xs;
+		xs.push_back(x);
+		return xs;
+	}
+	
+	template <typename T>
+	static std::vector<std::shared_ptr<T>> create_vector_ptr(const std::shared_ptr<T> x)
+	{
+		return create_vector<std::shared_ptr<T>>(x);
+	}
 }
 
 #endif

@@ -43,7 +43,7 @@ namespace splicpp
 			assert(s_name.substr(s_name.size() - appendix.size()) == appendix);
 			
 			if(n.size() == 1)
-				return std::vector<T> { f(this, str, n[0]->as_node()) };
+				return create_vector<T>(f(this, str, n[0]->as_node()));
 			else if(n.size() == 2)
 			{
 				std::vector<T> result = autoparse_plus(str, n[0]->as_node(), f);

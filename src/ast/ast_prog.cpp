@@ -25,22 +25,22 @@ namespace splicpp
 		//Define language constructs
 		std::shared_ptr<ast_construct> cons;
 		
-		cons = decltype(cons)(new ast_construct_print());
+		cons = std::shared_ptr<ast_construct>(new ast_construct_print());
 		c.assign(cons->fetch_name(), s.reg_cons(cons));
 		
-		cons = decltype(cons)(new ast_construct_is_empty());
+		cons = std::shared_ptr<ast_construct>(new ast_construct_is_empty());
 		c.assign(cons->fetch_name(), s.reg_cons(cons));
 		
-		cons = decltype(cons)(new ast_construct_head());
+		cons = std::shared_ptr<ast_construct>(new ast_construct_head());
 		c.assign(cons->fetch_name(), s.reg_cons(cons));
 		
-		cons = decltype(cons)(new ast_construct_tail());
+		cons = std::shared_ptr<ast_construct>(new ast_construct_tail());
 		c.assign(cons->fetch_name(), s.reg_cons(cons));
 		
-		cons = decltype(cons)(new ast_construct_fst());
+		cons = std::shared_ptr<ast_construct>(new ast_construct_fst());
 		c.assign(cons->fetch_name(), s.reg_cons(cons));
 		
-		cons = decltype(cons)(new ast_construct_snd());
+		cons = std::shared_ptr<ast_construct>(new ast_construct_snd());
 		c.assign(cons->fetch_name(), s.reg_cons(cons));
 	
 		//Register globals
