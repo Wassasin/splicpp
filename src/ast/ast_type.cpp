@@ -138,7 +138,7 @@ namespace splicpp
 	
 	std::shared_ptr<sl_type> ast_type_id::fetch_type(const typecontext& c) const
 	{
-		return c[id->fetch_id()]->unbind_maintain(); //Should be monomorph in any case
+		return c[id->fetch_id()]->unbind(c); //Should be monomorph in any case
 	}
 	
 	/* ast_type_void */

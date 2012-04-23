@@ -15,7 +15,6 @@ namespace splicpp
 		virtual ~sl_polytype() {}
 		
 		virtual std::shared_ptr<sl_type> unbind(const typecontext& c) const = 0;
-		virtual std::shared_ptr<sl_type> unbind_maintain() const = 0;
 		
 		virtual std::vector<std::shared_ptr<sl_type_unbound>> tv() const = 0;
 		virtual std::shared_ptr<sl_polytype> apply(const typecontext& c, const substitution& s) const = 0;
@@ -31,16 +30,17 @@ namespace splicpp
 		std::shared_ptr<sl_type> t;
 		std::vector<std::shared_ptr<sl_type_unbound>> bindings;
 		
+		void bind(std::shared_ptr<sl_type_unbound> t);
+		
 	public:
 		sl_polytype_forall(const std::shared_ptr<sl_type> t)
 		: t(t)
 		, bindings()
 		{}
 		
-		void bind(std::shared_ptr<sl_type_unbound> t);
+		std::shared_ptr<sl_type> unbind_maintain() const;
 		
 		virtual std::shared_ptr<sl_type> unbind(const typecontext& c) const;
-		virtual std::shared_ptr<sl_type> unbind_maintain() const;
 		
 		virtual std::vector<std::shared_ptr<sl_type_unbound>> tv() const;
 		virtual std::shared_ptr<sl_polytype> apply(const typecontext& c, const substitution& s) const;
@@ -49,6 +49,23 @@ namespace splicpp
 		
 		static std::shared_ptr<sl_polytype_forall> qualify(const typecontext& c, const std::shared_ptr<sl_type> t);
 		static std::shared_ptr<sl_polytype_forall> not_qualify(const std::shared_ptr<sl_type> t);
+	};
+	
+	class sl_polytype_exists : public sl_polytype
+	{
+		std::vector<std::shared_ptr<sl_type_unbound>> bindings;
+	
+	public:
+		sl_polytype_exists()
+		: bindings()
+		{}
+		
+		virtual std::shared_ptr<sl_type> unbind(const typecontext& c) const;
+		
+		virtual std::vector<std::shared_ptr<sl_type_unbound>> tv() const;
+		virtual std::shared_ptr<sl_polytype> apply(const typecontext& c, const substitution& s) const;
+		
+		virtual void print(std::ostream& s) const;
 	};
 }
 

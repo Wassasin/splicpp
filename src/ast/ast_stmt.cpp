@@ -147,7 +147,7 @@ namespace splicpp
 	
 	substitution ast_stmt_assignment::infer_type(const typecontext& c, const std::shared_ptr<sl_type>) const
 	{
-		const std::shared_ptr<sl_type> t = c[id->fetch_id()]->unbind_maintain();
+		const std::shared_ptr<sl_type> t = std::dynamic_pointer_cast<sl_polytype_forall>(c[id->fetch_id()])->unbind_maintain(); //DPC, should always be forall type
 		substitution s = exp->infer_type(c, t);
 		
 		std::cout << std::endl;
