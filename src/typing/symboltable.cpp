@@ -81,11 +81,11 @@ namespace splicpp
 		ltypecontext c(global);
 		substitution s;
 		
-		std::map<sid, s_ptr<sl_type_unbound>> init_types;
+		std::map<sid, cs_ptr<sl_type_unbound>> init_types;
 		for(size_t i = 0; i < index.size(); i++)
 			if(index[i].t != symbolref::t_type && index[i].t != symbolref::t_arg && index[i].t != symbolref::t_local_var)
 			{
-				const s_ptr<sl_type_unbound> t = c.create_fresh();
+				const cs_ptr<sl_type_unbound> t = c.create_fresh();
 				init_types[i] = t;
 				c.register_type(i, sl_polytype::qualify(c, t));
 			}
@@ -95,7 +95,7 @@ namespace splicpp
 		for(const sid i : select_all(symbolref::symbolreftype::t_construct))
 		{
 			c = c.apply(s);
-			s_ptr<sl_type_unbound> t = init_types[i];
+			cs_ptr<sl_type_unbound> t = init_types[i];
 			s = conss[index[i].i]->declare_type(c).composite(s);
 			//s = init_types[i]->apply(s)->unify(c[i]->apply(c, s)->unbind_maintain()).composite(s);
 		}
@@ -105,7 +105,7 @@ namespace splicpp
 		for(const sid i : select_all(symbolref::symbolreftype::t_var))
 		{
 			c = c.apply(s);
-			s_ptr<sl_type_unbound> t = init_types[i];
+			cs_ptr<sl_type_unbound> t = init_types[i];
 			s = vars[index[i].i]->declare_type(c).composite(s);
 			//s = init_types[i]->apply(s)->unify(c[i]->apply(c, s)->unbind_maintain()).composite(s);
 		}

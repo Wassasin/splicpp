@@ -43,10 +43,10 @@ namespace splicpp
 		
 		bool is_registered(const sid i) const;
 		s_ptr<sl_polytype> operator[](const sid i) const;
-		s_ptr<sl_type_unbound> create_fresh() const;
+		cs_ptr<sl_type_unbound> create_fresh() const;
 		typecontext apply(const substitution& s) const;
 		typecontext apply_maintain(const substitution& s) const;
-		std::vector<s_ptr<sl_type_unbound>> fv() const;
+		std::vector<cs_ptr<sl_type_unbound>> fv() const;
 		void print(std::ostream& s) const;
 		void print_debug() const;
 		

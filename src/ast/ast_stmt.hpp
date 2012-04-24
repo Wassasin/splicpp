@@ -39,7 +39,7 @@ namespace splicpp
 		
 		virtual ast_stmt_type type() const = 0;
 		virtual void pretty_print(std::ostream& s, const uint tab) const = 0;
-		virtual substitution infer_type(const typecontext& c, const s_ptr<sl_type> t) const = 0;
+		virtual substitution infer_type(const typecontext& c, const cs_ptr<sl_type> t) const = 0;
 	};
 	
 	class ast_stmt_stmts : public ast_stmt
@@ -58,7 +58,7 @@ namespace splicpp
 	
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
-		virtual substitution infer_type(const typecontext& c, const s_ptr<sl_type> t) const;
+		virtual substitution infer_type(const typecontext& c, const cs_ptr<sl_type> t) const;
 	};
 	
 	class ast_stmt_if : public ast_stmt
@@ -86,7 +86,7 @@ namespace splicpp
 		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
-		virtual substitution infer_type(const typecontext& c, const s_ptr<sl_type> t) const;
+		virtual substitution infer_type(const typecontext& c, const cs_ptr<sl_type> t) const;
 	};
 	
 	class ast_stmt_while : public ast_stmt
@@ -105,7 +105,7 @@ namespace splicpp
 		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
-		virtual substitution infer_type(const typecontext& c, const s_ptr<sl_type> t) const;
+		virtual substitution infer_type(const typecontext& c, const cs_ptr<sl_type> t) const;
 	};
 	
 	class ast_stmt_assignment : public ast_stmt
@@ -124,7 +124,7 @@ namespace splicpp
 		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
-		virtual substitution infer_type(const typecontext& c, const s_ptr<sl_type> t) const;
+		virtual substitution infer_type(const typecontext& c, const cs_ptr<sl_type> t) const;
 	};
 	
 	class ast_stmt_fun_call : public ast_stmt
@@ -141,7 +141,7 @@ namespace splicpp
 		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;	
-		virtual substitution infer_type(const typecontext& c, const s_ptr<sl_type> t) const;	
+		virtual substitution infer_type(const typecontext& c, const cs_ptr<sl_type> t) const;	
 	};
 	
 	class ast_stmt_return : public ast_stmt
@@ -163,7 +163,7 @@ namespace splicpp
 		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
-		virtual substitution infer_type(const typecontext& c, const s_ptr<sl_type> t) const;
+		virtual substitution infer_type(const typecontext& c, const cs_ptr<sl_type> t) const;
 	};
 }
 

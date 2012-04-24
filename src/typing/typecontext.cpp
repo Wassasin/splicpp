@@ -34,9 +34,9 @@ namespace splicpp
 		return t.get();
 	}
 	
-	s_ptr<sl_type_unbound> typecontext::create_fresh() const
+	cs_ptr<sl_type_unbound> typecontext::create_fresh() const
 	{
-		return s_ptr<sl_type_unbound>(new sl_type_unbound((*ft_count)++));
+		return cs_ptr<sl_type_unbound>(new sl_type_unbound((*ft_count)++));
 	}
 	
 	typecontext typecontext::apply(const substitution& s) const
@@ -65,13 +65,13 @@ namespace splicpp
 		return c;
 	}
 	
-	std::vector<s_ptr<sl_type_unbound>> typecontext::fv() const
+	std::vector<cs_ptr<sl_type_unbound>> typecontext::fv() const
 	{
-		std::vector<s_ptr<sl_type_unbound>> result;
+		std::vector<cs_ptr<sl_type_unbound>> result;
 		for(const auto t : types)
 			if(t)
-				for(const s_ptr<sl_type_unbound> tv : t.get()->tv())
-					if(!is_in_ptr<sl_type_unbound>(tv, result))
+				for(const cs_ptr<sl_type_unbound> tv : t.get()->tv())
+					if(!is_in_ptr<const sl_type_unbound>(tv, result))
 						result.push_back(tv);
 		
 		return result;

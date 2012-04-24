@@ -16,23 +16,23 @@ namespace splicpp
 		template<class T> 
 		struct pointer_less
 		{
-			bool operator()( const s_ptr<T>& lhs, const s_ptr<T>& rhs ) const
+			bool operator()( const cs_ptr<T>& lhs, const cs_ptr<T>& rhs ) const
 			{
 				return lhs->operator<(rhs);
 			}
 		};
 	
-		std::map<s_ptr<sl_type_unbound>, s_ptr<sl_type>, pointer_less<sl_type_unbound>> subs;
+		std::map<cs_ptr<sl_type_unbound>, cs_ptr<sl_type>, pointer_less<sl_type_unbound>> subs;
 		
 	public:
 		substitution()
 		: subs()
 		{}
 		
-		void add(const s_ptr<sl_type_unbound> x, s_ptr<sl_type> y);
-		void set(const s_ptr<sl_type_unbound> x, const s_ptr<sl_type> y);
+		void add(const cs_ptr<sl_type_unbound> x, cs_ptr<sl_type> y);
+		void set(const cs_ptr<sl_type_unbound> x, const cs_ptr<sl_type> y);
 		
-		s_ptr<sl_type> substitute(const s_ptr<sl_type_unbound> x) const;
+		cs_ptr<sl_type> substitute(const cs_ptr<sl_type_unbound> x) const;
 		substitution composite(const substitution& s) const;
 		void print(std::ostream& s) const;
 		

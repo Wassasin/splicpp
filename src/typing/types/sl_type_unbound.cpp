@@ -17,17 +17,17 @@ namespace splicpp
 		return t_unbound;
 	}
 	
-	bool sl_type_unbound::equals(const s_ptr<sl_type_unbound> y) const
+	bool sl_type_unbound::equals(const cs_ptr<sl_type_unbound> y) const
 	{
 		return(id == y->id);
 	}
 	
-	bool sl_type_unbound::operator<(const s_ptr<sl_type_unbound> y) const
+	bool sl_type_unbound::operator<(const cs_ptr<sl_type_unbound> y) const
 	{
 		return(id < y->id);
 	}
 	
-	bool sl_type_unbound::operator==(const s_ptr<sl_type_unbound> y) const
+	bool sl_type_unbound::operator==(const cs_ptr<sl_type_unbound> y) const
 	{
 		return equals(y);
 	}
@@ -37,10 +37,10 @@ namespace splicpp
 		s << "t" << id;
 	}
 	
-	boost::optional<substitution> sl_type_unbound::unify_partial(const s_ptr<sl_type> t) const
+	boost::optional<substitution> sl_type_unbound::unify_partial(const cs_ptr<sl_type> t) const
 	{
-		const s_ptr<sl_type_unbound> copy(new sl_type_unbound(*this));
-		if(t->type() == t_unbound && equals(std::dynamic_pointer_cast<sl_type_unbound>(t)))
+		const cs_ptr<sl_type_unbound> copy(new sl_type_unbound(*this));
+		if(t->type() == t_unbound && equals(std::dynamic_pointer_cast<const sl_type_unbound>(t)))
 			return substitution::id();
 	
 		for(const auto tx : t->tv())
@@ -52,15 +52,15 @@ namespace splicpp
 		return s;
 	}
 	
-	std::vector<s_ptr<sl_type_unbound>> sl_type_unbound::tv() const
+	std::vector<cs_ptr<sl_type_unbound>> sl_type_unbound::tv() const
 	{
-		std::vector<s_ptr<sl_type_unbound>> result;
-		result.push_back(s_ptr<sl_type_unbound>(new sl_type_unbound(*this)));
+		std::vector<cs_ptr<sl_type_unbound>> result;
+		result.push_back(cs_ptr<sl_type_unbound>(new sl_type_unbound(*this)));
 		return result;
 	}
 	
-	s_ptr<sl_type> sl_type_unbound::apply(const substitution& s) const
+	cs_ptr<sl_type> sl_type_unbound::apply(const substitution& s) const
 	{
-		return s.substitute(s_ptr<sl_type_unbound>(new sl_type_unbound(*this)));
+		return s.substitute(cs_ptr<sl_type_unbound>(new sl_type_unbound(*this)));
 	}
 }

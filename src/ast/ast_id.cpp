@@ -45,9 +45,9 @@ namespace splicpp
 		return name;
 	}
 	
-	substitution ast_id::infer_type(const typecontext& c, const s_ptr<sl_type> t) const
+	substitution ast_id::infer_type(const typecontext& c, const cs_ptr<sl_type> t) const
 	{
-		const s_ptr<sl_type> xt = c[fetch_id()]->unbind(c);
+		const cs_ptr<sl_type> xt = c[fetch_id()]->unbind(c);
 		const substitution s = xt->unify(t);
 		
 		std::cout << std::endl;

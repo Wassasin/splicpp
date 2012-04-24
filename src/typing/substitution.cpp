@@ -12,9 +12,9 @@
 
 namespace splicpp
 {
-	void substitution::add(const s_ptr<sl_type_unbound> x, const s_ptr<sl_type> y)
+	void substitution::add(const cs_ptr<sl_type_unbound> x, const cs_ptr<sl_type> y)
 	{
-		if(y->type() == sl_type::t_unbound && x->equals(std::dynamic_pointer_cast<sl_type_unbound>(y))) // a == a
+		if(y->type() == sl_type::t_unbound && x->equals(std::dynamic_pointer_cast<const sl_type_unbound>(y))) // a == a
 			return;
 	
 		if(subs.find(x) != subs.end()) // There already is a [x -> ?]
@@ -40,13 +40,13 @@ namespace splicpp
 			newsubs[p.first] = p.second->apply(s); //Rewrite [z -> x] with [x -> y] to [z -> y]
 			
 			if(y->type() == sl_type::t_unbound && p.first->equals(x)) //Rewrite [z->a] [a->y] to [y->z]; aliasing
-				newsubs[std::dynamic_pointer_cast<sl_type_unbound>(y)] = p.first->apply(s);
+				newsubs[std::dynamic_pointer_cast<const sl_type_unbound>(y)] = p.first->apply(s);
 		}
 		
 		for(auto i = newsubs.begin(); i != newsubs.end(); ++i)
 		{
 			const auto& p = *i;
-			if(p.second->type() == sl_type::t_unbound && p.first->equals(std::dynamic_pointer_cast<sl_type_unbound>(p.second)))
+			if(p.second->type() == sl_type::t_unbound && p.first->equals(std::dynamic_pointer_cast<const sl_type_unbound>(p.second)))
 				newsubs.erase(i);
 		}
 		
@@ -56,12 +56,12 @@ namespace splicpp
 		subs = newsubs;
 	}
 	
-	void substitution::set(const s_ptr<sl_type_unbound> x, const s_ptr<sl_type> y)
+	void substitution::set(const cs_ptr<sl_type_unbound> x, const cs_ptr<sl_type> y)
 	{
 		add(x, y);
 	}
 	
-	s_ptr<sl_type> substitution::substitute(const s_ptr<sl_type_unbound> x) const
+	cs_ptr<sl_type> substitution::substitute(const cs_ptr<sl_type_unbound> x) const
 	{
 		for(const auto p : subs)
 			if(p.first->equals(x))

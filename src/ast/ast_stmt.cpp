@@ -43,7 +43,7 @@ namespace splicpp
 		s << '}';
 	}
 	
-	substitution ast_stmt_stmts::infer_type(const typecontext& c, const s_ptr<sl_type> t) const
+	substitution ast_stmt_stmts::infer_type(const typecontext& c, const cs_ptr<sl_type> t) const
 	{
 		substitution s;
 		for(const auto stmt : stmts)
@@ -85,9 +85,9 @@ namespace splicpp
 		}
 	}
 	
-	substitution ast_stmt_if::infer_type(const typecontext& c, const s_ptr<sl_type> t) const
+	substitution ast_stmt_if::infer_type(const typecontext& c, const cs_ptr<sl_type> t) const
 	{
-		substitution s = exp->infer_type(c, s_ptr<sl_type>(new sl_type_bool()));
+		substitution s = exp->infer_type(c, cs_ptr<sl_type>(new sl_type_bool()));
 		s = stmt_true->infer_type(c.apply(s), t->apply(s)).composite(s);
 		
 		if(stmt_false)
@@ -118,9 +118,9 @@ namespace splicpp
 		stmt->pretty_print(s, tab);
 	}
 	
-	substitution ast_stmt_while::infer_type(const typecontext& c, const s_ptr<sl_type> t) const
+	substitution ast_stmt_while::infer_type(const typecontext& c, const cs_ptr<sl_type> t) const
 	{
-		substitution s = exp->infer_type(c, s_ptr<sl_type>(new sl_type_bool()));
+		substitution s = exp->infer_type(c, cs_ptr<sl_type>(new sl_type_bool()));
 		return stmt->infer_type(c.apply(s), t->apply(s)).composite(s);
 	}
 	
@@ -145,9 +145,9 @@ namespace splicpp
 		s << ';';
 	}
 	
-	substitution ast_stmt_assignment::infer_type(const typecontext& c, const s_ptr<sl_type>) const
+	substitution ast_stmt_assignment::infer_type(const typecontext& c, const cs_ptr<sl_type>) const
 	{
-		const s_ptr<sl_type> t = std::dynamic_pointer_cast<sl_polytype_forall>(c[id->fetch_id()])->unbind_maintain(); //DPC, should always be forall type
+		const cs_ptr<sl_type> t = std::dynamic_pointer_cast<sl_polytype_forall>(c[id->fetch_id()])->unbind_maintain(); //DPC, should always be forall type
 		substitution s = exp->infer_type(c, t);
 		
 		std::cout << std::endl;
@@ -180,7 +180,7 @@ namespace splicpp
 		s << ';';
 	}
 	
-	substitution ast_stmt_fun_call::infer_type(const typecontext& c, const s_ptr<sl_type>) const
+	substitution ast_stmt_fun_call::infer_type(const typecontext& c, const cs_ptr<sl_type>) const
 	{
 		return f->infer_type(c, c.create_fresh());
 	}
@@ -209,11 +209,11 @@ namespace splicpp
 		s << ';';
 	}
 	
-	substitution ast_stmt_return::infer_type(const typecontext& c, const s_ptr<sl_type> t) const
+	substitution ast_stmt_return::infer_type(const typecontext& c, const cs_ptr<sl_type> t) const
 	{
 		if(exp)
 			return exp.get()->infer_type(c, t);
 		else
-			return t->unify(s_ptr<sl_type>(new sl_type_void()));
+			return t->unify(cs_ptr<sl_type>(new sl_type_void()));
 	}
 }

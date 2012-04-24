@@ -14,12 +14,12 @@ namespace splicpp
 		s << "Void";
 	}
 	
-	std::vector<s_ptr<sl_type_unbound>> sl_type_void::tv() const
+	std::vector<cs_ptr<sl_type_unbound>> sl_type_void::tv() const
 	{
-		return std::vector<s_ptr<sl_type_unbound>>();
+		return std::vector<cs_ptr<sl_type_unbound>>();
 	}
 	
-	boost::optional<substitution> sl_type_void::unify_partial(const s_ptr<sl_type> t) const
+	boost::optional<substitution> sl_type_void::unify_partial(const cs_ptr<sl_type> t) const
 	{
 		if(t->type() != t_void)
 			return boost::optional<substitution>();
@@ -27,8 +27,8 @@ namespace splicpp
 		return substitution::id();
 	}
 	
-	s_ptr<sl_type> sl_type_void::apply(const substitution&) const
+	cs_ptr<sl_type> sl_type_void::apply(const substitution&) const
 	{
-		return s_ptr<sl_type>(new sl_type_void());
+		return cs_ptr<sl_type>(new sl_type_void());
 	}
 }

@@ -66,25 +66,25 @@ namespace splicpp
 			stmt->assign_ids(cvar);
 	}
 	
-	s_ptr<sl_type> ast_fun_decl::fetch_assigned_type(const typecontext& c) const
+	cs_ptr<sl_type> ast_fun_decl::fetch_assigned_type(const typecontext& c) const
 	{
-		std::vector<s_ptr<sl_type>> t_args;
+		std::vector<cs_ptr<sl_type>> t_args;
 		for(const auto arg : args)
 			t_args.push_back(arg->fetch_assigned_type(c));
 		
-		return s_ptr<sl_type>(new sl_type_function(t_args, this->t->fetch_type(c)));
+		return cs_ptr<sl_type>(new sl_type_function(t_args, this->t->fetch_type(c)));
 	}
 	
 	substitution ast_fun_decl::declare_type(ltypecontext& c) const
 	{
 		ltypecontext clocal = c;
 	
-		s_ptr<sl_type_unbound> r = c.create_fresh();
-		std::vector<s_ptr<sl_type>> t_args;
+		cs_ptr<sl_type_unbound> r = c.create_fresh();
+		std::vector<cs_ptr<sl_type>> t_args;
 		for(size_t i = 0; i < args.size(); i++)
 			t_args.push_back(args[i]->declare_type(clocal));
 		
-		s_ptr<sl_type_function> ft(new sl_type_function(t_args, r));
+		cs_ptr<sl_type_function> ft(new sl_type_function(t_args, r));
 		
 		substitution s;
 		for(const auto decl : decls)

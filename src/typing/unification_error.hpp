@@ -25,7 +25,7 @@ namespace splicpp
 		: runtime_error(create_message(t1, t2))
 		{}
 	
-		unification_error(const s_ptr<sl_type> t1, const s_ptr<sl_type> t2)
+		unification_error(const cs_ptr<sl_type> t1, const cs_ptr<sl_type> t2)
 		: runtime_error(create_message(t1.get(), t2.get()))
 		{}
 	};
