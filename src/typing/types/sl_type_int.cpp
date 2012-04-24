@@ -14,12 +14,12 @@ namespace splicpp
 		s << "Int";
 	}
 	
-	std::vector<std::shared_ptr<sl_type_unbound>> sl_type_int::tv() const
+	std::vector<s_ptr<sl_type_unbound>> sl_type_int::tv() const
 	{
-		return std::vector<std::shared_ptr<sl_type_unbound>>();
+		return std::vector<s_ptr<sl_type_unbound>>();
 	}
 	
-	boost::optional<substitution> sl_type_int::unify_partial(const std::shared_ptr<sl_type> t) const
+	boost::optional<substitution> sl_type_int::unify_partial(const s_ptr<sl_type> t) const
 	{
 		if(t->type() != t_int)
 			return boost::optional<substitution>();
@@ -27,8 +27,8 @@ namespace splicpp
 		return substitution::id();
 	}
 	
-	std::shared_ptr<sl_type> sl_type_int::apply(const substitution&) const
+	s_ptr<sl_type> sl_type_int::apply(const substitution&) const
 	{
-		return std::shared_ptr<sl_type>(new sl_type_int());
+		return s_ptr<sl_type>(new sl_type_int());
 	}
 }

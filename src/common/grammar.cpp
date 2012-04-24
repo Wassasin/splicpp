@@ -21,7 +21,7 @@ namespace splicpp
 	stid grammar::add_symbol(symbol* s)
 	{
 		stid sid = symbols.size();
-		symbols.push_back(std::shared_ptr<symbol>(s));
+		symbols.push_back(s_ptr<symbol>(s));
 		return sid;
 	}
 	
@@ -117,12 +117,12 @@ namespace splicpp
 		throw std::runtime_error("Unknown symbol");
 	}
 
-	std::shared_ptr<symbol> grammar::fetch_symbol(const stid i) const
+	s_ptr<symbol> grammar::fetch_symbol(const stid i) const
 	{
 		return symbols.at(i);
 	}
 	
-	std::shared_ptr<symbol> grammar::fetch_symbol(const std::string name) const
+	s_ptr<symbol> grammar::fetch_symbol(const std::string name) const
 	{
 		return symbols.at(fetch_stid(name));
 	}
@@ -203,7 +203,7 @@ namespace splicpp
 	{
 		for(stid i = 0; i < symbols.size(); i++)
 		{
-			std::shared_ptr<symbol> s = symbols.at(i);
+			s_ptr<symbol> s = symbols.at(i);
 			if(s->type() == s_lit)
 				continue;
 			

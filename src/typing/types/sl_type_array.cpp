@@ -16,12 +16,12 @@ namespace splicpp
 		s << ']';
 	}
 	
-	std::vector<std::shared_ptr<sl_type_unbound>> sl_type_array::tv() const
+	std::vector<s_ptr<sl_type_unbound>> sl_type_array::tv() const
 	{
 		return t->tv();
 	}
 	
-	boost::optional<substitution> sl_type_array::unify_partial(const std::shared_ptr<sl_type> t) const
+	boost::optional<substitution> sl_type_array::unify_partial(const s_ptr<sl_type> t) const
 	{
 		if(t->type() != t_array)
 			return boost::optional<substitution>();
@@ -29,8 +29,8 @@ namespace splicpp
 		return this->t->unify_internal(std::dynamic_pointer_cast<sl_type_array>(t)->t);
 	}
 	
-	std::shared_ptr<sl_type> sl_type_array::apply(const substitution& s) const
+	s_ptr<sl_type> sl_type_array::apply(const substitution& s) const
 	{
-		return std::shared_ptr<sl_type>(new sl_type_array(t->apply(s)));
+		return s_ptr<sl_type>(new sl_type_array(t->apply(s)));
 	}
 }

@@ -18,8 +18,8 @@ namespace splicpp
 
 	class ast_fun_call : public ast
 	{
-		std::shared_ptr<ast_id> id;
-		std::vector<std::shared_ptr<ast_exp>> args;
+		s_ptr<ast_id> id;
+		std::vector<s_ptr<ast_exp>> args;
 		
 	public:
 		ast_fun_call(__decltype(id) id, const sloc sl)
@@ -28,10 +28,10 @@ namespace splicpp
 		, args()
 		{}
 		
-		void add_arg(std::shared_ptr<ast_exp> exp);
+		void add_arg(s_ptr<ast_exp> exp);
 		
 		void assign_ids(const varcontext& c);
-		substitution infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const;
+		substitution infer_type(const typecontext& c, const s_ptr<sl_type> t) const;
 		
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};

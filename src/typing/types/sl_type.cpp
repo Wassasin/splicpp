@@ -9,10 +9,10 @@
 
 namespace splicpp
 {
-	boost::optional<substitution> sl_type::unify_internal(const std::shared_ptr<sl_type> t) const
+	boost::optional<substitution> sl_type::unify_internal(const s_ptr<sl_type> t) const
 	{
-		const std::shared_ptr<sl_type> x = apply(substitution::id());
-		const std::shared_ptr<sl_type> y = t;
+		const s_ptr<sl_type> x = apply(substitution::id());
+		const s_ptr<sl_type> y = t;
 		
 		const boost::optional<substitution> u = x->unify_partial(y);
 		if(u)
@@ -24,7 +24,7 @@ namespace splicpp
 		return boost::optional<substitution>();
 	}
 
-	substitution sl_type::unify(const std::shared_ptr<sl_type> t) const
+	substitution sl_type::unify(const s_ptr<sl_type> t) const
 	{
 		boost::optional<substitution> u = unify_internal(t);
 		if(!u)

@@ -131,7 +131,7 @@ namespace splicpp
 			return s_new;
 		}
 		
-		std::string bnf_parser::parse_rule_name(const std::string str, const std::shared_ptr<cst_element> e) const
+		std::string bnf_parser::parse_rule_name(const std::string str, const s_ptr<cst_element> e) const
 		{
 			e->assert_token(g_bnf, "l_rule_name");
 			return e->as_token().as_string(str);

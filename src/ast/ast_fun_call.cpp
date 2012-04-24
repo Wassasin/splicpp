@@ -10,7 +10,7 @@
 
 namespace splicpp
 {
-	void ast_fun_call::add_arg(std::shared_ptr<ast_exp> exp)
+	void ast_fun_call::add_arg(s_ptr<ast_exp> exp)
 	{
 		args.push_back(exp);
 	}
@@ -22,13 +22,13 @@ namespace splicpp
 			arg->assign_ids(c);
 	}
 	
-	substitution ast_fun_call::infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const
+	substitution ast_fun_call::infer_type(const typecontext& c, const s_ptr<sl_type> t) const
 	{
-		std::vector<std::shared_ptr<sl_type>> targs;
+		std::vector<s_ptr<sl_type>> targs;
 		for(size_t i = 0; i < args.size(); i++)
 			targs.push_back(std::static_pointer_cast<sl_type>(c.create_fresh()));
 		
-		std::shared_ptr<sl_type_function> ft(new sl_type_function(targs, t));
+		s_ptr<sl_type_function> ft(new sl_type_function(targs, t));
 		substitution s = id->infer_type(c, ft);
 		
 		for(size_t i = 0; i < args.size(); i++)

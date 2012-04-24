@@ -95,32 +95,32 @@ namespace splicpp
 				throw std::logic_error("unexpected rule");
 		}
 		
-		std::shared_ptr<ast_prog> parse_prog(const std::string str, const cst_node n) const;
-		std::shared_ptr<ast_decl> parse_decl(const std::string str, const cst_node n) const;
-		std::shared_ptr<ast_var_decl> parse_var_decl(const std::string str, const cst_node n) const;
-		std::shared_ptr<ast_fun_decl> parse_fun_decl(const std::string str, const cst_node n) const;
-		std::shared_ptr<ast_type> parse_type(const std::string str, const cst_node n) const;
-		std::vector<std::shared_ptr<ast_f_arg>> parse_f_args(const std::string str, const cst_node n) const;
-		std::shared_ptr<ast_stmt> parse_stmt(const std::string str, const cst_node n) const;
-		std::shared_ptr<ast_fun_call> parse_fun_call(const std::string str, const cst_node n) const;
-		std::vector<std::shared_ptr<ast_exp>> parse_act_args(const std::string str, const cst_node n) const;
+		s_ptr<ast_prog> parse_prog(const std::string str, const cst_node n) const;
+		s_ptr<ast_decl> parse_decl(const std::string str, const cst_node n) const;
+		s_ptr<ast_var_decl> parse_var_decl(const std::string str, const cst_node n) const;
+		s_ptr<ast_fun_decl> parse_fun_decl(const std::string str, const cst_node n) const;
+		s_ptr<ast_type> parse_type(const std::string str, const cst_node n) const;
+		std::vector<s_ptr<ast_f_arg>> parse_f_args(const std::string str, const cst_node n) const;
+		s_ptr<ast_stmt> parse_stmt(const std::string str, const cst_node n) const;
+		s_ptr<ast_fun_call> parse_fun_call(const std::string str, const cst_node n) const;
+		std::vector<s_ptr<ast_exp>> parse_act_args(const std::string str, const cst_node n) const;
 		
-		std::shared_ptr<ast_exp> parse_exp(const std::string str, const cst_node n) const;
-		std::shared_ptr<ast_exp> parse_exp1(const std::string str, const cst_node n) const;
-		std::shared_ptr<ast_exp> parse_exp2(const std::string str, const cst_node n) const;
-		std::shared_ptr<ast_exp> parse_exp3(const std::string str, const cst_node n) const;
+		s_ptr<ast_exp> parse_exp(const std::string str, const cst_node n) const;
+		s_ptr<ast_exp> parse_exp1(const std::string str, const cst_node n) const;
+		s_ptr<ast_exp> parse_exp2(const std::string str, const cst_node n) const;
+		s_ptr<ast_exp> parse_exp3(const std::string str, const cst_node n) const;
 		ast_exp_op2::op_type parse_compr_op(const cst_node n) const;
-		std::shared_ptr<ast_exp> parse_exp4(const std::string str, const cst_node n) const;
+		s_ptr<ast_exp> parse_exp4(const std::string str, const cst_node n) const;
 		ast_exp_op2::op_type parse_sum_op(const cst_node n) const;
-		std::shared_ptr<ast_exp> parse_exp5(const std::string str, const cst_node n) const;
+		s_ptr<ast_exp> parse_exp5(const std::string str, const cst_node n) const;
 		ast_exp_op2::op_type parse_product_op(const cst_node n) const;
-		std::shared_ptr<ast_exp> parse_exp6(const std::string str, const cst_node n) const;
-		std::shared_ptr<ast_exp> parse_exp7(const std::string str, const cst_node n) const;
-		std::shared_ptr<ast_exp> parse_exp8(const std::string str, const cst_node n) const;
-		std::shared_ptr<ast_exp_int> parse_digit(const std::string str, const cst_node n) const;
-		std::shared_ptr<ast_id> parse_id(const std::string str, const std::shared_ptr<cst_element> e) const;
+		s_ptr<ast_exp> parse_exp6(const std::string str, const cst_node n) const;
+		s_ptr<ast_exp> parse_exp7(const std::string str, const cst_node n) const;
+		s_ptr<ast_exp> parse_exp8(const std::string str, const cst_node n) const;
+		s_ptr<ast_exp_int> parse_digit(const std::string str, const cst_node n) const;
+		s_ptr<ast_id> parse_id(const std::string str, const s_ptr<cst_element> e) const;
 		
-		parse_error unexpected_element(const std::shared_ptr<cst_element> e) const;
+		parse_error unexpected_element(const s_ptr<cst_element> e) const;
 		parse_error unexpected_token(const token t) const;
 		parse_error unexpected_node(const cst_node n) const;
 		
@@ -130,7 +130,7 @@ namespace splicpp
 		, t(fetch_ptable(g))
 		{}	
 		
-		std::shared_ptr<ast_prog> parse(std::string str) const;
+		s_ptr<ast_prog> parse(std::string str) const;
 		
 		void print_g() const;
 		void print_t() const;

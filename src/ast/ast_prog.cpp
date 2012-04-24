@@ -7,7 +7,7 @@
 
 namespace splicpp
 {
-	void ast_prog::add_decl(std::shared_ptr<ast_decl> decl)
+	void ast_prog::add_decl(s_ptr<ast_decl> decl)
 	{
 		decls.push_back(decl);
 	}
@@ -23,24 +23,24 @@ namespace splicpp
 	void ast_prog::register_globals(symboltable& s, varcontext& c)
 	{
 		//Define language constructs
-		std::shared_ptr<ast_construct> cons;
+		s_ptr<ast_construct> cons;
 		
-		cons = std::shared_ptr<ast_construct>(new ast_construct_print());
+		cons = s_ptr<ast_construct>(new ast_construct_print());
 		c.assign(cons->fetch_name(), s.reg_cons(cons));
 		
-		cons = std::shared_ptr<ast_construct>(new ast_construct_is_empty());
+		cons = s_ptr<ast_construct>(new ast_construct_is_empty());
 		c.assign(cons->fetch_name(), s.reg_cons(cons));
 		
-		cons = std::shared_ptr<ast_construct>(new ast_construct_head());
+		cons = s_ptr<ast_construct>(new ast_construct_head());
 		c.assign(cons->fetch_name(), s.reg_cons(cons));
 		
-		cons = std::shared_ptr<ast_construct>(new ast_construct_tail());
+		cons = s_ptr<ast_construct>(new ast_construct_tail());
 		c.assign(cons->fetch_name(), s.reg_cons(cons));
 		
-		cons = std::shared_ptr<ast_construct>(new ast_construct_fst());
+		cons = s_ptr<ast_construct>(new ast_construct_fst());
 		c.assign(cons->fetch_name(), s.reg_cons(cons));
 		
-		cons = std::shared_ptr<ast_construct>(new ast_construct_snd());
+		cons = s_ptr<ast_construct>(new ast_construct_snd());
 		c.assign(cons->fetch_name(), s.reg_cons(cons));
 	
 		//Register globals

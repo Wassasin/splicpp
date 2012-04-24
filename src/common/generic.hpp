@@ -16,7 +16,7 @@ namespace splicpp
 	}
 	
 	template <typename T>
-	static bool is_in_ptr(const std::shared_ptr<T> x, const std::vector<std::shared_ptr<T>>& xs)
+	static bool is_in_ptr(const s_ptr<T> x, const std::vector<s_ptr<T>>& xs)
 	{
 		for(size_t i = 0; i < xs.size(); i++)
 			if(xs[i]->operator==(x))
@@ -64,9 +64,9 @@ namespace splicpp
 	}
 	
 	template <typename T>
-	static std::vector<std::shared_ptr<T>> subtract_ptr(const std::vector<std::shared_ptr<T>> xs, std::vector<std::shared_ptr<T>> ys)
+	static std::vector<s_ptr<T>> subtract_ptr(const std::vector<s_ptr<T>> xs, std::vector<s_ptr<T>> ys)
 	{
-		std::vector<std::shared_ptr<T>> result;
+		std::vector<s_ptr<T>> result;
 		for(const auto& x : xs)
 			if(!is_in_ptr<T>(x, ys))
 				result.push_back(x);
@@ -83,9 +83,9 @@ namespace splicpp
 	}
 	
 	template <typename T>
-	static std::vector<std::shared_ptr<T>> create_vector_ptr(const std::shared_ptr<T> x)
+	static std::vector<s_ptr<T>> create_vector_ptr(const s_ptr<T> x)
 	{
-		return create_vector<std::shared_ptr<T>>(x);
+		return create_vector<s_ptr<T>>(x);
 	}
 }
 

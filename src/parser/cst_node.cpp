@@ -3,7 +3,7 @@
 
 namespace splicpp
 {
-	void cst_node::add_element(const std::shared_ptr<cst_element> x)
+	void cst_node::add_element(const s_ptr<cst_element> x)
 	{
 		elements.push_front(x);
 	}
@@ -23,11 +23,11 @@ namespace splicpp
 		print_tab(tab);
 		std::cout << g.fetch_symbol(fetch_stid(g))->name << std::endl;
 	
-		BOOST_FOREACH(const std::shared_ptr<cst_element> x, elements)
+		BOOST_FOREACH(const s_ptr<cst_element> x, elements)
 			x->print(g, source, tab+1);
 	}
 
-	std::shared_ptr<cst_element> cst_node::operator[](size_t i) const
+	s_ptr<cst_element> cst_node::operator[](size_t i) const
 	{
 		return elements.at(i);
 	}

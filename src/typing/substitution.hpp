@@ -2,8 +2,9 @@
 #define SUBSTITUTION_H
 
 #include <map>
-#include <memory>
 #include <ostream>
+
+#include "../common/typedefs.hpp"
 
 namespace splicpp
 {
@@ -15,23 +16,23 @@ namespace splicpp
 		template<class T> 
 		struct pointer_less
 		{
-			bool operator()( const std::shared_ptr<T>& lhs, const std::shared_ptr<T>& rhs ) const
+			bool operator()( const s_ptr<T>& lhs, const s_ptr<T>& rhs ) const
 			{
 				return lhs->operator<(rhs);
 			}
 		};
 	
-		std::map<std::shared_ptr<sl_type_unbound>, std::shared_ptr<sl_type>, pointer_less<sl_type_unbound>> subs;
+		std::map<s_ptr<sl_type_unbound>, s_ptr<sl_type>, pointer_less<sl_type_unbound>> subs;
 		
 	public:
 		substitution()
 		: subs()
 		{}
 		
-		void add(const std::shared_ptr<sl_type_unbound> x, std::shared_ptr<sl_type> y);
-		void set(const std::shared_ptr<sl_type_unbound> x, const std::shared_ptr<sl_type> y);
+		void add(const s_ptr<sl_type_unbound> x, s_ptr<sl_type> y);
+		void set(const s_ptr<sl_type_unbound> x, const s_ptr<sl_type> y);
 		
-		std::shared_ptr<sl_type> substitute(const std::shared_ptr<sl_type_unbound> x) const;
+		s_ptr<sl_type> substitute(const s_ptr<sl_type_unbound> x) const;
 		substitution composite(const substitution& s) const;
 		void print(std::ostream& s) const;
 		

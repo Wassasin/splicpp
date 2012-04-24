@@ -18,8 +18,8 @@ namespace splicpp
 
 	class ast_f_arg : public ast
 	{
-		std::shared_ptr<ast_type> t;
-		std::shared_ptr<ast_id> id;
+		s_ptr<ast_type> t;
+		s_ptr<ast_id> id;
 
 	public:	
 		ast_f_arg(__decltype(t) t, __decltype(id) id, const sloc sl)
@@ -34,8 +34,8 @@ namespace splicpp
 		
 		void register_types(symboltable& s, varcontext& c);
 		
-		std::shared_ptr<sl_type> fetch_assigned_type(const typecontext& c) const;
-		std::shared_ptr<sl_type_unbound> declare_type(typecontext& c) const;
+		s_ptr<sl_type> fetch_assigned_type(const typecontext& c) const;
+		s_ptr<sl_type_unbound> declare_type(typecontext& c) const;
 		
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};

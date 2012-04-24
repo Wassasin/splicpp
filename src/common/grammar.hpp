@@ -13,7 +13,7 @@ namespace splicpp
 {
 	class grammar
 	{
-		std::vector<std::shared_ptr<symbol>> symbols;
+		std::vector<s_ptr<symbol>> symbols;
 		std::vector<rule> rules;
 		
 		std::vector<char> ignore_list;
@@ -53,8 +53,8 @@ namespace splicpp
 		
 		const rule& fetch_rule(const rid i) const;
 		stid fetch_stid(const std::string name) const;
-		std::shared_ptr<symbol> fetch_symbol(const stid i) const;
-		std::shared_ptr<symbol> fetch_symbol(const std::string name) const;
+		s_ptr<symbol> fetch_symbol(const stid i) const;
+		s_ptr<symbol> fetch_symbol(const std::string name) const;
 		
 		size_t rules_size() const;
 		size_t symbols_size() const;

@@ -12,7 +12,7 @@
 
 namespace splicpp
 {
-	void substitution::add(const std::shared_ptr<sl_type_unbound> x, const std::shared_ptr<sl_type> y)
+	void substitution::add(const s_ptr<sl_type_unbound> x, const s_ptr<sl_type> y)
 	{
 		if(y->type() == sl_type::t_unbound && x->equals(std::dynamic_pointer_cast<sl_type_unbound>(y))) // a == a
 			return;
@@ -56,12 +56,12 @@ namespace splicpp
 		subs = newsubs;
 	}
 	
-	void substitution::set(const std::shared_ptr<sl_type_unbound> x, const std::shared_ptr<sl_type> y)
+	void substitution::set(const s_ptr<sl_type_unbound> x, const s_ptr<sl_type> y)
 	{
 		add(x, y);
 	}
 	
-	std::shared_ptr<sl_type> substitution::substitute(const std::shared_ptr<sl_type_unbound> x) const
+	s_ptr<sl_type> substitution::substitute(const s_ptr<sl_type_unbound> x) const
 	{
 		for(const auto p : subs)
 			if(p.first->equals(x))

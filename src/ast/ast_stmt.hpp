@@ -39,12 +39,12 @@ namespace splicpp
 		
 		virtual ast_stmt_type type() const = 0;
 		virtual void pretty_print(std::ostream& s, const uint tab) const = 0;
-		virtual substitution infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const = 0;
+		virtual substitution infer_type(const typecontext& c, const s_ptr<sl_type> t) const = 0;
 	};
 	
 	class ast_stmt_stmts : public ast_stmt
 	{
-		std::vector<std::shared_ptr<ast_stmt>> stmts;
+		std::vector<s_ptr<ast_stmt>> stmts;
 	
 	public:
 		ast_stmt_stmts(const sloc sl)
@@ -52,30 +52,30 @@ namespace splicpp
 		, stmts()
 		{}
 	
-		void add_stmt(std::shared_ptr<ast_stmt> stmt);
+		void add_stmt(s_ptr<ast_stmt> stmt);
 	
 		virtual void assign_ids(const varcontext& c);
 	
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
-		virtual substitution infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const;
+		virtual substitution infer_type(const typecontext& c, const s_ptr<sl_type> t) const;
 	};
 	
 	class ast_stmt_if : public ast_stmt
 	{
-		std::shared_ptr<ast_exp> exp;
-		std::shared_ptr<ast_stmt> stmt_true;
-		boost::optional<std::shared_ptr<ast_stmt>> stmt_false;
+		s_ptr<ast_exp> exp;
+		s_ptr<ast_stmt> stmt_true;
+		boost::optional<s_ptr<ast_stmt>> stmt_false;
 	
 	public:
-		ast_stmt_if(std::shared_ptr<ast_exp> exp, std::shared_ptr<ast_stmt> stmt_true, const sloc sl)
+		ast_stmt_if(s_ptr<ast_exp> exp, s_ptr<ast_stmt> stmt_true, const sloc sl)
 		: ast_stmt(sl)
 		, exp(exp)
 		, stmt_true(stmt_true)
 		, stmt_false()
 		{}
 		
-		ast_stmt_if(std::shared_ptr<ast_exp> exp, std::shared_ptr<ast_stmt> stmt_true, std::shared_ptr<ast_stmt> stmt_false, const sloc sl)
+		ast_stmt_if(s_ptr<ast_exp> exp, s_ptr<ast_stmt> stmt_true, s_ptr<ast_stmt> stmt_false, const sloc sl)
 		: ast_stmt(sl)
 		, exp(exp)
 		, stmt_true(stmt_true)
@@ -86,13 +86,13 @@ namespace splicpp
 		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
-		virtual substitution infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const;
+		virtual substitution infer_type(const typecontext& c, const s_ptr<sl_type> t) const;
 	};
 	
 	class ast_stmt_while : public ast_stmt
 	{
-		std::shared_ptr<ast_exp> exp;
-		std::shared_ptr<ast_stmt> stmt;
+		s_ptr<ast_exp> exp;
+		s_ptr<ast_stmt> stmt;
 	
 	public:
 		ast_stmt_while(__decltype(exp) exp, __decltype(stmt) stmt, const sloc sl)
@@ -105,13 +105,13 @@ namespace splicpp
 		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
-		virtual substitution infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const;
+		virtual substitution infer_type(const typecontext& c, const s_ptr<sl_type> t) const;
 	};
 	
 	class ast_stmt_assignment : public ast_stmt
 	{
-		std::shared_ptr<ast_id> id;
-		std::shared_ptr<ast_exp> exp;
+		s_ptr<ast_id> id;
+		s_ptr<ast_exp> exp;
 		
 	public:
 		ast_stmt_assignment(__decltype(id) id, __decltype(exp) exp, const sloc sl)
@@ -124,12 +124,12 @@ namespace splicpp
 		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
-		virtual substitution infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const;
+		virtual substitution infer_type(const typecontext& c, const s_ptr<sl_type> t) const;
 	};
 	
 	class ast_stmt_fun_call : public ast_stmt
 	{
-		std::shared_ptr<ast_fun_call> f;
+		s_ptr<ast_fun_call> f;
 		
 	public:
 		ast_stmt_fun_call(__decltype(f) f, const sloc sl)
@@ -141,12 +141,12 @@ namespace splicpp
 		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;	
-		virtual substitution infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const;	
+		virtual substitution infer_type(const typecontext& c, const s_ptr<sl_type> t) const;	
 	};
 	
 	class ast_stmt_return : public ast_stmt
 	{
-		boost::optional<std::shared_ptr<ast_exp>> exp;
+		boost::optional<s_ptr<ast_exp>> exp;
 	
 	public:
 		ast_stmt_return(const sloc sl)
@@ -163,7 +163,7 @@ namespace splicpp
 		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
-		virtual substitution infer_type(const typecontext& c, const std::shared_ptr<sl_type> t) const;
+		virtual substitution infer_type(const typecontext& c, const s_ptr<sl_type> t) const;
 	};
 }
 

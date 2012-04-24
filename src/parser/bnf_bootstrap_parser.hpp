@@ -22,7 +22,7 @@ namespace splicpp
 		void parse_syntax(grammar& g, const std::string str, const cst_node n) const;
 		void parse_rule(grammar& g, const std::string str, const cst_node n) const;
 		void parse_expr(grammar& g, const std::string str, const cst_node n, rule& r) const;
-		std::string parse_rule_name(const std::string str, const std::shared_ptr<cst_element> e) const;
+		std::string parse_rule_name(const std::string str, const s_ptr<cst_element> e) const;
 	
 	public:
 		bnf_bootstrap_parser()

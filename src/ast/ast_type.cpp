@@ -14,7 +14,7 @@
 
 namespace splicpp
 {
-	void ast_type::register_type(const std::shared_ptr<ast_type> t, symboltable& s, varcontext& c)
+	void ast_type::register_type(const s_ptr<ast_type> t, symboltable& s, varcontext& c)
 	{
 		if(t->type() == type_id)
 		{
@@ -41,9 +41,9 @@ namespace splicpp
 		s << "Int";
 	}
 	
-	std::shared_ptr<sl_type> ast_type_int::fetch_type(const typecontext&) const
+	s_ptr<sl_type> ast_type_int::fetch_type(const typecontext&) const
 	{
-		return std::shared_ptr<sl_type>(new sl_type_int());
+		return s_ptr<sl_type>(new sl_type_int());
 	}
 	
 	/* ast_type_bool */
@@ -58,9 +58,9 @@ namespace splicpp
 		s << "Bool";
 	}
 	
-	std::shared_ptr<sl_type> ast_type_bool::fetch_type(const typecontext&) const
+	s_ptr<sl_type> ast_type_bool::fetch_type(const typecontext&) const
 	{
-		return std::shared_ptr<sl_type>(new sl_type_bool());
+		return s_ptr<sl_type>(new sl_type_bool());
 	}
 	
 	/* ast_type_tuple */
@@ -85,9 +85,9 @@ namespace splicpp
 		s << ")";
 	}
 	
-	std::shared_ptr<sl_type> ast_type_tuple::fetch_type(const typecontext& c) const
+	s_ptr<sl_type> ast_type_tuple::fetch_type(const typecontext& c) const
 	{
-		return std::shared_ptr<sl_type>(new sl_type_tuple(t_left->fetch_type(c), t_right->fetch_type(c)));
+		return s_ptr<sl_type>(new sl_type_tuple(t_left->fetch_type(c), t_right->fetch_type(c)));
 	}
 	
 	/* ast_type_array */
@@ -109,9 +109,9 @@ namespace splicpp
 		s << "]";
 	}
 	
-	std::shared_ptr<sl_type> ast_type_array::fetch_type(const typecontext& c) const
+	s_ptr<sl_type> ast_type_array::fetch_type(const typecontext& c) const
 	{
-		return std::shared_ptr<sl_type>(new sl_type_array(t->fetch_type(c)));
+		return s_ptr<sl_type>(new sl_type_array(t->fetch_type(c)));
 	}
 	
 	/* ast_type_id */
@@ -136,7 +136,7 @@ namespace splicpp
 		id->pretty_print(s, tab);
 	}
 	
-	std::shared_ptr<sl_type> ast_type_id::fetch_type(const typecontext& c) const
+	s_ptr<sl_type> ast_type_id::fetch_type(const typecontext& c) const
 	{
 		return c[id->fetch_id()]->unbind(c); //Should be monomorph in any case
 	}
@@ -153,8 +153,8 @@ namespace splicpp
 		s << "Void";
 	}
 	
-	std::shared_ptr<sl_type> ast_type_void::fetch_type(const typecontext&) const
+	s_ptr<sl_type> ast_type_void::fetch_type(const typecontext&) const
 	{
-		return std::shared_ptr<sl_type>(new sl_type_void());
+		return s_ptr<sl_type>(new sl_type_void());
 	}
 }

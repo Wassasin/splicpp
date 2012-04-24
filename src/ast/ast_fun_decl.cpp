@@ -17,17 +17,17 @@
 
 namespace splicpp
 {
-	void ast_fun_decl::add_arg(std::shared_ptr<ast_f_arg> arg)
+	void ast_fun_decl::add_arg(s_ptr<ast_f_arg> arg)
 	{
 		args.push_back(arg);
 	}
 	
-	void ast_fun_decl::add_decl(std::shared_ptr<ast_var_decl> decl)
+	void ast_fun_decl::add_decl(s_ptr<ast_var_decl> decl)
 	{
 		decls.push_back(decl);
 	}
 	
-	void ast_fun_decl::add_stmt(std::shared_ptr<ast_stmt> stmt)
+	void ast_fun_decl::add_stmt(s_ptr<ast_stmt> stmt)
 	{
 		stmts.push_back(stmt);
 	}
@@ -66,25 +66,25 @@ namespace splicpp
 			stmt->assign_ids(cvar);
 	}
 	
-	std::shared_ptr<sl_type> ast_fun_decl::fetch_assigned_type(const typecontext& c) const
+	s_ptr<sl_type> ast_fun_decl::fetch_assigned_type(const typecontext& c) const
 	{
-		std::vector<std::shared_ptr<sl_type>> t_args;
+		std::vector<s_ptr<sl_type>> t_args;
 		for(const auto arg : args)
 			t_args.push_back(arg->fetch_assigned_type(c));
 		
-		return std::shared_ptr<sl_type>(new sl_type_function(t_args, this->t->fetch_type(c)));
+		return s_ptr<sl_type>(new sl_type_function(t_args, this->t->fetch_type(c)));
 	}
 	
 	substitution ast_fun_decl::declare_type(ltypecontext& c) const
 	{
 		ltypecontext clocal = c;
 	
-		std::shared_ptr<sl_type_unbound> r = c.create_fresh();
-		std::vector<std::shared_ptr<sl_type>> t_args;
+		s_ptr<sl_type_unbound> r = c.create_fresh();
+		std::vector<s_ptr<sl_type>> t_args;
 		for(size_t i = 0; i < args.size(); i++)
 			t_args.push_back(args[i]->declare_type(clocal));
 		
-		std::shared_ptr<sl_type_function> ft(new sl_type_function(t_args, r));
+		s_ptr<sl_type_function> ft(new sl_type_function(t_args, r));
 		
 		substitution s;
 		for(const auto decl : decls)

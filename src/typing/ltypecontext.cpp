@@ -4,7 +4,7 @@
 
 namespace splicpp
 {
-	void ltypecontext::register_type(const sid i, const std::shared_ptr<sl_polytype> t)
+	void ltypecontext::register_type(const sid i, const s_ptr<sl_polytype> t)
 	{
 		register_global(i, t);
 		typecontext::register_type(i, t);
@@ -21,7 +21,7 @@ namespace splicpp
 		return c;
 	}
 
-	void ltypecontext::register_global(const sid i, const std::shared_ptr<sl_polytype> t) const
+	void ltypecontext::register_global(const sid i, const s_ptr<sl_polytype> t) const
 	{
 		g->register_type(i, t);
 	}

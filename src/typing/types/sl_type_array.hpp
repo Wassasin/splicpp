@@ -7,21 +7,21 @@ namespace splicpp
 {	
 	class sl_type_array : public sl_type
 	{
-		std::shared_ptr<sl_type> t;
+		s_ptr<sl_type> t;
 
 	protected:
-		virtual boost::optional<substitution> unify_partial(const std::shared_ptr<sl_type> t) const;
+		virtual boost::optional<substitution> unify_partial(const s_ptr<sl_type> t) const;
 	
 	public:
-		sl_type_array(const std::shared_ptr<sl_type> t)
+		sl_type_array(const s_ptr<sl_type> t)
 		: t(t)
 		{}
 		
 		virtual sl_type_type type() const;
 		virtual void print(std::ostream& s) const;
 		
-		virtual std::vector<std::shared_ptr<sl_type_unbound>> tv() const;
-		virtual std::shared_ptr<sl_type> apply(const substitution& s) const;
+		virtual std::vector<s_ptr<sl_type_unbound>> tv() const;
+		virtual s_ptr<sl_type> apply(const substitution& s) const;
 	};
 }
 

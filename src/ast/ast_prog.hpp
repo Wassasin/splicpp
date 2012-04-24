@@ -2,7 +2,8 @@
 #define AST_PROG_H
 
 #include <vector>
-#include <memory>
+
+#include "../common/typedefs.hpp"
 
 #include "ast.hpp"
 
@@ -14,7 +15,7 @@ namespace splicpp
 	
 	class ast_prog : public ast
 	{
-		std::vector<std::shared_ptr<ast_decl>> decls;
+		std::vector<s_ptr<ast_decl>> decls;
 	
 	public:
 		ast_prog(const sloc sl)
@@ -22,7 +23,7 @@ namespace splicpp
 		, decls()
 		{}
 		
-		void add_decl(std::shared_ptr<ast_decl> decl);
+		void add_decl(s_ptr<ast_decl> decl);
 		
 		void register_ids(symboltable& s);
 		void register_globals(symboltable&, varcontext& c);

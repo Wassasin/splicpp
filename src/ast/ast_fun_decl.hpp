@@ -25,12 +25,12 @@ namespace splicpp
 
 	class ast_fun_decl : public ast
 	{
-		std::shared_ptr<ast_type> t;
-		std::shared_ptr<ast_id> id;
+		s_ptr<ast_type> t;
+		s_ptr<ast_id> id;
 		
-		std::vector<std::shared_ptr<ast_f_arg>> args;
-		std::vector<std::shared_ptr<ast_var_decl>> decls;
-		std::vector<std::shared_ptr<ast_stmt>> stmts;
+		std::vector<s_ptr<ast_f_arg>> args;
+		std::vector<s_ptr<ast_var_decl>> decls;
+		std::vector<s_ptr<ast_stmt>> stmts;
 	
 	public:
 		ast_fun_decl(__decltype(t) t, __decltype(id) id, const sloc sl)
@@ -42,16 +42,16 @@ namespace splicpp
 		, stmts()
 		{}
 		
-		void add_arg(std::shared_ptr<ast_f_arg> arg);
-		void add_decl(std::shared_ptr<ast_var_decl> decl);
-		void add_stmt(std::shared_ptr<ast_stmt> stmt);
+		void add_arg(s_ptr<ast_f_arg> arg);
+		void add_decl(s_ptr<ast_var_decl> decl);
+		void add_stmt(s_ptr<ast_stmt> stmt);
 		
 		void assign(sid i);
 		std::string fetch_name() const;
 		
 		void register_locals(symboltable& s, varcontext& c);
 		
-		std::shared_ptr<sl_type> fetch_assigned_type(const typecontext& c) const;
+		s_ptr<sl_type> fetch_assigned_type(const typecontext& c) const;
 		substitution declare_type(ltypecontext& c) const;
 		
 		virtual void pretty_print(std::ostream& s, const uint tab) const;

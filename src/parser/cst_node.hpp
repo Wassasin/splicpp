@@ -15,18 +15,18 @@ namespace splicpp
 	struct cst_node
 	{
 		rid r;
-		std::deque<std::shared_ptr<cst_element>> elements;
+		std::deque<s_ptr<cst_element>> elements;
 	
 		cst_node(rid r)
 		: r(r)
 		, elements()
 		{}
 	
-		void add_element(const std::shared_ptr<cst_element> x);
+		void add_element(const s_ptr<cst_element> x);
 		bool is_full(const grammar& g) const;
 		stid fetch_stid(const grammar& g) const;
 		void print(const grammar& g, const std::string source, const uint tab) const;
-		std::shared_ptr<cst_element> operator[](size_t i) const;
+		s_ptr<cst_element> operator[](size_t i) const;
 		void assert_stid(const grammar& g, const stid i) const;
 		void assert_stid(const grammar& g, const std::string str) const;
 		size_t size() const;

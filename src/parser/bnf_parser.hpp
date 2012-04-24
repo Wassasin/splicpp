@@ -23,7 +23,7 @@ namespace splicpp
 		stid add_kleene(grammar& g, std::string rule_name, const stid s) const;
 		stid add_plus(grammar& g, std::string rule_name, const stid s) const;
 		
-		std::string parse_rule_name(const std::string str, const std::shared_ptr<cst_element> e) const;
+		std::string parse_rule_name(const std::string str, const s_ptr<cst_element> e) const;
 	public:
 		bnf_parser()
 		: g_bnf()

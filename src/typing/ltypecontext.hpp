@@ -7,10 +7,10 @@ namespace splicpp
 {
 	class ltypecontext : public typecontext
 	{
-		std::shared_ptr<typecontext> g;
+		s_ptr<typecontext> g;
 		
 	public:
-		ltypecontext(std::shared_ptr<typecontext> g)
+		ltypecontext(s_ptr<typecontext> g)
 		: typecontext(g->ft_count)
 		, g(g)
 		{}
@@ -25,10 +25,10 @@ namespace splicpp
 		, g(c.g)
 		{}
 		
-		virtual void register_type(const sid i, const std::shared_ptr<sl_polytype> t);
+		virtual void register_type(const sid i, const s_ptr<sl_polytype> t);
 		
 		ltypecontext apply(const substitution& s) const;
-		void register_global(const sid i, const std::shared_ptr<sl_polytype> t) const;
+		void register_global(const sid i, const s_ptr<sl_polytype> t) const;
 	};
 }
 

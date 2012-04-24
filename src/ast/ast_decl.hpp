@@ -34,7 +34,7 @@ namespace splicpp
 	
 	class ast_decl_var : public ast_decl
 	{
-		std::shared_ptr<ast_var_decl> v;
+		s_ptr<ast_var_decl> v;
 	
 	public:
 		ast_decl_var(__decltype(v) v, const sloc sl)
@@ -51,7 +51,7 @@ namespace splicpp
 	
 	class ast_decl_fun : public ast_decl
 	{
-		std::shared_ptr<ast_fun_decl> f;
+		s_ptr<ast_fun_decl> f;
 		
 	public:
 		ast_decl_fun(__decltype(f) f, const sloc sl)

@@ -46,12 +46,12 @@ namespace splicpp
 		};
 		
 		std::vector<symbolref> index;
-		std::vector<std::shared_ptr<ast_fun_decl>> funs;
-		std::vector<std::shared_ptr<ast_construct>> conss;
-		std::vector<std::shared_ptr<ast_var_decl>> vars;
-		std::vector<std::shared_ptr<ast_f_arg>> args;
-		std::vector<std::shared_ptr<ast_var_decl>> local_vars;
-		std::vector<std::shared_ptr<ast_type_id>> types;
+		std::vector<s_ptr<ast_fun_decl>> funs;
+		std::vector<s_ptr<ast_construct>> conss;
+		std::vector<s_ptr<ast_var_decl>> vars;
+		std::vector<s_ptr<ast_f_arg>> args;
+		std::vector<s_ptr<ast_var_decl>> local_vars;
+		std::vector<s_ptr<ast_type_id>> types;
 	
 		sid create_entry(const symbolref::symbolreftype t, const size_t i);
 		std::vector<sid> select_all(const symbolref::symbolreftype t) const;
@@ -68,12 +68,12 @@ namespace splicpp
 		, types()
 		{}
 		
-		sid reg_fun(std::shared_ptr<ast_fun_decl> f);
-		sid reg_cons(std::shared_ptr<ast_construct> c);
-		sid reg_var(std::shared_ptr<ast_var_decl> v);
-		sid reg_arg(std::shared_ptr<ast_f_arg> a);
-		sid reg_lvar(std::shared_ptr<ast_var_decl> lv);
-		sid reg_type(std::shared_ptr<ast_type_id> t);
+		sid reg_fun(s_ptr<ast_fun_decl> f);
+		sid reg_cons(s_ptr<ast_construct> c);
+		sid reg_var(s_ptr<ast_var_decl> v);
+		sid reg_arg(s_ptr<ast_f_arg> a);
+		sid reg_lvar(s_ptr<ast_var_decl> lv);
+		sid reg_type(s_ptr<ast_type_id> t);
 		
 		void check_types() const;
 		void print(std::ostream& s) const;

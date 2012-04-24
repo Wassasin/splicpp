@@ -45,7 +45,7 @@ namespace splicpp
 		, s(s)
 		{}
 		
-		void print(const std::shared_ptr<T> x)
+		void print(const s_ptr<T> x)
 		{
 			if(first)
 				first = false;

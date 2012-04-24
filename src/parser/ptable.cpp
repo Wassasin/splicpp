@@ -87,7 +87,7 @@ namespace splicpp
 	{
 		const grammar g = l.get_grammar();
 	
-		std::stack<std::shared_ptr<cst_element>> e_stack;
+		std::stack<s_ptr<cst_element>> e_stack;
 		std::stack<stateid> s_stack;
 		
 		l.reset();
@@ -102,7 +102,7 @@ namespace splicpp
 			if(t.t == acttransition::t_shift)
 			{
 				s_stack.push(t.state);
-				e_stack.push(std::shared_ptr<cst_element>(new cst_element(a)));
+				e_stack.push(s_ptr<cst_element>(new cst_element(a)));
 				
 				a = l.next();
 			}
@@ -128,7 +128,7 @@ namespace splicpp
 					throw std::exception();
 				
 				s_stack.push(gt.state);
-				e_stack.push(std::shared_ptr<cst_element>(new cst_element(n)));
+				e_stack.push(s_ptr<cst_element>(new cst_element(n)));
 			}
 			else if(t.t == acttransition::t_accept)
 				break;

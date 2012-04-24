@@ -27,7 +27,7 @@ namespace splicpp
 		return result;
 	}
 	
-	sid symboltable::reg_fun(std::shared_ptr<ast_fun_decl> f)
+	sid symboltable::reg_fun(s_ptr<ast_fun_decl> f)
 	{
 		sid i = create_entry(symbolref::t_fun, funs.size());
 		f->assign(i);
@@ -35,7 +35,7 @@ namespace splicpp
 		return i;
 	}
 	
-	sid symboltable::reg_cons(std::shared_ptr<ast_construct> cons)
+	sid symboltable::reg_cons(s_ptr<ast_construct> cons)
 	{
 		sid i = create_entry(symbolref::t_construct, conss.size());
 		cons->assign(i);
@@ -43,7 +43,7 @@ namespace splicpp
 		return i;
 	}	
 	
-	sid symboltable::reg_var(std::shared_ptr<ast_var_decl> v)
+	sid symboltable::reg_var(s_ptr<ast_var_decl> v)
 	{
 		sid i = create_entry(symbolref::t_var, vars.size());
 		v->assign(i);
@@ -51,7 +51,7 @@ namespace splicpp
 		return i;
 	}
 	
-	sid symboltable::reg_arg(std::shared_ptr<ast_f_arg> a)
+	sid symboltable::reg_arg(s_ptr<ast_f_arg> a)
 	{
 		sid i = create_entry(symbolref::t_arg, args.size());
 		a->assign(i);
@@ -59,7 +59,7 @@ namespace splicpp
 		return i;
 	}
 	
-	sid symboltable::reg_lvar(std::shared_ptr<ast_var_decl> lv)
+	sid symboltable::reg_lvar(s_ptr<ast_var_decl> lv)
 	{
 		sid i = create_entry(symbolref::t_local_var, local_vars.size());
 		lv->assign(i);
@@ -67,7 +67,7 @@ namespace splicpp
 		return i;
 	}
 	
-	sid symboltable::reg_type(std::shared_ptr<ast_type_id> t)
+	sid symboltable::reg_type(s_ptr<ast_type_id> t)
 	{
 		sid i = create_entry(symbolref::t_type, types.size());
 		t->assign(i);
@@ -77,15 +77,15 @@ namespace splicpp
 	
 	void symboltable::check_types() const
 	{
-		std::shared_ptr<typecontext> global(new typecontext());
+		s_ptr<typecontext> global(new typecontext());
 		ltypecontext c(global);
 		substitution s;
 		
-		std::map<sid, std::shared_ptr<sl_type_unbound>> init_types;
+		std::map<sid, s_ptr<sl_type_unbound>> init_types;
 		for(size_t i = 0; i < index.size(); i++)
 			if(index[i].t != symbolref::t_type && index[i].t != symbolref::t_arg && index[i].t != symbolref::t_local_var)
 			{
-				const std::shared_ptr<sl_type_unbound> t = c.create_fresh();
+				const s_ptr<sl_type_unbound> t = c.create_fresh();
 				init_types[i] = t;
 				c.register_type(i, sl_polytype::qualify(c, t));
 			}
@@ -95,7 +95,7 @@ namespace splicpp
 		for(const sid i : select_all(symbolref::symbolreftype::t_construct))
 		{
 			c = c.apply(s);
-			std::shared_ptr<sl_type_unbound> t = init_types[i];
+			s_ptr<sl_type_unbound> t = init_types[i];
 			s = conss[index[i].i]->declare_type(c).composite(s);
 			//s = init_types[i]->apply(s)->unify(c[i]->apply(c, s)->unbind_maintain()).composite(s);
 		}
@@ -105,7 +105,7 @@ namespace splicpp
 		for(const sid i : select_all(symbolref::symbolreftype::t_var))
 		{
 			c = c.apply(s);
-			std::shared_ptr<sl_type_unbound> t = init_types[i];
+			s_ptr<sl_type_unbound> t = init_types[i];
 			s = vars[index[i].i]->declare_type(c).composite(s);
 			//s = init_types[i]->apply(s)->unify(c[i]->apply(c, s)->unbind_maintain()).composite(s);
 		}
