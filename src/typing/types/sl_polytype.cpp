@@ -108,10 +108,9 @@ namespace splicpp
 		return std::vector<cs_ptr<sl_type_unbound>>();
 	}
 	
-	cs_ptr<sl_polytype> sl_polytype_exists::apply(const typecontext& c, const substitution&) const
+	cs_ptr<sl_polytype> sl_polytype_exists::apply(const typecontext&, const substitution&) const
 	{
-		//return shared_from_this();
-		return apply(c, substitution::id()); //To stop errors
+		return shared_from_this();
 	}
 	
 	void sl_polytype_exists::print(std::ostream& s) const
