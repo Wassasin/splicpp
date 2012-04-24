@@ -25,10 +25,10 @@ namespace splicpp
 		, g(c.g)
 		{}
 		
-		virtual void register_type(const sid i, const s_ptr<sl_polytype> t);
+		virtual void register_type(const sid i, const cs_ptr<sl_polytype> t);
 		
 		ltypecontext apply(const substitution& s) const;
-		void register_global(const sid i, const s_ptr<sl_polytype> t) const;
+		void register_global(const sid i, const cs_ptr<sl_polytype> t) const;
 	};
 }
 

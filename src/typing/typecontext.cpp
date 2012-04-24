@@ -9,7 +9,7 @@
 
 namespace splicpp
 {
-	void typecontext::register_type(const sid i, const s_ptr<sl_polytype> t)
+	void typecontext::register_type(const sid i, const cs_ptr<sl_polytype> t)
 	{
 		if(i >= types.size())
 			types.resize(i+1);
@@ -25,7 +25,7 @@ namespace splicpp
 		return types.at(i);
 	}
 	
-	s_ptr<sl_polytype> typecontext::operator[](const sid i) const
+	cs_ptr<sl_polytype> typecontext::operator[](const sid i) const
 	{
 		const auto t = types.at(i);
 		if(!t)

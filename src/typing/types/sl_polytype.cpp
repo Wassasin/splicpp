@@ -33,10 +33,10 @@ namespace splicpp
 		return subtract_ptr<const sl_type_unbound>(t->tv(), bindings);
 	}
 	
-	s_ptr<sl_polytype> sl_polytype_forall::apply(const typecontext& c, const substitution& s) const
+	cs_ptr<sl_polytype> sl_polytype_forall::apply(const typecontext& c, const substitution& s) const
 	{
 		const cs_ptr<sl_type> tt = t->apply(s);
-		const s_ptr<sl_polytype_forall> result = sl_polytype_forall::not_qualify(tt);
+		const s_ptr<sl_polytype_forall> result(new sl_polytype_forall(t));
 		
 		std::vector<cs_ptr<sl_type_unbound>> fvs;
 		for(const cs_ptr<sl_type_unbound> fvtmp : c.fv())
@@ -73,19 +73,19 @@ namespace splicpp
 			t->print(s);
 	}
 	
-	s_ptr<sl_polytype> sl_polytype::qualify(const typecontext& c, const cs_ptr<sl_type> t)
+	cs_ptr<sl_polytype> sl_polytype::qualify(const typecontext& c, const cs_ptr<sl_type> t)
 	{
-		return std::static_pointer_cast<sl_polytype>(sl_polytype_forall::qualify(c, t));
+		return std::static_pointer_cast<const sl_polytype>(sl_polytype_forall::qualify(c, t));
 	}
 	
-	s_ptr<sl_polytype> sl_polytype::not_qualify(const cs_ptr<sl_type> t)
+	cs_ptr<sl_polytype> sl_polytype::not_qualify(const cs_ptr<sl_type> t)
 	{
-		return std::static_pointer_cast<sl_polytype>(sl_polytype_forall::not_qualify(t));
+		return std::static_pointer_cast<const sl_polytype>(sl_polytype_forall::not_qualify(t));
 	}
 	
-	s_ptr<sl_polytype_forall> sl_polytype_forall::qualify(const typecontext& c, const cs_ptr<sl_type> t)
+	cs_ptr<sl_polytype_forall> sl_polytype_forall::qualify(const typecontext& c, const cs_ptr<sl_type> t)
 	{
-		const auto result = s_ptr<sl_polytype_forall>(new sl_polytype_forall(t));
+		s_ptr<sl_polytype_forall> result(new sl_polytype_forall(t));
 		
 		for(const auto x : subtract_ptr<const sl_type_unbound>(t->tv(), c.fv()))
 			result->bind(x);
@@ -93,9 +93,9 @@ namespace splicpp
 		return result;
 	}
 	
-	s_ptr<sl_polytype_forall> sl_polytype_forall::not_qualify(const cs_ptr<sl_type> t)
+	cs_ptr<sl_polytype_forall> sl_polytype_forall::not_qualify(const cs_ptr<sl_type> t)
 	{
-		return s_ptr<sl_polytype_forall>(new sl_polytype_forall(t));
+		return cs_ptr<sl_polytype_forall>(new sl_polytype_forall(t));
 	}
 	
 	cs_ptr<sl_type> sl_polytype_exists::unbind(const typecontext& c) const
@@ -108,7 +108,7 @@ namespace splicpp
 		return std::vector<cs_ptr<sl_type_unbound>>();
 	}
 	
-	s_ptr<sl_polytype> sl_polytype_exists::apply(const typecontext& c, const substitution&) const
+	cs_ptr<sl_polytype> sl_polytype_exists::apply(const typecontext& c, const substitution&) const
 	{
 		//return shared_from_this();
 		return apply(c, substitution::id()); //To stop errors

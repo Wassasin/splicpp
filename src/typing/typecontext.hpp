@@ -18,7 +18,7 @@ namespace splicpp
 	class typecontext
 	{
 	protected:
-		std::vector<boost::optional<s_ptr<sl_polytype>>> types;
+		std::vector<boost::optional<cs_ptr<sl_polytype>>> types;
 		s_ptr<uint> ft_count;
 		
 		typecontext(decltype(ft_count) ft_count)
@@ -39,10 +39,10 @@ namespace splicpp
 		
 		virtual ~typecontext() {}
 		
-		virtual void register_type(const sid i, const s_ptr<sl_polytype> t);
+		virtual void register_type(const sid i, const cs_ptr<sl_polytype> t);
 		
 		bool is_registered(const sid i) const;
-		s_ptr<sl_polytype> operator[](const sid i) const;
+		cs_ptr<sl_polytype> operator[](const sid i) const;
 		cs_ptr<sl_type_unbound> create_fresh() const;
 		typecontext apply(const substitution& s) const;
 		typecontext apply_maintain(const substitution& s) const;

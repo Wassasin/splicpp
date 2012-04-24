@@ -42,7 +42,7 @@ namespace splicpp
 	{
 		const cs_ptr<sl_type_unbound> a = c.create_fresh();
 		const substitution s = exp->infer_type(c, a);
-		const s_ptr<sl_polytype> t = sl_polytype::qualify(c.apply(s), a->apply(s));
+		const cs_ptr<sl_polytype> t = sl_polytype::qualify(c.apply(s), a->apply(s));
 		
 		c.register_type(id->fetch_id(), t);
 		return s;
