@@ -53,11 +53,11 @@ namespace splicpp
 	
 	class sl_polytype_exists : public sl_polytype
 	{
-		std::vector<cs_ptr<sl_type_unbound>> bindings;
+		s_ptr<std::vector<cs_ptr<sl_type_unbound>>> bindings;
 	
 	public:
 		sl_polytype_exists()
-		: bindings()
+		: bindings(new std::vector<cs_ptr<sl_type_unbound>>())
 		{}
 		
 		virtual cs_ptr<sl_type> unbind(const typecontext& c) const;

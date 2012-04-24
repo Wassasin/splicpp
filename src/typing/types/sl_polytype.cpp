@@ -100,7 +100,9 @@ namespace splicpp
 	
 	cs_ptr<sl_type> sl_polytype_exists::unbind(const typecontext& c) const
 	{
-		return std::static_pointer_cast<const sl_type>(c.create_fresh());
+		const auto u = c.create_fresh();
+		bindings->push_back(u);
+		return std::static_pointer_cast<const sl_type>(u);
 	}
 		
 	std::vector<cs_ptr<sl_type_unbound>> sl_polytype_exists::tv() const
@@ -117,12 +119,12 @@ namespace splicpp
 	{
 		s << "(exists T";
 		
-		if(bindings.size() > 0)
+		if(bindings->size() > 0)
 		{
 			s << " {bound to: ";
 			
 			delim_gen_printer<const sl_type_unbound> p(", ", s);
-			for(const auto b : bindings)
+			for(const auto b : *bindings.get())
 				p.print(b);
 			
 			s << "}";
