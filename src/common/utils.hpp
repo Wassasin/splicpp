@@ -31,6 +31,31 @@ namespace splicpp
 		}
 	};
 	
+	template <typename T>
+	class delim_gen_printer
+	{
+		const std::string delim;
+		bool first;
+		std::ostream& s;
+		
+	public:
+		delim_gen_printer(const std::string delim, std::ostream& s)
+		: delim(delim)
+		, first(true)
+		, s(s)
+		{}
+		
+		void print(const std::shared_ptr<T> x)
+		{
+			if(first)
+				first = false;
+			else
+				s << delim;
+			
+			x->print(s);
+		}
+	};
+	
 	class delim_end_printer
 	{
 		const std::string delim, end;

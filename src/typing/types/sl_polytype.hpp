@@ -9,7 +9,7 @@ namespace splicpp
 	class sl_type_unbound;
 	class substitution;
 	
-	class sl_polytype
+	class sl_polytype : public std::enable_shared_from_this<sl_polytype>
 	{
 	public:
 		virtual ~sl_polytype() {}

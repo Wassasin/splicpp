@@ -5,6 +5,7 @@
 
 #include "../typecontext.hpp"
 #include "../../common/generic.hpp"
+#include "../../common/utils.hpp"
 
 namespace splicpp
 {
@@ -95,5 +96,39 @@ namespace splicpp
 	std::shared_ptr<sl_polytype_forall> sl_polytype_forall::not_qualify(const std::shared_ptr<sl_type> t)
 	{
 		return std::shared_ptr<sl_polytype_forall>(new sl_polytype_forall(t));
+	}
+	
+	std::shared_ptr<sl_type> sl_polytype_exists::unbind(const typecontext& c) const
+	{
+		return std::static_pointer_cast<sl_type>(c.create_fresh());
+	}
+		
+	std::vector<std::shared_ptr<sl_type_unbound>> sl_polytype_exists::tv() const
+	{
+		return std::vector<std::shared_ptr<sl_type_unbound>>();
+	}
+	
+	std::shared_ptr<sl_polytype> sl_polytype_exists::apply(const typecontext& c, const substitution&) const
+	{
+		//return shared_from_this();
+		return apply(c, substitution::id()); //To stop errors
+	}
+	
+	void sl_polytype_exists::print(std::ostream& s) const
+	{
+		s << "(exists T";
+		
+		if(bindings.size() > 0)
+		{
+			s << " {bound to: ";
+			
+			delim_gen_printer<sl_type_unbound> p(", ", s);
+			for(const auto b : bindings)
+				p.print(b);
+			
+			s << "}";
+		}
+		
+		s << ")";
 	}
 }
