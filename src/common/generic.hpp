@@ -26,6 +26,16 @@ namespace splicpp
 	}
 	
 	template <typename T>
+	static bool any_is_in_ptr(const std::vector<s_ptr<T>> xs, const std::vector<s_ptr<T>>& ys)
+	{
+		for(s_ptr<T> x : xs)
+			if(is_in_ptr<T>(x, ys))
+				return true;
+		
+		return false;
+	}
+	
+	template <typename T>
 	static void remove_duplicates(std::vector<T>& xs)
 	{
 		std::vector<T> tmp;

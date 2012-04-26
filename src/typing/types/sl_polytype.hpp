@@ -60,6 +60,9 @@ namespace splicpp
 		: bindings(new std::vector<cs_ptr<sl_type_unbound>>())
 		{}
 		
+		substitution propagate_findings(const typecontext& c, const cs_ptr<sl_polytype> t, substitution s) const;
+		std::vector<cs_ptr<sl_type_unbound>> fetch_bindings() const;
+		
 		virtual cs_ptr<sl_type> unbind(const typecontext& c) const;
 		
 		virtual std::vector<cs_ptr<sl_type_unbound>> tv() const;

@@ -11,7 +11,7 @@ namespace splicpp
 {
 	boost::optional<substitution> sl_type::unify_internal(const cs_ptr<sl_type> t) const
 	{
-		const cs_ptr<sl_type> x = apply(substitution::id());
+		const cs_ptr<sl_type> x = shared_from_this();
 		const cs_ptr<sl_type> y = t;
 		
 		const boost::optional<substitution> u = x->unify_partial(y);

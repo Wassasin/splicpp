@@ -14,7 +14,7 @@ namespace splicpp
 	class typecontext;
 	class sl_type_unbound;
 
-	class sl_type
+	class sl_type : public std::enable_shared_from_this<sl_type>
 	{
 	protected:
 		virtual boost::optional<substitution> unify_partial(const cs_ptr<sl_type> t) const = 0;

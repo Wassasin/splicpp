@@ -1,6 +1,9 @@
 #include "symboltable.hpp"
 
 #include <map>
+#include <stdexcept>
+
+#include "../common/generic.hpp"
 
 #include "typecontext.hpp"
 #include "ltypecontext.hpp"
@@ -93,23 +96,22 @@ namespace splicpp
 		print(c, std::cout << std::endl << "Typecontext initial: " << std::endl);
 		
 		for(const sid i : select_all(symbolref::symbolreftype::t_construct))
-		{
-			c = c.apply(s);
 			s = conss[index[i].i]->declare_type(c).composite(s);
-		}
 		
-		//s.print(std::cout << std::endl << "Substitutions: " << std::endl);
+		ltypecontext corig = c;
 		
 		for(const sid i : select_all(symbolref::symbolreftype::t_var))
 		{
-			c = c.apply(s);
-			s = vars[index[i].i]->declare_type(c).composite(s);
+			ltypecontext ctmp = corig;
+			s = vars[index[i].i]->declare_type(ctmp).composite(s);
+			c.register_type(i, ctmp[i]); //Copy result from ctmp to c;
 		}
 		
 		for(const sid i : select_all(symbolref::symbolreftype::t_fun))
 		{
-			c = c.apply(s);
-			s = funs[index[i].i]->declare_type(c).composite(s);
+			ltypecontext ctmp = corig;
+			s = funs[index[i].i]->declare_type(ctmp).composite(s);
+			c.register_type(i, ctmp[i]); //Copy result from ctmp to c;
 		}
 		
 		//for(const sid i : select_all(symbolref::symbolreftype::t_local_var))
@@ -144,7 +146,62 @@ namespace splicpp
 		*/
 		s.print(std::cout << std::endl << "Substitutions: " << std::endl);
 		
-		print(global->apply_maintain(substitution::id()), std::cout << std::endl << "Typecontext pre-final: " << std::endl);
+		//print(global->apply_maintain(substitution::id()), std::cout << std::endl << "Typecontext pre-final: " << std::endl);
+		
+		print(*global.get(), std::cout << std::endl << "Typecontext pre-s: " << std::endl);
+		
+		std::cout << std::endl << "Init types:" << std::endl;
+		
+		std::vector<sid> prop_index;
+		for(const std::pair<sid, cs_ptr<sl_polytype_exists>> p : init_types)
+			prop_index.push_back(p.first);
+		
+		while(!prop_index.empty())
+		{
+			bool changed = false;
+			
+			for(size_t i = 0; i < prop_index.size(); i++)
+			{
+				const cs_ptr<sl_polytype_exists> t = init_types[prop_index[i]];
+				
+				std::vector<cs_ptr<sl_type_unbound>> blacklist;
+				for(size_t j = 0; j < prop_index.size(); j++)
+					for(const auto tmp : init_types[prop_index[j]]->fetch_bindings())
+						add_to<cs_ptr<sl_type_unbound>>(tmp->apply(s)->tv(), blacklist);
+				
+				if(any_is_in_ptr<const sl_type_unbound>(std::dynamic_pointer_cast<const sl_polytype_forall>(c[prop_index[i]])->unbind_maintain()->apply(s)->tv(), blacklist))
+					continue;
+	
+				s = t->propagate_findings(c, c[prop_index[i]]->apply(c, s), s);
+				
+				prop_index.erase(prop_index.begin()+i);
+				i--;
+				
+				changed = true;
+				break;
+			}
+			
+			if(!prop_index.empty() && !changed)
+			{
+				for(size_t i = 0; i < prop_index.size(); i++)
+				{
+					print_name(prop_index[i], std::cout << std::endl);
+					for(const auto t : std::dynamic_pointer_cast<const sl_polytype_forall>(c[prop_index[i]])->unbind_maintain()->apply(s)->tv())
+						t->print(std::cout << ' ');
+				}
+				throw std::runtime_error("Cyclic dependency in definitions, cannot infer type");
+			}
+		}
+		
+		for(const std::pair<sid, cs_ptr<sl_polytype_exists>> p : init_types)
+		{
+			std::cout << p.first << ": ";
+			p.second->print(std::cout);
+			std::cout << std::endl;
+		}
+		
+		s.print(std::cout << std::endl << "Substitutions: " << std::endl);
+		
 		print(global->apply_maintain(s), std::cout << std::endl << "Typecontext final: " << std::endl);
 	}
 	

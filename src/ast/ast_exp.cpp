@@ -112,7 +112,6 @@ namespace splicpp
 		const substitution s2 = e_right->infer_type(c.apply(s1), t2->apply(s1)).composite(s1);
 		
 		return t->apply(s2)->unify(r->apply(s2)).composite(s2);
-		
 	}
 	
 	/* ast_exp_negation */

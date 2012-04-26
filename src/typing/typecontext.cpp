@@ -57,9 +57,11 @@ namespace splicpp
 		for(size_t i = 0; i < c.types.size(); i++)
 			if(c.types[i])
 			{
+				cs_ptr<sl_polytype> t = c.types[i].get();
+				
 				typecontext ctmp(ft_count);
-				ctmp.register_type(i, types[i].get());
-				c.types[i] = c.types[i].get()->apply(ctmp, s); //Maintain qualifications by creating an artificial empty typecontext
+				ctmp.register_type(i, t);
+				c.types[i] = t->apply(ctmp, s); //Maintain qualifications by creating an artificial empty typecontext
 			}
 			
 		return c;
