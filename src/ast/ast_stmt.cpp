@@ -147,7 +147,19 @@ namespace splicpp
 	
 	substitution ast_stmt_assignment::infer_type(const typecontext& c, const cs_ptr<sl_type>) const
 	{
-		const cs_ptr<sl_type> t = std::dynamic_pointer_cast<const sl_polytype_forall>(c[id->fetch_id()])->unbind_maintain(); //DPC, should always be forall type
+		cs_ptr<sl_type> t;
+		
+		const cs_ptr<sl_polytype> dest = c[id->fetch_id()];
+		const cs_ptr<sl_polytype_forall> dest_forall = std::dynamic_pointer_cast<const sl_polytype_forall>(dest);
+		const cs_ptr<sl_polytype_exists> dest_exists = std::dynamic_pointer_cast<const sl_polytype_exists>(dest);
+		
+		if(dest_forall != nullptr) //Local var_decl or arg
+			t = dest_forall->unbind_maintain();
+		else if(dest_exists != nullptr) //Global var_decl
+			t = dest_exists->unbind(c);
+		else
+			throw std::logic_error("Encountered unexpected type of sl_polytype, not sl_polytype_exists or sl_polytype_forall");
+		
 		substitution s = exp->infer_type(c, t);
 		
 		std::cout << std::endl;

@@ -17,9 +17,10 @@ namespace splicpp
 	
 	void sl_type_function::print(std::ostream& s) const
 	{
+		s << "<";
+		
 		if(args.size() > 0)
 		{
-			s << "<";
 			delim_printer p(", ", s);
 			for(const auto arg : args)
 			{
@@ -27,9 +28,9 @@ namespace splicpp
 				arg->print(stmp);
 				p.print(stmp.str());
 			}
-			s << "> -> ";
 		}
 		
+		s << "> -> ";
 		r->print(s);
 	}
 	

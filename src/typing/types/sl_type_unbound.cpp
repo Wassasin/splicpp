@@ -45,7 +45,7 @@ namespace splicpp
 	
 		for(const auto tx : t->tv())
 			if(copy->equals(tx))
-				throw boost::optional<substitution>();
+				return boost::optional<substitution>();
 		
 		substitution s;
 		s.add(copy, t);
