@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <memory>
 #include <sstream>
+
 #include "types/sl_type.hpp"
 
 namespace splicpp
@@ -28,6 +29,21 @@ namespace splicpp
 		, t1(t1)
 		, t2(t2)
 		{}
+		
+		void print(const std::string str, std::ostream& s)
+		{
+			s << "Cannot unify types:";
+			
+			s << std::endl << "Type ";
+			t1->print(s);
+			s << ", line " << t1->sl.line+1 << ':' << std::endl;
+			t1->sl.print(str, s);
+			
+			s << std::endl << "Type ";
+			t2->print(s);
+			s << ", line " << t2->sl.line+1 << ':' << std::endl;
+			t2->sl.print(str, s);
+		}
 	};
 }
 

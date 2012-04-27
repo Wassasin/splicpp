@@ -93,8 +93,6 @@ namespace splicpp
 				c.register_type(i, std::static_pointer_cast<const sl_polytype>(t));
 			}
 		
-		print(c, std::cout << std::endl << "Typecontext initial: " << std::endl);
-		
 		for(const sid i : select_all(symbolref::symbolreftype::t_construct))
 			s = conss[index[i].i]->declare_type(c).composite(s);
 		
@@ -144,13 +142,6 @@ namespace splicpp
 		for(const sid i : select_all(symbolref::symbolreftype::t_fun))
 			c[i]->unify(funs[index[i].i]->fetch_assigned_type(c));
 		*/
-		s.print(std::cout << std::endl << "Substitutions: " << std::endl);
-		
-		//print(global->apply_maintain(substitution::id()), std::cout << std::endl << "Typecontext pre-final: " << std::endl);
-		
-		print(*global.get(), std::cout << std::endl << "Typecontext pre-s: " << std::endl);
-		
-		std::cout << std::endl << "Init types:" << std::endl;
 		
 		std::vector<sid> prop_index;
 		for(const std::pair<sid, cs_ptr<sl_polytype_exists>> p : init_types)
@@ -193,16 +184,9 @@ namespace splicpp
 			}
 		}
 		
-		for(const std::pair<sid, cs_ptr<sl_polytype_exists>> p : init_types)
-		{
-			std::cout << p.first << ": ";
-			p.second->print(std::cout);
-			std::cout << std::endl;
-		}
+		//s.print(std::cout << std::endl << "Substitutions: " << std::endl);
 		
-		s.print(std::cout << std::endl << "Substitutions: " << std::endl);
-		
-		print(global->apply_maintain(s), std::cout << std::endl << "Typecontext final: " << std::endl);
+		print(global->apply_maintain(s), std::cout << "Typecontext final: " << std::endl);
 	}
 	
 	void symboltable::print(std::ostream& s) const

@@ -71,8 +71,8 @@ namespace splicpp
 			case op_divides:
 			case op_mod:
 			{
-				t1 = cs_ptr<sl_type>(new sl_type_int(sl));
-				t2 = cs_ptr<sl_type>(new sl_type_int(sl));
+				t1 = cs_ptr<sl_type>(new sl_type_int(e_left->sl));
+				t2 = cs_ptr<sl_type>(new sl_type_int(e_right->sl));
 				r = cs_ptr<sl_type>(new sl_type_int(sl));
 				break;
 			}
@@ -84,8 +84,8 @@ namespace splicpp
 			case op_geq:
 			case op_neq:
 			{
-				t1 = cs_ptr<sl_type>(new sl_type_int(sl));
-				t2 = cs_ptr<sl_type>(new sl_type_int(sl));
+				t1 = cs_ptr<sl_type>(new sl_type_int(e_left->sl));
+				t2 = cs_ptr<sl_type>(new sl_type_int(e_right->sl));
 				r = cs_ptr<sl_type>(new sl_type_bool(sl));
 				break;
 			}	
@@ -93,16 +93,16 @@ namespace splicpp
 			case op_conjunction:
 			case op_disjunction:
 			{
-				t1 = cs_ptr<sl_type>(new sl_type_bool(sl));
-				t2 = cs_ptr<sl_type>(new sl_type_bool(sl));
+				t1 = cs_ptr<sl_type>(new sl_type_bool(e_left->sl));
+				t2 = cs_ptr<sl_type>(new sl_type_bool(e_right->sl));
 				r = cs_ptr<sl_type>(new sl_type_bool(sl));
 				break;
 			}
 			
 			case op_cons:
 			{
-				t1 = std::static_pointer_cast<const sl_type>(c.create_fresh(sl));
-				t2 = cs_ptr<sl_type>(new sl_type_array(t1, sl));
+				t1 = std::static_pointer_cast<const sl_type>(c.create_fresh(e_left->sl));
+				t2 = cs_ptr<sl_type>(new sl_type_array(t1, e_right->sl));
 				r = cs_ptr<sl_type>(new sl_type_array(t1, sl));
 				break;
 			}

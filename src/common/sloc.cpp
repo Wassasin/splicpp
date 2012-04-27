@@ -2,6 +2,14 @@
 
 namespace splicpp
 {
+	sloc sloc::until(const sloc end) const
+	{
+		sloc result = *this;
+		result.length = end.pos + end.length - pos;
+		
+		return result;
+	}
+
 	void sloc::print(std::string str, std::ostream& s) const
 	{
 		size_t line_start;
@@ -29,7 +37,12 @@ namespace splicpp
 		
 		s << '^';
 		
-		for(size_t j = pos+1; j < pos+length; j++)
+		for(size_t i = pos+1; i < pos+length; i++)
+		{
+			if(str[i] == '\n')
+				break;
+			
 			s << '~';
+		}
 	}
 }

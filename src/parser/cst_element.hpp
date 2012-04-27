@@ -5,6 +5,7 @@
 
 #include "cst_node.hpp"
 
+#include "../common/sloc.hpp"
 #include "../common/token.hpp"
 #include "../common/grammar.hpp"
 
@@ -44,7 +45,10 @@ namespace splicpp
 		
 		token as_token() const;
 		cst_node as_node() const;
+		
+		sloc sl() const;
 		void print(const grammar& g, const std::string source, const uint tab) const;
+		
 		void assert_token(const grammar& g, const std::string str) const;
 		void assert_node(const grammar& g, const std::string str) const;
 	};

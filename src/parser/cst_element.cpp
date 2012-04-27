@@ -39,6 +39,14 @@ namespace splicpp
 		return node.get();
 	}
 	
+	sloc cst_element::sl() const
+	{
+		if(is_token())
+			return as_token().as_sloc();
+		else
+			return as_node().sl();
+	}
+	
 	void cst_element::print(const grammar& g, const std::string source, const uint tab) const
 	{
 		if(type == t_token)

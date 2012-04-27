@@ -24,6 +24,7 @@ namespace splicpp
 		, fake(false)
 		{}
 		
+		sloc until(const sloc end) const;
 		void print(std::string str, std::ostream& s) const;
 	};
 }

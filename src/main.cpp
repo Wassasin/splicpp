@@ -5,6 +5,7 @@
 #include "parser/spl_parser.hpp"
 #include "ast/ast_prog.hpp"
 #include "typing/symboltable.hpp"
+#include "typing/unification_error.hpp"
 
 int main(int argc, char **argv)
 {
@@ -91,7 +92,8 @@ int main(int argc, char **argv)
 		if(phase < 1)
 			return 0;
 		
-		auto prog = p.parse(splicpp::readfile(f));
+		std::string str = splicpp::readfile(f);
+		auto prog = p.parse(str);
 	
 		if(vm.count("print"))
 			prog->pretty_print(std::cout, 0);
@@ -105,7 +107,15 @@ int main(int argc, char **argv)
 		if(phase < 3)
 			return 0;
 		
-		s.check_types();
+		try
+		{
+			s.check_types();
+		} catch (splicpp::unification_error& e)
+		{
+			e.print(str, std::cerr);
+			std::cerr << std::endl;
+			return -1;
+		}
 		
 		return 0;
 	}

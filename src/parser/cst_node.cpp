@@ -52,10 +52,6 @@ namespace splicpp
 		if(size() == 0)
 			throw std::logic_error("Cannot provide sLoc of lambda-expression");
 		
-		const auto e = elements.at(0);
-		if(e->is_node())
-			return e->as_node().sl();
-		
-		return e->as_token().as_sloc();
+		return elements.front()->sl().until(elements.back()->sl());
 	}
 }
