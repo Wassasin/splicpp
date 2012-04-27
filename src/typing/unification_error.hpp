@@ -10,7 +10,9 @@ namespace splicpp
 {
 	class unification_error : public std::runtime_error
 	{
-		static std::string create_message(const sl_type* t1, const sl_type* t2)
+		const cs_ptr<sl_type> t1, t2;
+	
+		static std::string create_message(const cs_ptr<sl_type> t1, const cs_ptr<sl_type> t2)
 		{
 			std::stringstream s;
 			s << "Cannot unify types ";
@@ -21,12 +23,10 @@ namespace splicpp
 		}
 	
 	public:
-		unification_error(const sl_type* t1, const sl_type* t2)
-		: runtime_error(create_message(t1, t2))
-		{}
-	
 		unification_error(const cs_ptr<sl_type> t1, const cs_ptr<sl_type> t2)
-		: runtime_error(create_message(t1.get(), t2.get()))
+		: runtime_error(create_message(t1, t2))
+		, t1(t1)
+		, t2(t2)
 		{}
 	};
 }

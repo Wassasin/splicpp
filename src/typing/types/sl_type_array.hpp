@@ -13,8 +13,9 @@ namespace splicpp
 		virtual boost::optional<substitution> unify_partial(const cs_ptr<sl_type> t) const;
 	
 	public:
-		sl_type_array(const cs_ptr<sl_type> t)
-		: t(t)
+		sl_type_array(const cs_ptr<sl_type> t, const sloc sl)
+		: sl_type(sl)
+		, t(t)
 		{}
 		
 		virtual sl_type_type type() const;

@@ -29,6 +29,6 @@ namespace splicpp
 	
 	cs_ptr<sl_type> sl_type_void::apply(const substitution&) const
 	{
-		return cs_ptr<sl_type>(new sl_type_void());
+		return shared_from_this();
 	}
 }

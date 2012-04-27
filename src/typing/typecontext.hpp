@@ -6,6 +6,7 @@
 #include <boost/optional.hpp>
 
 #include "../common/typedefs.hpp"
+#include "../common/sloc.hpp"
 
 namespace splicpp
 {
@@ -43,7 +44,7 @@ namespace splicpp
 		
 		bool is_registered(const sid i) const;
 		cs_ptr<sl_polytype> operator[](const sid i) const;
-		cs_ptr<sl_type_unbound> create_fresh() const;
+		cs_ptr<sl_type_unbound> create_fresh(const sloc sl) const;
 		typecontext apply(const substitution& s) const;
 		typecontext apply_maintain(const substitution& s) const;
 		std::vector<cs_ptr<sl_type_unbound>> fv() const;

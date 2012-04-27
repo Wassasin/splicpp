@@ -10,14 +10,15 @@ namespace splicpp
 
 	class sl_type_unbound : public sl_type
 	{
-		uint id;
+		const uint id;
 		
 	protected:
 		virtual boost::optional<substitution> unify_partial(const cs_ptr<sl_type> t) const;
 	
 	public:
-		sl_type_unbound(uint id)
-		: id(id)
+		sl_type_unbound(const uint id, const sloc sl)
+		: sl_type(sl)
+		, id(id)
 		{}
 		
 		virtual bool is_unbound() const;

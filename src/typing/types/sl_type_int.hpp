@@ -11,6 +11,10 @@ namespace splicpp
 		virtual boost::optional<substitution> unify_partial(const cs_ptr<sl_type> t) const;
 	
 	public:
+		sl_type_int(const sloc sl)
+		: sl_type(sl)
+		{}
+	
 		virtual sl_type_type type() const;
 		virtual void print(std::ostream& s) const;
 		

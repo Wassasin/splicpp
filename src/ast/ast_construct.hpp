@@ -22,7 +22,7 @@ namespace splicpp
 		virtual cs_ptr<sl_type> fetch_type(const typecontext& c) const = 0;
 	public:
 		ast_construct()
-		: ast(sloc(0, 0)) //Bogus sLoc
+		: ast(sloc()) //Bogus sLoc
 		, id()
 		{}
 		

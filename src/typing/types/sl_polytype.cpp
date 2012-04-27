@@ -18,7 +18,7 @@ namespace splicpp
 	{
 		substitution s;
 		for(const auto binding : bindings)
-			s.add(binding, c.create_fresh());
+			s.add(binding, c.create_fresh(t->sl));
 		
 		return t->apply(s);
 	}
@@ -112,7 +112,7 @@ namespace splicpp
 	
 	cs_ptr<sl_type> sl_polytype_exists::unbind(const typecontext& c) const
 	{
-		const auto u = c.create_fresh();
+		const auto u = c.create_fresh(sloc()); //Virtual position in code
 		bindings->push_back(u);
 		return std::static_pointer_cast<const sl_type>(u);
 	}

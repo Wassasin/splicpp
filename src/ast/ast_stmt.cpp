@@ -87,7 +87,7 @@ namespace splicpp
 	
 	substitution ast_stmt_if::infer_type(const typecontext& c, const cs_ptr<sl_type> t) const
 	{
-		substitution s = exp->infer_type(c, cs_ptr<sl_type>(new sl_type_bool()));
+		substitution s = exp->infer_type(c, cs_ptr<sl_type>(new sl_type_bool(sl)));
 		s = stmt_true->infer_type(c.apply(s), t->apply(s)).composite(s);
 		
 		if(stmt_false)
@@ -120,7 +120,7 @@ namespace splicpp
 	
 	substitution ast_stmt_while::infer_type(const typecontext& c, const cs_ptr<sl_type> t) const
 	{
-		substitution s = exp->infer_type(c, cs_ptr<sl_type>(new sl_type_bool()));
+		substitution s = exp->infer_type(c, cs_ptr<sl_type>(new sl_type_bool(sl)));
 		return stmt->infer_type(c.apply(s), t->apply(s)).composite(s);
 	}
 	
@@ -160,18 +160,7 @@ namespace splicpp
 		else
 			throw std::logic_error("Encountered unexpected type of sl_polytype, not sl_polytype_exists or sl_polytype_forall");
 		
-		substitution s = exp->infer_type(c, t);
-		
-		std::cout << std::endl;
-		std::cout << std::endl << "ast_stmt_assignment::infer_type name: " << id->fetch_name();
-		std::cout << std::endl << "ast_stmt_assignment::infer_type c[" << id->fetch_id() << "]: ";
-		c[id->fetch_id()]->print(std::cout);
-		std::cout << std::endl << "ast_stmt_assignment::infer_type c[" << id->fetch_id() << "]->unbind_maintain(c): ";
-		t->print(std::cout);
-		std::cout << std::endl << "ast_stmt_assignment::infer_type s: ";
-		s.print(std::cout);
-		
-		return s;
+		return exp->infer_type(c, t);
 	}
 	
 	/* ast_stmt_fun_call */
@@ -194,7 +183,7 @@ namespace splicpp
 	
 	substitution ast_stmt_fun_call::infer_type(const typecontext& c, const cs_ptr<sl_type>) const
 	{
-		return f->infer_type(c, c.create_fresh());
+		return f->infer_type(c, c.create_fresh(sl));
 	}
 	
 	/* ast_stmt_return */
@@ -226,6 +215,6 @@ namespace splicpp
 		if(exp)
 			return exp.get()->infer_type(c, t);
 		else
-			return t->unify(cs_ptr<sl_type>(new sl_type_void()));
+			return t->unify(cs_ptr<sl_type>(new sl_type_void(sl)));
 	}
 }

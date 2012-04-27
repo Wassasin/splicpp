@@ -34,9 +34,9 @@ namespace splicpp
 		return t.get();
 	}
 	
-	cs_ptr<sl_type_unbound> typecontext::create_fresh() const
+	cs_ptr<sl_type_unbound> typecontext::create_fresh(const sloc sl) const
 	{
-		return cs_ptr<sl_type_unbound>(new sl_type_unbound((*ft_count)++));
+		return cs_ptr<sl_type_unbound>(new sl_type_unbound((*ft_count)++, sl));
 	}
 	
 	typecontext typecontext::apply(const substitution& s) const

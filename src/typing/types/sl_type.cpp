@@ -28,7 +28,7 @@ namespace splicpp
 	{
 		boost::optional<substitution> u = unify_internal(t);
 		if(!u)
-			throw unification_error(this, t.get());
+			throw unification_error(shared_from_this(), t);
 		
 		return u.get();
 	}

@@ -41,12 +41,12 @@ namespace splicpp
 	cs_ptr<sl_type> ast_construct_print::fetch_type(const typecontext& c) const
 	{
 		const std::vector<cs_ptr<sl_type>> args(create_vector_ptr<const sl_type>(
-			std::static_pointer_cast<const sl_type>(c.create_fresh())
+			std::static_pointer_cast<const sl_type>(c.create_fresh(sl))
 		));
 		
-		const cs_ptr<sl_type> r(new sl_type_void());
+		const cs_ptr<sl_type> r(new sl_type_void(sl));
 		
-		return cs_ptr<sl_type>(new sl_type_function(args, r));
+		return cs_ptr<sl_type>(new sl_type_function(args, r, sl));
 	}
 	
 	std::string ast_construct_is_empty::fetch_name() const
@@ -57,12 +57,12 @@ namespace splicpp
 	cs_ptr<sl_type> ast_construct_is_empty::fetch_type(const typecontext& c) const
 	{
 		const std::vector<cs_ptr<sl_type>> args(create_vector_ptr<const sl_type>(
-			cs_ptr<sl_type>(new sl_type_array(std::static_pointer_cast<const sl_type>(c.create_fresh())))
+			cs_ptr<sl_type>(new sl_type_array(std::static_pointer_cast<const sl_type>(c.create_fresh(sl)), sl))
 		));
 		
-		const cs_ptr<sl_type> r(new sl_type_bool());
+		const cs_ptr<sl_type> r(new sl_type_bool(sl));
 		
-		return cs_ptr<sl_type>(new sl_type_function(args, r));
+		return cs_ptr<sl_type>(new sl_type_function(args, r, sl));
 	}
 	
 	std::string ast_construct_head::fetch_name() const
@@ -72,12 +72,12 @@ namespace splicpp
 	
 	cs_ptr<sl_type> ast_construct_head::fetch_type(const typecontext& c) const
 	{
-		const cs_ptr<sl_type> a = std::static_pointer_cast<const sl_type>(c.create_fresh());
+		const cs_ptr<sl_type> a = std::static_pointer_cast<const sl_type>(c.create_fresh(sl));
 		const std::vector<cs_ptr<sl_type>> args(create_vector_ptr<const sl_type>(
-			cs_ptr<sl_type>(new sl_type_array(a))
+			cs_ptr<sl_type>(new sl_type_array(a, sl))
 		));
 		
-		return cs_ptr<sl_type>(new sl_type_function(args, a));
+		return cs_ptr<sl_type>(new sl_type_function(args, a, sl));
 	}
 	
 	std::string ast_construct_tail::fetch_name() const
@@ -87,12 +87,12 @@ namespace splicpp
 	
 	cs_ptr<sl_type> ast_construct_tail::fetch_type(const typecontext& c) const
 	{
-		const cs_ptr<sl_type> r(new sl_type_array(c.create_fresh()));
+		const cs_ptr<sl_type> r(new sl_type_array(c.create_fresh(sl), sl));
 		const std::vector<cs_ptr<sl_type>> args(create_vector_ptr<const sl_type>(
 			cs_ptr<sl_type>(r)
 		));
 		
-		return cs_ptr<sl_type>(new sl_type_function(args, r));
+		return cs_ptr<sl_type>(new sl_type_function(args, r, sl));
 	}
 	
 	std::string ast_construct_fst::fetch_name() const
@@ -102,14 +102,14 @@ namespace splicpp
 	
 	cs_ptr<sl_type> ast_construct_fst::fetch_type(const typecontext& c) const
 	{
-		const cs_ptr<sl_type> a1 = std::static_pointer_cast<const sl_type>(c.create_fresh());
-		const cs_ptr<sl_type> a2 = std::static_pointer_cast<const sl_type>(c.create_fresh());
+		const cs_ptr<sl_type> a1 = std::static_pointer_cast<const sl_type>(c.create_fresh(sl));
+		const cs_ptr<sl_type> a2 = std::static_pointer_cast<const sl_type>(c.create_fresh(sl));
 		
 		const std::vector<cs_ptr<sl_type>> args(create_vector_ptr<const sl_type>(
-			cs_ptr<sl_type>(new sl_type_tuple(a1, a2))
+			cs_ptr<sl_type>(new sl_type_tuple(a1, a2, sl))
 		));
 		
-		return cs_ptr<sl_type>(new sl_type_function(args, a1));
+		return cs_ptr<sl_type>(new sl_type_function(args, a1, sl));
 	}
 	
 	std::string ast_construct_snd::fetch_name() const
@@ -119,13 +119,13 @@ namespace splicpp
 	
 	cs_ptr<sl_type> ast_construct_snd::fetch_type(const typecontext& c) const
 	{
-		const cs_ptr<sl_type> a1 = std::static_pointer_cast<const sl_type>(c.create_fresh());
-		const cs_ptr<sl_type> a2 = std::static_pointer_cast<const sl_type>(c.create_fresh());
+		const cs_ptr<sl_type> a1 = std::static_pointer_cast<const sl_type>(c.create_fresh(sl));
+		const cs_ptr<sl_type> a2 = std::static_pointer_cast<const sl_type>(c.create_fresh(sl));
 		
 		const std::vector<cs_ptr<sl_type>> args(create_vector_ptr<const sl_type>(
-			cs_ptr<sl_type>(new sl_type_tuple(a1, a2))
+			cs_ptr<sl_type>(new sl_type_tuple(a1, a2, sl))
 		));
 		
-		return cs_ptr<sl_type>(new sl_type_function(args, a2));
+		return cs_ptr<sl_type>(new sl_type_function(args, a2, sl));
 	}
 }

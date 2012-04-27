@@ -37,7 +37,7 @@ namespace splicpp
 	
 	cs_ptr<sl_type_unbound> ast_f_arg::declare_type(typecontext& c) const
 	{
-		const auto t = c.create_fresh();
+		const auto t = c.create_fresh(sl);
 		c.register_type(id->fetch_id(), sl_polytype::not_qualify(t)); //t is fresh, thus would always be qualified
 		return t;
 	}

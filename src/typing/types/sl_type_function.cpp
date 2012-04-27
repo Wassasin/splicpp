@@ -82,6 +82,6 @@ namespace splicpp
 		for(const auto arg : args)
 			newargs.push_back(arg->apply(s));
 		
-		return cs_ptr<sl_type>(new sl_type_function(newargs, r->apply(s)));
+		return cs_ptr<sl_type>(new sl_type_function(newargs, r->apply(s), sl));
 	}
 }

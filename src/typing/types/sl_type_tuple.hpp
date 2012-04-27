@@ -13,8 +13,9 @@ namespace splicpp
 		virtual boost::optional<substitution> unify_partial(const cs_ptr<sl_type> t) const;
 	
 	public:
-		sl_type_tuple(const cs_ptr<sl_type> t_left, const cs_ptr<sl_type> t_right)
-		: t_left(t_left)
+		sl_type_tuple(const cs_ptr<sl_type> t_left, const cs_ptr<sl_type> t_right, const sloc sl)
+		: sl_type(sl)
+		, t_left(t_left)
 		, t_right(t_right)
 		{}
 		

@@ -26,9 +26,9 @@ namespace splicpp
 	{
 		std::vector<cs_ptr<sl_type>> targs;
 		for(size_t i = 0; i < args.size(); i++)
-			targs.push_back(std::static_pointer_cast<const sl_type>(c.create_fresh()));
+			targs.push_back(std::static_pointer_cast<const sl_type>(c.create_fresh(sl)));
 		
-		cs_ptr<sl_type_function> ft(new sl_type_function(targs, t));
+		cs_ptr<sl_type_function> ft(new sl_type_function(targs, t, sl));
 		substitution s = id->infer_type(c, ft);
 		
 		for(size_t i = 0; i < args.size(); i++)

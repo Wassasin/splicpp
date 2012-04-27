@@ -6,6 +6,7 @@
 #include <ostream>
 #include <boost/optional.hpp>
 
+#include "../../common/sloc.hpp"
 #include "../substitution.hpp"
 
 namespace splicpp
@@ -31,6 +32,12 @@ namespace splicpp
 			t_void,
 			t_universal
 		};
+		
+		const sloc sl;
+		
+		sl_type(const sloc sl)
+		: sl(sl)
+		{}
 		
 		substitution unify(const cs_ptr<sl_type> t) const;
 		boost::optional<substitution> unify_internal(const cs_ptr<sl_type> t) const;
