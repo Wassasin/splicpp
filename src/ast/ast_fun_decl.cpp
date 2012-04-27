@@ -94,21 +94,9 @@ namespace splicpp
 		}
 		
 		for(const auto stmt : stmts)
-		{
-			std::cout << std::endl << "BLAAT";
-			clocal.apply(s).print(std::cout << std::endl);
 			s = stmt->infer_type(clocal.apply(s), r->apply(s)).composite(s);
-		}
-		
-		std::cout << std::endl;
-		std::cout << std::endl << "ast_fun_decl::declare_type register_type: ";
-		sl_polytype::qualify(c.apply(s), ft->apply(s))->print(std::cout);
 		
 		c.register_type(id->fetch_id(), sl_polytype::qualify(c.apply(s), ft->apply(s)));
-		
-		std::cout << std::endl << "ast_fun_decl::declare_type c: ";
-		c.print(std::cout);
-		
 		return s;
 	}
 	
