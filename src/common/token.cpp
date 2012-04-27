@@ -9,6 +9,6 @@ namespace splicpp
 	
 	sloc token::as_sloc() const
 	{
-		return sloc(pos, line);
+		return sloc(pos, line, length);
 	}
 }

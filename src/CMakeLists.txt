@@ -10,6 +10,7 @@ add_executable(splicpp
 	common/grammar.cpp
 	common/rule.cpp
 	common/symbols.cpp
+	common/sloc.cpp
 	common/token.cpp
 
 	parser/bnf_parser.cpp	

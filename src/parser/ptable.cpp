@@ -5,6 +5,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include "../common/utils.hpp"
+#include "../common/sloc.hpp"
 
 namespace splicpp
 {
@@ -147,6 +148,10 @@ namespace splicpp
 				}
 				
 				p.finish();
+				
+				str << std::endl;
+				a.as_sloc().print(l.get_str(), str);
+				
 				throw std::runtime_error(str.str());
 			}
 		}
