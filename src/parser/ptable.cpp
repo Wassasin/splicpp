@@ -15,7 +15,7 @@ namespace splicpp
 		switch(t)
 		{
 			case t_error:
-				//std::cout << "err";
+				// "err"
 			break;
 			case t_accept:
 				ss << "acc";
@@ -56,7 +56,7 @@ namespace splicpp
 		switch(t)
 		{
 			case t_error:
-				//std::cout << "err";
+				// "err"
 			break;
 			case t_jump:
 				ss << state;
