@@ -10,6 +10,7 @@
 #include "../typing/types/sl_type.hpp"
 #include "../typing/types/sl_type_function.hpp"
 #include "../typing/types/sl_type_unbound.hpp"
+#include "../typing/types/sl_type_void.hpp"
 
 #include "ast_id.hpp"
 #include "ast_f_arg.hpp"
@@ -93,8 +94,17 @@ namespace splicpp
 			s = decl->declare_type(clocal).composite(s);
 		}
 		
+		bool contains_return = false;
 		for(const auto stmt : stmts)
+		{
+			if(stmt->contains_return())
+				contains_return = true;
+			
 			s = stmt->infer_type(clocal.apply(s), r->apply(s)).composite(s);
+		}
+		
+		if(!contains_return)
+			s = r->apply(s)->unify(cs_ptr<sl_type>(new sl_type_void(sl))).composite(s);
 		
 		c.register_type(id->fetch_id(), sl_polytype::qualify(c.apply(s), ft->apply(s)));
 		return s;

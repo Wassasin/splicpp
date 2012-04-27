@@ -52,6 +52,15 @@ namespace splicpp
 		return s;
 	}
 	
+	bool ast_stmt_stmts::contains_return() const
+	{
+		for(const auto stmt : stmts)
+			if(stmt->contains_return())
+				return true;
+	
+		return false;
+	}
+	
 	/* ast_stmt_if */
 	
 	void ast_stmt_if::assign_ids(const varcontext& c)
@@ -96,6 +105,11 @@ namespace splicpp
 		return s;
 	}
 	
+	bool ast_stmt_if::contains_return() const
+	{
+		return stmt_true->contains_return() || (stmt_false && stmt_false.get()->contains_return());
+	}
+	
 	/* ast_stmt_while */
 	
 	void ast_stmt_while::assign_ids(const varcontext& c)
@@ -122,6 +136,11 @@ namespace splicpp
 	{
 		substitution s = exp->infer_type(c, cs_ptr<sl_type>(new sl_type_bool(sl)));
 		return stmt->infer_type(c.apply(s), t->apply(s)).composite(s);
+	}
+	
+	bool ast_stmt_while::contains_return() const
+	{
+		return stmt->contains_return();
 	}
 	
 	/* ast_stmt_assignment */
@@ -163,6 +182,11 @@ namespace splicpp
 		return exp->infer_type(c, t);
 	}
 	
+	bool ast_stmt_assignment::contains_return() const
+	{
+		return false;
+	}
+	
 	/* ast_stmt_fun_call */
 	
 	void ast_stmt_fun_call::assign_ids(const varcontext& c)
@@ -184,6 +208,11 @@ namespace splicpp
 	substitution ast_stmt_fun_call::infer_type(const typecontext& c, const cs_ptr<sl_type>) const
 	{
 		return f->infer_type(c, c.create_fresh(sl));
+	}
+	
+	bool ast_stmt_fun_call::contains_return() const
+	{
+		return false;
 	}
 	
 	/* ast_stmt_return */
@@ -216,5 +245,10 @@ namespace splicpp
 			return exp.get()->infer_type(c, t);
 		else
 			return t->unify(cs_ptr<sl_type>(new sl_type_void(sl)));
+	}
+	
+	bool ast_stmt_return::contains_return() const
+	{
+		return true;
 	}
 }
