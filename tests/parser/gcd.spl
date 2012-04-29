@@ -13,6 +13,7 @@ Void main()
 Void gcd()
 {
 	Int t = b;
+	
 	while(True)
 	{
 		if(b == 0)

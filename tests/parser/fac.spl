@@ -62,7 +62,7 @@ Int product([Int] list)
 [Int] fromTo (Int from, Int to)
 {
 	if(from <= to)
-		return from : fromTo(from +1, to);
+		return from : fromTo(from+1, to);
 	else
 		return [];
 }
