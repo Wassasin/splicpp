@@ -30,7 +30,7 @@ namespace splicpp
 		id->pretty_print(s, tab);
 	}
 	
-	substitution ast_exp_id::infer_type(const typecontext& c, const cs_ptr<sl_type> t) const
+	substitution ast_exp_id::infer_type(const typecontext& c, const s_ptr<const sl_type> t) const
 	{
 		return id->infer_type(c, t);
 	}
@@ -60,9 +60,9 @@ namespace splicpp
 		e_right->pretty_print(s, tab);
 	}
 	
-	substitution ast_exp_op2::infer_type(const typecontext& c, const cs_ptr<sl_type> t) const
+	substitution ast_exp_op2::infer_type(const typecontext& c, const s_ptr<const sl_type> t) const
 	{
-		cs_ptr<sl_type> t1, t2, r;
+		s_ptr<const sl_type> t1, t2, r;
 		switch(optype())
 		{
 			case op_plus:
@@ -71,9 +71,9 @@ namespace splicpp
 			case op_divides:
 			case op_mod:
 			{
-				t1 = cs_ptr<sl_type>(new sl_type_int(e_left->sl));
-				t2 = cs_ptr<sl_type>(new sl_type_int(e_right->sl));
-				r = cs_ptr<sl_type>(new sl_type_int(sl));
+				t1 = s_ptr<const sl_type>(new sl_type_int(e_left->sl));
+				t2 = s_ptr<const sl_type>(new sl_type_int(e_right->sl));
+				r = s_ptr<const sl_type>(new sl_type_int(sl));
 				break;
 			}
 			
@@ -84,26 +84,26 @@ namespace splicpp
 			case op_geq:
 			case op_neq:
 			{
-				t1 = cs_ptr<sl_type>(new sl_type_int(e_left->sl));
-				t2 = cs_ptr<sl_type>(new sl_type_int(e_right->sl));
-				r = cs_ptr<sl_type>(new sl_type_bool(sl));
+				t1 = s_ptr<const sl_type>(new sl_type_int(e_left->sl));
+				t2 = s_ptr<const sl_type>(new sl_type_int(e_right->sl));
+				r = s_ptr<const sl_type>(new sl_type_bool(sl));
 				break;
 			}	
 			
 			case op_conjunction:
 			case op_disjunction:
 			{
-				t1 = cs_ptr<sl_type>(new sl_type_bool(e_left->sl));
-				t2 = cs_ptr<sl_type>(new sl_type_bool(e_right->sl));
-				r = cs_ptr<sl_type>(new sl_type_bool(sl));
+				t1 = s_ptr<const sl_type>(new sl_type_bool(e_left->sl));
+				t2 = s_ptr<const sl_type>(new sl_type_bool(e_right->sl));
+				r = s_ptr<const sl_type>(new sl_type_bool(sl));
 				break;
 			}
 			
 			case op_cons:
 			{
 				t1 = std::static_pointer_cast<const sl_type>(c.create_fresh(e_left->sl));
-				t2 = cs_ptr<sl_type>(new sl_type_array(t1, e_right->sl));
-				r = cs_ptr<sl_type>(new sl_type_array(t1, sl));
+				t2 = s_ptr<const sl_type>(new sl_type_array(t1, e_right->sl));
+				r = s_ptr<const sl_type>(new sl_type_array(t1, sl));
 				break;
 			}
 		}	
@@ -132,9 +132,9 @@ namespace splicpp
 		exp->pretty_print(s, tab);
 	}
 	
-	substitution ast_exp_negation::infer_type(const typecontext& c, const cs_ptr<sl_type> t) const
+	substitution ast_exp_negation::infer_type(const typecontext& c, const s_ptr<const sl_type> t) const
 	{
-		const cs_ptr<sl_type> b(new sl_type_bool(sl));
+		const s_ptr<const sl_type> b(new sl_type_bool(sl));
 		const substitution s = exp->infer_type(c, b);
 		return t->apply(s)->unify(b).composite(s);
 	}
@@ -156,9 +156,9 @@ namespace splicpp
 		s << i;
 	}
 	
-	substitution ast_exp_int::infer_type(const typecontext&, const cs_ptr<sl_type> t) const
+	substitution ast_exp_int::infer_type(const typecontext&, const s_ptr<const sl_type> t) const
 	{
-		return t->unify(cs_ptr<sl_type>(new sl_type_int(sl)));
+		return t->unify(s_ptr<const sl_type>(new sl_type_int(sl)));
 	}
 	
 	/* ast_exp_bool */
@@ -181,9 +181,9 @@ namespace splicpp
 			s << "False";
 	}
 	
-	substitution ast_exp_bool::infer_type(const typecontext&, const cs_ptr<sl_type> t) const
+	substitution ast_exp_bool::infer_type(const typecontext&, const s_ptr<const sl_type> t) const
 	{
-		return t->unify(cs_ptr<sl_type>(new sl_type_bool(sl)));
+		return t->unify(s_ptr<const sl_type>(new sl_type_bool(sl)));
 	}
 	
 	/* ast_exp_exp */
@@ -205,7 +205,7 @@ namespace splicpp
 		s << ')';
 	}
 	
-	substitution ast_exp_exp::infer_type(const typecontext& c, const cs_ptr<sl_type> t) const
+	substitution ast_exp_exp::infer_type(const typecontext& c, const s_ptr<const sl_type> t) const
 	{
 		return exp->infer_type(c, t);
 	}
@@ -227,7 +227,7 @@ namespace splicpp
 		c->pretty_print(s, tab);
 	}
 	
-	substitution ast_exp_fun_call::infer_type(const typecontext& c, const cs_ptr<sl_type> t) const
+	substitution ast_exp_fun_call::infer_type(const typecontext& c, const s_ptr<const sl_type> t) const
 	{
 		return this->c->infer_type(c, t);
 	}
@@ -249,9 +249,9 @@ namespace splicpp
 		s << "[]";
 	}
 	
-	substitution ast_exp_nil::infer_type(const typecontext& c, const cs_ptr<sl_type> t) const
+	substitution ast_exp_nil::infer_type(const typecontext& c, const s_ptr<const sl_type> t) const
 	{
-		return t->unify(cs_ptr<sl_type>(new sl_type_array(c.create_fresh(sl), sl)));
+		return t->unify(s_ptr<const sl_type>(new sl_type_array(c.create_fresh(sl), sl)));
 	}
 	
 	/* ast_exp_tuple */
@@ -276,12 +276,12 @@ namespace splicpp
 		s << ')';
 	}
 	
-	substitution ast_exp_tuple::infer_type(const typecontext& c, const cs_ptr<sl_type> t) const
+	substitution ast_exp_tuple::infer_type(const typecontext& c, const s_ptr<const sl_type> t) const
 	{
-		const cs_ptr<sl_type> a1 = c.create_fresh(sl);
-		const cs_ptr<sl_type> a2 = c.create_fresh(sl);
+		const s_ptr<const sl_type> a1 = c.create_fresh(sl);
+		const s_ptr<const sl_type> a2 = c.create_fresh(sl);
 		
-		const cs_ptr<sl_type> r(new sl_type_tuple(a1, a2, sl));
+		const s_ptr<const sl_type> r(new sl_type_tuple(a1, a2, sl));
 		
 		const substitution s1 = e_left->infer_type(c, a1);
 		const substitution s2 = e_right->infer_type(c.apply(s1), a2).composite(s1);

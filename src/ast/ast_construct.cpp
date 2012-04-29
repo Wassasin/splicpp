@@ -38,15 +38,15 @@ namespace splicpp
 		return "print";
 	}
 	
-	cs_ptr<sl_type> ast_construct_print::fetch_type(const typecontext& c) const
+	s_ptr<const sl_type> ast_construct_print::fetch_type(const typecontext& c) const
 	{
-		const std::vector<cs_ptr<sl_type>> args(create_vector_ptr<const sl_type>(
+		const std::vector<s_ptr<const sl_type>> args(create_vector_ptr<const sl_type>(
 			std::static_pointer_cast<const sl_type>(c.create_fresh(sl))
 		));
 		
-		const cs_ptr<sl_type> r(new sl_type_void(sl));
+		const s_ptr<const sl_type> r(new sl_type_void(sl));
 		
-		return cs_ptr<sl_type>(new sl_type_function(args, r, sl));
+		return s_ptr<const sl_type>(new sl_type_function(args, r, sl));
 	}
 	
 	std::string ast_construct_is_empty::fetch_name() const
@@ -54,15 +54,15 @@ namespace splicpp
 		return "isEmpty";
 	}
 	
-	cs_ptr<sl_type> ast_construct_is_empty::fetch_type(const typecontext& c) const
+	s_ptr<const sl_type> ast_construct_is_empty::fetch_type(const typecontext& c) const
 	{
-		const std::vector<cs_ptr<sl_type>> args(create_vector_ptr<const sl_type>(
-			cs_ptr<sl_type>(new sl_type_array(std::static_pointer_cast<const sl_type>(c.create_fresh(sl)), sl))
+		const std::vector<s_ptr<const sl_type>> args(create_vector_ptr<const sl_type>(
+			s_ptr<const sl_type>(new sl_type_array(std::static_pointer_cast<const sl_type>(c.create_fresh(sl)), sl))
 		));
 		
-		const cs_ptr<sl_type> r(new sl_type_bool(sl));
+		const s_ptr<const sl_type> r(new sl_type_bool(sl));
 		
-		return cs_ptr<sl_type>(new sl_type_function(args, r, sl));
+		return s_ptr<const sl_type>(new sl_type_function(args, r, sl));
 	}
 	
 	std::string ast_construct_head::fetch_name() const
@@ -70,14 +70,14 @@ namespace splicpp
 		return "head";
 	}
 	
-	cs_ptr<sl_type> ast_construct_head::fetch_type(const typecontext& c) const
+	s_ptr<const sl_type> ast_construct_head::fetch_type(const typecontext& c) const
 	{
-		const cs_ptr<sl_type> a = std::static_pointer_cast<const sl_type>(c.create_fresh(sl));
-		const std::vector<cs_ptr<sl_type>> args(create_vector_ptr<const sl_type>(
-			cs_ptr<sl_type>(new sl_type_array(a, sl))
+		const s_ptr<const sl_type> a = std::static_pointer_cast<const sl_type>(c.create_fresh(sl));
+		const std::vector<s_ptr<const sl_type>> args(create_vector_ptr<const sl_type>(
+			s_ptr<const sl_type>(new sl_type_array(a, sl))
 		));
 		
-		return cs_ptr<sl_type>(new sl_type_function(args, a, sl));
+		return s_ptr<const sl_type>(new sl_type_function(args, a, sl));
 	}
 	
 	std::string ast_construct_tail::fetch_name() const
@@ -85,14 +85,14 @@ namespace splicpp
 		return "tail";
 	}
 	
-	cs_ptr<sl_type> ast_construct_tail::fetch_type(const typecontext& c) const
+	s_ptr<const sl_type> ast_construct_tail::fetch_type(const typecontext& c) const
 	{
-		const cs_ptr<sl_type> r(new sl_type_array(c.create_fresh(sl), sl));
-		const std::vector<cs_ptr<sl_type>> args(create_vector_ptr<const sl_type>(
-			cs_ptr<sl_type>(r)
+		const s_ptr<const sl_type> r(new sl_type_array(c.create_fresh(sl), sl));
+		const std::vector<s_ptr<const sl_type>> args(create_vector_ptr<const sl_type>(
+			s_ptr<const sl_type>(r)
 		));
 		
-		return cs_ptr<sl_type>(new sl_type_function(args, r, sl));
+		return s_ptr<const sl_type>(new sl_type_function(args, r, sl));
 	}
 	
 	std::string ast_construct_fst::fetch_name() const
@@ -100,16 +100,16 @@ namespace splicpp
 		return "fst";
 	}
 	
-	cs_ptr<sl_type> ast_construct_fst::fetch_type(const typecontext& c) const
+	s_ptr<const sl_type> ast_construct_fst::fetch_type(const typecontext& c) const
 	{
-		const cs_ptr<sl_type> a1 = std::static_pointer_cast<const sl_type>(c.create_fresh(sl));
-		const cs_ptr<sl_type> a2 = std::static_pointer_cast<const sl_type>(c.create_fresh(sl));
+		const s_ptr<const sl_type> a1 = std::static_pointer_cast<const sl_type>(c.create_fresh(sl));
+		const s_ptr<const sl_type> a2 = std::static_pointer_cast<const sl_type>(c.create_fresh(sl));
 		
-		const std::vector<cs_ptr<sl_type>> args(create_vector_ptr<const sl_type>(
-			cs_ptr<sl_type>(new sl_type_tuple(a1, a2, sl))
+		const std::vector<s_ptr<const sl_type>> args(create_vector_ptr<const sl_type>(
+			s_ptr<const sl_type>(new sl_type_tuple(a1, a2, sl))
 		));
 		
-		return cs_ptr<sl_type>(new sl_type_function(args, a1, sl));
+		return s_ptr<const sl_type>(new sl_type_function(args, a1, sl));
 	}
 	
 	std::string ast_construct_snd::fetch_name() const
@@ -117,15 +117,15 @@ namespace splicpp
 		return "snd";
 	}
 	
-	cs_ptr<sl_type> ast_construct_snd::fetch_type(const typecontext& c) const
+	s_ptr<const sl_type> ast_construct_snd::fetch_type(const typecontext& c) const
 	{
-		const cs_ptr<sl_type> a1 = std::static_pointer_cast<const sl_type>(c.create_fresh(sl));
-		const cs_ptr<sl_type> a2 = std::static_pointer_cast<const sl_type>(c.create_fresh(sl));
+		const s_ptr<const sl_type> a1 = std::static_pointer_cast<const sl_type>(c.create_fresh(sl));
+		const s_ptr<const sl_type> a2 = std::static_pointer_cast<const sl_type>(c.create_fresh(sl));
 		
-		const std::vector<cs_ptr<sl_type>> args(create_vector_ptr<const sl_type>(
-			cs_ptr<sl_type>(new sl_type_tuple(a1, a2, sl))
+		const std::vector<s_ptr<const sl_type>> args(create_vector_ptr<const sl_type>(
+			s_ptr<const sl_type>(new sl_type_tuple(a1, a2, sl))
 		));
 		
-		return cs_ptr<sl_type>(new sl_type_function(args, a2, sl));
+		return s_ptr<const sl_type>(new sl_type_function(args, a2, sl));
 	}
 }

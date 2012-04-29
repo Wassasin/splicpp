@@ -43,7 +43,7 @@ namespace splicpp
 		s << '}';
 	}
 	
-	substitution ast_stmt_stmts::infer_type(const typecontext& c, const cs_ptr<sl_type> t) const
+	substitution ast_stmt_stmts::infer_type(const typecontext& c, const s_ptr<const sl_type> t) const
 	{
 		substitution s;
 		for(const auto stmt : stmts)
@@ -94,9 +94,9 @@ namespace splicpp
 		}
 	}
 	
-	substitution ast_stmt_if::infer_type(const typecontext& c, const cs_ptr<sl_type> t) const
+	substitution ast_stmt_if::infer_type(const typecontext& c, const s_ptr<const sl_type> t) const
 	{
-		substitution s = exp->infer_type(c, cs_ptr<sl_type>(new sl_type_bool(sl)));
+		substitution s = exp->infer_type(c, s_ptr<const sl_type>(new sl_type_bool(sl)));
 		s = stmt_true->infer_type(c.apply(s), t->apply(s)).composite(s);
 		
 		if(stmt_false)
@@ -132,9 +132,9 @@ namespace splicpp
 		stmt->pretty_print(s, tab);
 	}
 	
-	substitution ast_stmt_while::infer_type(const typecontext& c, const cs_ptr<sl_type> t) const
+	substitution ast_stmt_while::infer_type(const typecontext& c, const s_ptr<const sl_type> t) const
 	{
-		substitution s = exp->infer_type(c, cs_ptr<sl_type>(new sl_type_bool(sl)));
+		substitution s = exp->infer_type(c, s_ptr<const sl_type>(new sl_type_bool(sl)));
 		return stmt->infer_type(c.apply(s), t->apply(s)).composite(s);
 	}
 	
@@ -164,13 +164,13 @@ namespace splicpp
 		s << ';';
 	}
 	
-	substitution ast_stmt_assignment::infer_type(const typecontext& c, const cs_ptr<sl_type>) const
+	substitution ast_stmt_assignment::infer_type(const typecontext& c, const s_ptr<const sl_type>) const
 	{
-		cs_ptr<sl_type> t;
+		s_ptr<const sl_type> t;
 		
-		const cs_ptr<sl_polytype> dest = c[id->fetch_id()];
-		const cs_ptr<sl_polytype_forall> dest_forall = std::dynamic_pointer_cast<const sl_polytype_forall>(dest);
-		const cs_ptr<sl_polytype_exists> dest_exists = std::dynamic_pointer_cast<const sl_polytype_exists>(dest);
+		const s_ptr<const sl_polytype> dest = c[id->fetch_id()];
+		const s_ptr<const sl_polytype_forall> dest_forall = std::dynamic_pointer_cast<const sl_polytype_forall>(dest);
+		const s_ptr<const sl_polytype_exists> dest_exists = std::dynamic_pointer_cast<const sl_polytype_exists>(dest);
 		
 		if(dest_forall != nullptr) //Local var_decl or arg
 			t = dest_forall->unbind_maintain();
@@ -205,7 +205,7 @@ namespace splicpp
 		s << ';';
 	}
 	
-	substitution ast_stmt_fun_call::infer_type(const typecontext& c, const cs_ptr<sl_type>) const
+	substitution ast_stmt_fun_call::infer_type(const typecontext& c, const s_ptr<const sl_type>) const
 	{
 		return f->infer_type(c, c.create_fresh(sl));
 	}
@@ -239,12 +239,12 @@ namespace splicpp
 		s << ';';
 	}
 	
-	substitution ast_stmt_return::infer_type(const typecontext& c, const cs_ptr<sl_type> t) const
+	substitution ast_stmt_return::infer_type(const typecontext& c, const s_ptr<const sl_type> t) const
 	{
 		if(exp)
 			return exp.get()->infer_type(c, t);
 		else
-			return t->unify(cs_ptr<sl_type>(new sl_type_void(sl)));
+			return t->unify(s_ptr<const sl_type>(new sl_type_void(sl)));
 	}
 	
 	bool ast_stmt_return::contains_return() const

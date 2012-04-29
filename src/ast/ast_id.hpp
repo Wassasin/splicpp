@@ -33,7 +33,7 @@ namespace splicpp
 		sid fetch_id() const;
 		
 		std::string fetch_name() const;
-		substitution infer_type(const typecontext& c, const cs_ptr<sl_type> t) const;
+		substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 	};
 }
 

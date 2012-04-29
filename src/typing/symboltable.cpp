@@ -84,11 +84,11 @@ namespace splicpp
 		ltypecontext c(global);
 		substitution s;
 		
-		std::map<sid, cs_ptr<sl_polytype_exists>> init_types;
+		std::map<sid, s_ptr<const sl_polytype_exists>> init_types;
 		for(size_t i = 0; i < index.size(); i++)
 			if(index[i].t == symbolref::t_var || index[i].t == symbolref::t_fun)
 			{
-				const cs_ptr<sl_polytype_exists> t(new sl_polytype_exists());
+				const s_ptr<const sl_polytype_exists> t(new sl_polytype_exists());
 				init_types[i] = t;
 				c.register_type(i, std::static_pointer_cast<const sl_polytype>(t));
 			}
@@ -144,7 +144,7 @@ namespace splicpp
 		*/
 		
 		std::vector<sid> prop_index;
-		for(const std::pair<sid, cs_ptr<sl_polytype_exists>> p : init_types)
+		for(const std::pair<sid, s_ptr<const sl_polytype_exists>> p : init_types)
 			prop_index.push_back(p.first);
 		
 		while(!prop_index.empty())
@@ -153,12 +153,12 @@ namespace splicpp
 			
 			for(size_t i = 0; i < prop_index.size(); i++)
 			{
-				const cs_ptr<sl_polytype_exists> t = init_types[prop_index[i]];
+				const s_ptr<const sl_polytype_exists> t = init_types[prop_index[i]];
 				
-				std::vector<cs_ptr<sl_type_unbound>> blacklist;
+				std::vector<s_ptr<const sl_type_unbound>> blacklist;
 				for(size_t j = 0; j < prop_index.size(); j++)
 					for(const auto tmp : init_types[prop_index[j]]->fetch_bindings())
-						add_to<cs_ptr<sl_type_unbound>>(tmp->apply(s)->tv(), blacklist);
+						add_to<s_ptr<const sl_type_unbound>>(tmp->apply(s)->tv(), blacklist);
 				
 				if(any_is_in_ptr<const sl_type_unbound>(std::dynamic_pointer_cast<const sl_polytype_forall>(c[prop_index[i]])->unbind_maintain()->apply(s)->tv(), blacklist))
 					continue;

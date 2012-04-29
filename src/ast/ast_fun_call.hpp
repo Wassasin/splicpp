@@ -31,7 +31,7 @@ namespace splicpp
 		void add_arg(s_ptr<ast_exp> exp);
 		
 		void assign_ids(const varcontext& c);
-		substitution infer_type(const typecontext& c, const cs_ptr<sl_type> t) const;
+		substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};

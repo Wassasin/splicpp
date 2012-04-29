@@ -22,13 +22,13 @@ namespace splicpp
 			arg->assign_ids(c);
 	}
 	
-	substitution ast_fun_call::infer_type(const typecontext& c, const cs_ptr<sl_type> t) const
+	substitution ast_fun_call::infer_type(const typecontext& c, const s_ptr<const sl_type> t) const
 	{
-		std::vector<cs_ptr<sl_type>> targs;
+		std::vector<s_ptr<const sl_type>> targs;
 		for(size_t i = 0; i < args.size(); i++)
 			targs.push_back(std::static_pointer_cast<const sl_type>(c.create_fresh(sl)));
 		
-		cs_ptr<sl_type_function> ft(new sl_type_function(targs, t, sl));
+		s_ptr<const sl_type_function> ft(new sl_type_function(targs, t, sl));
 		substitution s = id->infer_type(c, ft);
 		
 		for(size_t i = 0; i < args.size(); i++)

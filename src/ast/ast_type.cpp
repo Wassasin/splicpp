@@ -41,9 +41,9 @@ namespace splicpp
 		s << "Int";
 	}
 	
-	cs_ptr<sl_type> ast_type_int::fetch_type(const typecontext&) const
+	s_ptr<const sl_type> ast_type_int::fetch_type(const typecontext&) const
 	{
-		return cs_ptr<sl_type>(new sl_type_int(sl));
+		return s_ptr<const sl_type>(new sl_type_int(sl));
 	}
 	
 	/* ast_type_bool */
@@ -58,9 +58,9 @@ namespace splicpp
 		s << "Bool";
 	}
 	
-	cs_ptr<sl_type> ast_type_bool::fetch_type(const typecontext&) const
+	s_ptr<const sl_type> ast_type_bool::fetch_type(const typecontext&) const
 	{
-		return cs_ptr<sl_type>(new sl_type_bool(sl));
+		return s_ptr<const sl_type>(new sl_type_bool(sl));
 	}
 	
 	/* ast_type_tuple */
@@ -85,9 +85,9 @@ namespace splicpp
 		s << ")";
 	}
 	
-	cs_ptr<sl_type> ast_type_tuple::fetch_type(const typecontext& c) const
+	s_ptr<const sl_type> ast_type_tuple::fetch_type(const typecontext& c) const
 	{
-		return cs_ptr<sl_type>(new sl_type_tuple(t_left->fetch_type(c), t_right->fetch_type(c), sl));
+		return s_ptr<const sl_type>(new sl_type_tuple(t_left->fetch_type(c), t_right->fetch_type(c), sl));
 	}
 	
 	/* ast_type_array */
@@ -109,9 +109,9 @@ namespace splicpp
 		s << "]";
 	}
 	
-	cs_ptr<sl_type> ast_type_array::fetch_type(const typecontext& c) const
+	s_ptr<const sl_type> ast_type_array::fetch_type(const typecontext& c) const
 	{
-		return cs_ptr<sl_type>(new sl_type_array(t->fetch_type(c), sl));
+		return s_ptr<const sl_type>(new sl_type_array(t->fetch_type(c), sl));
 	}
 	
 	/* ast_type_id */
@@ -136,7 +136,7 @@ namespace splicpp
 		id->pretty_print(s, tab);
 	}
 	
-	cs_ptr<sl_type> ast_type_id::fetch_type(const typecontext& c) const
+	s_ptr<const sl_type> ast_type_id::fetch_type(const typecontext& c) const
 	{
 		return c[id->fetch_id()]->unbind(c); //Should be monomorph in any case
 	}
@@ -153,8 +153,8 @@ namespace splicpp
 		s << "Void";
 	}
 	
-	cs_ptr<sl_type> ast_type_void::fetch_type(const typecontext&) const
+	s_ptr<const sl_type> ast_type_void::fetch_type(const typecontext&) const
 	{
-		return cs_ptr<sl_type>(new sl_type_void(sl));
+		return s_ptr<const sl_type>(new sl_type_void(sl));
 	}
 }

@@ -34,9 +34,9 @@ namespace splicpp
 		r->print(s);
 	}
 	
-	std::vector<cs_ptr<sl_type_unbound>> sl_type_function::tv() const
+	std::vector<s_ptr<const sl_type_unbound>> sl_type_function::tv() const
 	{
-		std::vector<cs_ptr<sl_type_unbound>> result;
+		std::vector<s_ptr<const sl_type_unbound>> result;
 		for(const auto arg : args)
 			for(const auto u : arg->tv())
 				if(!is_in_ptr<const sl_type_unbound>(u, result))
@@ -49,12 +49,12 @@ namespace splicpp
 		return result;
 	}
 	
-	boost::optional<substitution> sl_type_function::unify_partial(const cs_ptr<sl_type> t) const
+	boost::optional<substitution> sl_type_function::unify_partial(const s_ptr<const sl_type> t) const
 	{
 		if(t->type() != t_function)
 			return boost::optional<substitution>();
 		
-		cs_ptr<sl_type_function> tf = std::dynamic_pointer_cast<const sl_type_function>(t);
+		s_ptr<const sl_type_function> tf = std::dynamic_pointer_cast<const sl_type_function>(t);
 		
 		if(args.size() != tf->args.size())
 			return boost::optional<substitution>();
@@ -76,12 +76,12 @@ namespace splicpp
 		return s;
 	}
 	
-	cs_ptr<sl_type> sl_type_function::apply(const substitution& s) const
+	s_ptr<const sl_type> sl_type_function::apply(const substitution& s) const
 	{
-		std::vector<cs_ptr<sl_type>> newargs;
+		std::vector<s_ptr<const sl_type>> newargs;
 		for(const auto arg : args)
 			newargs.push_back(arg->apply(s));
 		
-		return cs_ptr<sl_type>(new sl_type_function(newargs, r->apply(s), sl));
+		return s_ptr<const sl_type>(new sl_type_function(newargs, r->apply(s), sl));
 	}
 }

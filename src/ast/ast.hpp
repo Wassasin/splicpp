@@ -9,9 +9,9 @@ namespace splicpp
 {
 	class ast
 	{
-	protected:
-		const sloc sl;
 	public:
+		const sloc sl;
+	
 		ast(const sloc sl)
 		: sl(sl)
 		{}

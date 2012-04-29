@@ -39,7 +39,7 @@ namespace splicpp
 		
 		virtual ast_stmt_type type() const = 0;
 		virtual void pretty_print(std::ostream& s, const uint tab) const = 0;
-		virtual substitution infer_type(const typecontext& c, const cs_ptr<sl_type> t) const = 0;
+		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const = 0;
 		
 		virtual bool contains_return() const = 0;
 	};
@@ -60,7 +60,7 @@ namespace splicpp
 	
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
-		virtual substitution infer_type(const typecontext& c, const cs_ptr<sl_type> t) const;
+		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual bool contains_return() const;
 	};
@@ -90,7 +90,7 @@ namespace splicpp
 		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
-		virtual substitution infer_type(const typecontext& c, const cs_ptr<sl_type> t) const;
+		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual bool contains_return() const;
 	};
@@ -111,7 +111,7 @@ namespace splicpp
 		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
-		virtual substitution infer_type(const typecontext& c, const cs_ptr<sl_type> t) const;
+		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual bool contains_return() const;
 	};
@@ -132,7 +132,7 @@ namespace splicpp
 		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
-		virtual substitution infer_type(const typecontext& c, const cs_ptr<sl_type> t) const;
+		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual bool contains_return() const;
 	};
@@ -151,7 +151,7 @@ namespace splicpp
 		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;	
-		virtual substitution infer_type(const typecontext& c, const cs_ptr<sl_type> t) const;
+		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual bool contains_return() const;
 	};
@@ -175,7 +175,7 @@ namespace splicpp
 		
 		virtual ast_stmt_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
-		virtual substitution infer_type(const typecontext& c, const cs_ptr<sl_type> t) const;
+		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual bool contains_return() const;
 	};

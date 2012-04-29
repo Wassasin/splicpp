@@ -33,16 +33,16 @@ namespace splicpp
 		ast_type::register_type(t, s, c);
 	}
 	
-	cs_ptr<sl_type> ast_var_decl::fetch_assigned_type(const typecontext& c) const
+	s_ptr<const sl_type> ast_var_decl::fetch_assigned_type(const typecontext& c) const
 	{
 		return t->fetch_type(c);
 	}
 	
 	substitution ast_var_decl::declare_type(ltypecontext& c) const
 	{
-		const cs_ptr<sl_type_unbound> a = c.create_fresh(sl);
+		const s_ptr<const sl_type_unbound> a = c.create_fresh(sl);
 		const substitution s = exp->infer_type(c, a);
-		const cs_ptr<sl_polytype> t = sl_polytype::qualify(c.apply(s), a->apply(s));
+		const s_ptr<const sl_polytype> t = sl_polytype::qualify(c.apply(s), a->apply(s));
 		
 		c.register_type(id->fetch_id(), t);
 		return s;

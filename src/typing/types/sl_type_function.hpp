@@ -10,14 +10,14 @@ namespace splicpp
 {	
 	class sl_type_function : public sl_type
 	{
-		std::vector<cs_ptr<sl_type>> args;
-		cs_ptr<sl_type> r;
+		std::vector<s_ptr<const sl_type>> args;
+		s_ptr<const sl_type> r;
 		
 	protected:
-		virtual boost::optional<substitution> unify_partial(const cs_ptr<sl_type> t) const;
+		virtual boost::optional<substitution> unify_partial(const s_ptr<const sl_type> t) const;
 	
 	public:
-		sl_type_function(const std::vector<cs_ptr<sl_type>> args, const cs_ptr<sl_type> r, const sloc sl)
+		sl_type_function(const std::vector<s_ptr<const sl_type>> args, const s_ptr<const sl_type> r, const sloc sl)
 		: sl_type(sl)
 		, args(args)
 		, r(r)
@@ -26,8 +26,8 @@ namespace splicpp
 		virtual sl_type_type type() const;
 		virtual void print(std::ostream& s) const;
 		
-		virtual std::vector<cs_ptr<sl_type_unbound>> tv() const;
-		virtual cs_ptr<sl_type> apply(const substitution& s) const;
+		virtual std::vector<s_ptr<const sl_type_unbound>> tv() const;
+		virtual s_ptr<const sl_type> apply(const substitution& s) const;
 	};
 }
 

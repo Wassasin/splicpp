@@ -13,7 +13,7 @@ namespace splicpp
 		const uint id;
 		
 	protected:
-		virtual boost::optional<substitution> unify_partial(const cs_ptr<sl_type> t) const;
+		virtual boost::optional<substitution> unify_partial(const s_ptr<const sl_type> t) const;
 	
 	public:
 		sl_type_unbound(const uint id, const sloc sl)
@@ -24,13 +24,13 @@ namespace splicpp
 		virtual bool is_unbound() const;
 		
 		virtual sl_type_type type() const;
-		bool equals(const cs_ptr<sl_type_unbound> y) const;
-		bool operator<(const cs_ptr<sl_type_unbound> y) const;
-		bool operator==(const cs_ptr<sl_type_unbound> y) const;
+		bool equals(const s_ptr<const sl_type_unbound> y) const;
+		bool operator<(const s_ptr<const sl_type_unbound> y) const;
+		bool operator==(const s_ptr<const sl_type_unbound> y) const;
 		virtual void print(std::ostream& s) const;
 		
-		virtual std::vector<cs_ptr<sl_type_unbound>> tv() const;
-		virtual cs_ptr<sl_type> apply(const substitution& s) const;
+		virtual std::vector<s_ptr<const sl_type_unbound>> tv() const;
+		virtual s_ptr<const sl_type> apply(const substitution& s) const;
 	};
 }
 

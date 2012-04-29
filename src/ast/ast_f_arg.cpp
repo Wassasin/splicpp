@@ -30,12 +30,12 @@ namespace splicpp
 		ast_type::register_type(t, s, c);
 	}
 	
-	cs_ptr<sl_type> ast_f_arg::fetch_assigned_type(const typecontext& c) const
+	s_ptr<const sl_type> ast_f_arg::fetch_assigned_type(const typecontext& c) const
 	{
 		return t->fetch_type(c);
 	}
 	
-	cs_ptr<sl_type_unbound> ast_f_arg::declare_type(typecontext& c) const
+	s_ptr<const sl_type_unbound> ast_f_arg::declare_type(typecontext& c) const
 	{
 		const auto t = c.create_fresh(sl);
 		c.register_type(id->fetch_id(), sl_polytype::not_qualify(t)); //t is fresh, thus would always be qualified

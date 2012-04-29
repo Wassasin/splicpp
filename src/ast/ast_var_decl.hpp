@@ -39,7 +39,7 @@ namespace splicpp
 		void assign_ids(const varcontext& c);
 		void register_types(symboltable& s, varcontext& c);
 		
-		cs_ptr<sl_type> fetch_assigned_type(const typecontext& c) const;
+		s_ptr<const sl_type> fetch_assigned_type(const typecontext& c) const;
 		substitution declare_type(ltypecontext& c) const;
 		
 		virtual void pretty_print(std::ostream& s, const uint tab) const;

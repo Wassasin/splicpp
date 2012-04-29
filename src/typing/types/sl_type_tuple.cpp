@@ -21,7 +21,7 @@ namespace splicpp
 		s << ')';
 	}
 	
-	std::vector<cs_ptr<sl_type_unbound>> sl_type_tuple::tv() const
+	std::vector<s_ptr<const sl_type_unbound>> sl_type_tuple::tv() const
 	{
 		auto result = t_left->tv();
 		for(const auto x : t_right->tv())
@@ -31,12 +31,12 @@ namespace splicpp
 		return result;
 	}
 	
-	boost::optional<substitution> sl_type_tuple::unify_partial(const cs_ptr<sl_type> t) const
+	boost::optional<substitution> sl_type_tuple::unify_partial(const s_ptr<const sl_type> t) const
 	{
 		if(t->type() != t_tuple)
 			return boost::optional<substitution>();
 		
-		cs_ptr<sl_type_tuple> tt = std::dynamic_pointer_cast<const sl_type_tuple>(t);
+		s_ptr<const sl_type_tuple> tt = std::dynamic_pointer_cast<const sl_type_tuple>(t);
 		const auto srighttmp = t_right->unify_internal(tt->t_right);
 		if(!srighttmp)
 			return boost::optional<substitution>();
@@ -50,8 +50,8 @@ namespace splicpp
 		return slefttmp.get().composite(sright);
 	}
 	
-	cs_ptr<sl_type> sl_type_tuple::apply(const substitution& s) const
+	s_ptr<const sl_type> sl_type_tuple::apply(const substitution& s) const
 	{
-		return cs_ptr<sl_type>(new sl_type_tuple(t_left->apply(s), t_right->apply(s), sl));
+		return s_ptr<const sl_type>(new sl_type_tuple(t_left->apply(s), t_right->apply(s), sl));
 	}
 }

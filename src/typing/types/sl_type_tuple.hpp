@@ -7,13 +7,13 @@ namespace splicpp
 {	
 	class sl_type_tuple : public sl_type
 	{
-		cs_ptr<sl_type> t_left, t_right;
+		s_ptr<const sl_type> t_left, t_right;
 		
 	protected:
-		virtual boost::optional<substitution> unify_partial(const cs_ptr<sl_type> t) const;
+		virtual boost::optional<substitution> unify_partial(const s_ptr<const sl_type> t) const;
 	
 	public:
-		sl_type_tuple(const cs_ptr<sl_type> t_left, const cs_ptr<sl_type> t_right, const sloc sl)
+		sl_type_tuple(const s_ptr<const sl_type> t_left, const s_ptr<const sl_type> t_right, const sloc sl)
 		: sl_type(sl)
 		, t_left(t_left)
 		, t_right(t_right)
@@ -22,8 +22,8 @@ namespace splicpp
 		virtual sl_type_type type() const;
 		virtual void print(std::ostream& s) const;
 		
-		virtual std::vector<cs_ptr<sl_type_unbound>> tv() const;
-		virtual cs_ptr<sl_type> apply(const substitution& s) const;
+		virtual std::vector<s_ptr<const sl_type_unbound>> tv() const;
+		virtual s_ptr<const sl_type> apply(const substitution& s) const;
 	};
 }
 

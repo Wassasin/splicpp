@@ -9,7 +9,7 @@
 
 namespace splicpp
 {
-	void typecontext::register_type(const sid i, const cs_ptr<sl_polytype> t)
+	void typecontext::register_type(const sid i, const s_ptr<const sl_polytype> t)
 	{
 		if(i >= types.size())
 			types.resize(i+1);
@@ -25,7 +25,7 @@ namespace splicpp
 		return types.at(i);
 	}
 	
-	cs_ptr<sl_polytype> typecontext::operator[](const sid i) const
+	s_ptr<const sl_polytype> typecontext::operator[](const sid i) const
 	{
 		const auto t = types.at(i);
 		if(!t)
@@ -34,9 +34,9 @@ namespace splicpp
 		return t.get();
 	}
 	
-	cs_ptr<sl_type_unbound> typecontext::create_fresh(const sloc sl) const
+	s_ptr<const sl_type_unbound> typecontext::create_fresh(const sloc sl) const
 	{
-		return cs_ptr<sl_type_unbound>(new sl_type_unbound((*ft_count)++, sl));
+		return s_ptr<const sl_type_unbound>(new sl_type_unbound((*ft_count)++, sl));
 	}
 	
 	typecontext typecontext::apply(const substitution& s) const
@@ -57,7 +57,7 @@ namespace splicpp
 		for(size_t i = 0; i < c.types.size(); i++)
 			if(c.types[i])
 			{
-				cs_ptr<sl_polytype> t = c.types[i].get();
+				s_ptr<const sl_polytype> t = c.types[i].get();
 				
 				typecontext ctmp(ft_count);
 				ctmp.register_type(i, t);
@@ -67,12 +67,12 @@ namespace splicpp
 		return c;
 	}
 	
-	std::vector<cs_ptr<sl_type_unbound>> typecontext::fv() const
+	std::vector<s_ptr<const sl_type_unbound>> typecontext::fv() const
 	{
-		std::vector<cs_ptr<sl_type_unbound>> result;
+		std::vector<s_ptr<const sl_type_unbound>> result;
 		for(const auto t : types)
 			if(t)
-				for(const cs_ptr<sl_type_unbound> tv : t.get()->tv())
+				for(const s_ptr<const sl_type_unbound> tv : t.get()->tv())
 					if(!is_in_ptr<const sl_type_unbound>(tv, result))
 						result.push_back(tv);
 		

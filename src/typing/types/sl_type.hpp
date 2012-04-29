@@ -15,10 +15,17 @@ namespace splicpp
 	class typecontext;
 	class sl_type_unbound;
 
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Weffc++"
+	/*
+		Ignore non-virtual-destructor warning
+		This is a bug in GCC4.6
+		See http://stackoverflow.com/questions/2571850/why-does-enable-shared-from-this-have-a-non-virtual-destructor
+	*/
 	class sl_type : public std::enable_shared_from_this<sl_type>
 	{
 	protected:
-		virtual boost::optional<substitution> unify_partial(const cs_ptr<sl_type> t) const = 0;
+		virtual boost::optional<substitution> unify_partial(const s_ptr<const sl_type> t) const = 0;
 		
 	public:
 		enum sl_type_type
@@ -39,8 +46,8 @@ namespace splicpp
 		: sl(sl)
 		{}
 		
-		substitution unify(const cs_ptr<sl_type> t) const;
-		boost::optional<substitution> unify_internal(const cs_ptr<sl_type> t) const;
+		substitution unify(const s_ptr<const sl_type> t) const;
+		boost::optional<substitution> unify_internal(const s_ptr<const sl_type> t) const;
 		
 		void print_debug() const;
 		
@@ -50,9 +57,10 @@ namespace splicpp
 		virtual sl_type_type type() const = 0;
 		virtual void print(std::ostream& s) const = 0;
 		
-		virtual std::vector<cs_ptr<sl_type_unbound>> tv() const = 0;
-		virtual cs_ptr<sl_type> apply(const substitution& s) const = 0;
+		virtual std::vector<s_ptr<const sl_type_unbound>> tv() const = 0;
+		virtual s_ptr<const sl_type> apply(const substitution& s) const = 0;
 	};
+	#pragma GCC diagnostic pop
 }
 
 #endif
