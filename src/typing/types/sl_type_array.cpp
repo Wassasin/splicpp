@@ -21,10 +21,10 @@ namespace splicpp
 		return t->tv();
 	}
 	
-	boost::optional<substitution> sl_type_array::unify_partial(const s_ptr<const sl_type> t) const
+	sl_type::unify_details sl_type_array::unify_partial(const s_ptr<const sl_type> t) const
 	{
 		if(t->type() != t_array)
-			return boost::optional<substitution>();
+			return unify_details(shared_from_this(), t);
 		
 		return this->t->unify_internal(std::dynamic_pointer_cast<const sl_type_array>(t)->t);
 	}

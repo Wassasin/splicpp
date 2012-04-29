@@ -49,28 +49,28 @@ namespace splicpp
 		return result;
 	}
 	
-	boost::optional<substitution> sl_type_function::unify_partial(const s_ptr<const sl_type> t) const
+	sl_type::unify_details sl_type_function::unify_partial(const s_ptr<const sl_type> t) const
 	{
 		if(t->type() != t_function)
-			return boost::optional<substitution>();
+			return unify_details(shared_from_this(), t);
 		
 		s_ptr<const sl_type_function> tf = std::dynamic_pointer_cast<const sl_type_function>(t);
 		
 		if(args.size() != tf->args.size())
-			return boost::optional<substitution>();
+			return unify_details(shared_from_this(), t);
 			
-		auto stmp = r->unify_internal(tf->r);
-		if(!stmp)
-			return boost::optional<substitution>();
+		unify_details stmp = r->unify_internal(tf->r);
+		if(!stmp.is_success())
+			return stmp;
 		
-		substitution s = stmp.get();
+		substitution s = stmp.fetch_s();
 		for(size_t i = 0; i < args.size(); i++)
 		{
 			stmp = args.at(args.size()-(i+1))->apply(s)->unify_internal(tf->args.at(args.size()-(i+1))->apply(s));
-			if(!stmp)
-				return boost::optional<substitution>();
+			if(!stmp.is_success())
+				return stmp;
 			
-			s = stmp.get().composite(s);
+			s = stmp.fetch_s().composite(s);
 		}
 		
 		return s;

@@ -19,10 +19,10 @@ namespace splicpp
 		return std::vector<s_ptr<const sl_type_unbound>>();
 	}
 	
-	boost::optional<substitution> sl_type_bool::unify_partial(const s_ptr<const sl_type> t) const
+	sl_type::unify_details sl_type_bool::unify_partial(const s_ptr<const sl_type> t) const
 	{
 		if(t->type() != t_bool)
-			return boost::optional<substitution>();
+			return unify_details(shared_from_this(), t);
 		
 		return substitution::id();
 	}

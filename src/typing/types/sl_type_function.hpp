@@ -14,7 +14,7 @@ namespace splicpp
 		s_ptr<const sl_type> r;
 		
 	protected:
-		virtual boost::optional<substitution> unify_partial(const s_ptr<const sl_type> t) const;
+		virtual unify_details unify_partial(const s_ptr<const sl_type> t) const;
 	
 	public:
 		sl_type_function(const std::vector<s_ptr<const sl_type>> args, const s_ptr<const sl_type> r, const sloc sl)

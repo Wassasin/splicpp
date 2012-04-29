@@ -8,7 +8,7 @@ namespace splicpp
 	class sl_type_int : public sl_type
 	{
 	protected:
-		virtual boost::optional<substitution> unify_partial(const s_ptr<const sl_type> t) const;
+		virtual unify_details unify_partial(const s_ptr<const sl_type> t) const;
 	
 	public:
 		sl_type_int(const sloc sl)

@@ -10,7 +10,7 @@ namespace splicpp
 		s_ptr<const sl_type> t_left, t_right;
 		
 	protected:
-		virtual boost::optional<substitution> unify_partial(const s_ptr<const sl_type> t) const;
+		virtual unify_details unify_partial(const s_ptr<const sl_type> t) const;
 	
 	public:
 		sl_type_tuple(const s_ptr<const sl_type> t_left, const s_ptr<const sl_type> t_right, const sloc sl)

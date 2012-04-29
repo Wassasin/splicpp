@@ -112,37 +112,6 @@ namespace splicpp
 			c.register_type(i, ctmp[i]); //Copy result from ctmp to c;
 		}
 		
-		//for(const sid i : select_all(symbolref::symbolreftype::t_local_var))
-		//	s = local_vars[index[i].i]->infer_type(c, init_types[i]).composite(s);
-		
-		/*
-		for(const sid i : select_all(symbolref::symbolreftype::t_type))
-			c.register_type(i, std::static_pointer_cast<sl_type>(c.create_fresh()));
-		
-		for(const sid i : select_all(symbolref::symbolreftype::t_var))
-			c.register_type(i, vars[index[i].i]->fetch_assigned_type(c));
-		
-		for(const sid i : select_all(symbolref::symbolreftype::t_fun))
-			c.register_type(i, funs[index[i].i]->fetch_assigned_type(c));
-		
-		for(const sid i : select_all(symbolref::symbolreftype::t_arg))
-			c.register_type(i, args[index[i].i]->fetch_assigned_type(c));
-		
-		for(const sid i : select_all(symbolref::symbolreftype::t_local_var))
-			c.register_type(i, local_vars[index[i].i]->fetch_assigned_type(c));
-			
-		//Set inferred types
-		for(const sid i : select_all(symbolref::symbolreftype::t_var))
-			c.register_type(i, c[i]->apply(vars[index[i].i]->infer_type(c)));
-		*/
-		
-		/*for(const sid i : select_all(symbolref::symbolreftype::t_var))
-			c[i]->unify(vars[index[i].i]->fetch_assigned_type(c));
-		
-		for(const sid i : select_all(symbolref::symbolreftype::t_fun))
-			c[i]->unify(funs[index[i].i]->fetch_assigned_type(c));
-		*/
-		
 		std::vector<sid> prop_index;
 		for(const std::pair<sid, s_ptr<const sl_polytype_exists>> p : init_types)
 			prop_index.push_back(p.first);
@@ -184,7 +153,22 @@ namespace splicpp
 			}
 		}
 		
-		//s.print(std::cout << std::endl << "Substitutions: " << std::endl);
+		for(const sid i : select_all(symbolref::symbolreftype::t_type))
+			c.register_type(i, sl_polytype::not_qualify(c.create_fresh(sloc())));
+		
+		c = c.apply(s);
+		
+		for(const sid i : select_all(symbolref::symbolreftype::t_var))
+			vars[index[i].i]->fetch_assigned_type(c)->unify(c[i]->unbind(c));
+		
+		for(const sid i : select_all(symbolref::symbolreftype::t_fun))
+			funs[index[i].i]->fetch_assigned_type(c)->unify(c[i]->unbind(c));
+		
+//		for(const sid i : select_all(symbolref::symbolreftype::t_arg))
+//			args[index[i].i]->fetch_assigned_type(c)->unify(c[i]->unbind(c));
+		
+//		for(const sid i : select_all(symbolref::symbolreftype::t_local_var))
+//			local_vars[index[i].i]->fetch_assigned_type(c)->unify(c[i]->unbind(c));
 		
 		print(global->apply_maintain(s), std::cout << "Typecontext final: " << std::endl);
 	}
