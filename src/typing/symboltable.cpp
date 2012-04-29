@@ -126,8 +126,9 @@ namespace splicpp
 				
 				std::vector<s_ptr<const sl_type_unbound>> blacklist;
 				for(size_t j = 0; j < prop_index.size(); j++)
-					for(const auto tmp : init_types[prop_index[j]]->fetch_bindings())
-						add_to<s_ptr<const sl_type_unbound>>(tmp->apply(s)->tv(), blacklist);
+					if(i != j)
+						for(const auto tmp : init_types[prop_index[j]]->fetch_bindings())
+							add_to<s_ptr<const sl_type_unbound>>(tmp->apply(s)->tv(), blacklist);
 				
 				if(any_is_in_ptr<const sl_type_unbound>(std::dynamic_pointer_cast<const sl_polytype_forall>(c[prop_index[i]])->unbind_maintain()->apply(s)->tv(), blacklist))
 					continue;
@@ -183,7 +184,7 @@ namespace splicpp
 			stmp = local_vars[index[i].i]->fetch_assigned_type(gtmp)->unify(gtmp[i]->unbind(gtmp)).composite(stmp);
 		}
 		
-		print(global->apply_maintain(s), std::cout << "Typecontext final: " << std::endl);
+		print(global->apply_maintain(stmp.composite(s)), std::cout << "Typecontext final: " << std::endl);
 	}
 	
 	void symboltable::print(std::ostream& s) const
