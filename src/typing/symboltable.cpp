@@ -162,25 +162,25 @@ namespace splicpp
 		for(const sid i : select_all(symbolref::symbolreftype::t_var))
 		{
 			gtmp = gtmp.apply(stmp);
-			stmp = vars[index[i].i]->fetch_assigned_type(gtmp)->unify(gtmp[i]->unbind(gtmp));
+			stmp = vars[index[i].i]->fetch_assigned_type(gtmp)->unify(gtmp[i]->unbind(gtmp)).composite(stmp);
 		}
 		
 		for(const sid i : select_all(symbolref::symbolreftype::t_fun))
 		{
 			gtmp = gtmp.apply(stmp);
-			stmp = funs[index[i].i]->fetch_assigned_type(gtmp)->unify(gtmp[i]->unbind(gtmp));
+			stmp = funs[index[i].i]->fetch_assigned_type(gtmp)->unify(gtmp[i]->unbind(gtmp)).composite(stmp);
 		}
 		
 		for(const sid i : select_all(symbolref::symbolreftype::t_arg))
 		{
 			gtmp = gtmp.apply(stmp);
-			stmp = args[index[i].i]->fetch_assigned_type(gtmp)->unify(gtmp[i]->unbind(gtmp));
+			stmp = args[index[i].i]->fetch_assigned_type(gtmp)->unify(gtmp[i]->unbind(gtmp)).composite(stmp);
 		}
 		
 		for(const sid i : select_all(symbolref::symbolreftype::t_local_var))
 		{
 			gtmp = gtmp.apply(stmp);
-			stmp = local_vars[index[i].i]->fetch_assigned_type(gtmp)->unify(gtmp[i]->unbind(gtmp));
+			stmp = local_vars[index[i].i]->fetch_assigned_type(gtmp)->unify(gtmp[i]->unbind(gtmp)).composite(stmp);
 		}
 		
 		print(global->apply_maintain(s), std::cout << "Typecontext final: " << std::endl);
