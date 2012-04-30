@@ -17,6 +17,11 @@ namespace splicpp
 		{}
 	
 		virtual void print(std::ostream& s, const uint tab) const;
+		
+		static s_ptr<const ir_exp> create(const ir_label l)
+		{
+			return s_ptr<const ir_exp>(new ir_exp_name(l));
+		}
 	};
 }
 

@@ -35,6 +35,11 @@ namespace splicpp
 		{}
 	
 		virtual void print(std::ostream& s, const uint tab) const;
+		
+		static s_ptr<const ir_exp> create(const binop op, const s_ptr<const ir_exp> e_left, const s_ptr<const ir_exp> e_right)
+		{
+			return s_ptr<const ir_exp>(new ir_exp_binop(op, e_left, e_right));
+		}
 	};
 }
 

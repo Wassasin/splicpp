@@ -3,6 +3,8 @@
 
 #include "ir_exp.hpp"
 
+#include "../common/typedefs.hpp"
+
 namespace splicpp
 {
 	class ir_exp_const : public ir_exp
@@ -15,6 +17,11 @@ namespace splicpp
 		{}
 	
 		virtual void print(std::ostream& s, const uint tab) const;
+		
+		static s_ptr<const ir_exp> create(const int i)
+		{
+			return s_ptr<const ir_exp>(new ir_exp_const(i));
+		}
 	};
 }
 

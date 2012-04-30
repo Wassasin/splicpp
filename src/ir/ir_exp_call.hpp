@@ -22,6 +22,11 @@ namespace splicpp
 		{}
 	
 		virtual void print(std::ostream& s, const uint tab) const;
+		
+		static s_ptr<const ir_exp> create(const s_ptr<const ir_exp> func, const std::vector<s_ptr<const ir_exp>> args)
+		{
+			return s_ptr<const ir_exp>(new ir_exp_call(func, args));
+		}
 	};
 }
 
