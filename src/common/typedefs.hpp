@@ -15,6 +15,9 @@ namespace splicpp
 	typedef size_t stateid; //State Identifier
 	typedef size_t sid; //Symbol Identifier (Variables, Functions)
 	
+	typedef uint ir_label;
+	typedef uint ir_temp;
+	
 	#define s_ptr std::shared_ptr
 }
 

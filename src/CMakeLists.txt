@@ -50,6 +50,22 @@ add_executable(splicpp
 	typing/types/sl_type_tuple.cpp
 	typing/types/sl_type_unbound.cpp
 	typing/types/sl_type_void.cpp
+	
+	ir/ir_exp.cpp
+	ir/ir_exp_binop.cpp
+	ir/ir_exp_call.cpp
+	ir/ir_exp_const.cpp
+	ir/ir_exp_eseq.cpp
+	ir/ir_exp_mem.cpp
+	ir/ir_exp_name.cpp
+	ir/ir_exp_temp.cpp
+	ir/ir_stmt.cpp
+	ir/ir_stmt_cjump.cpp
+	ir/ir_stmt_exp.cpp
+	ir/ir_stmt_jump.cpp
+	ir/ir_stmt_label.cpp
+	ir/ir_stmt_move.cpp
+	ir/ir_stmt_seq.cpp
 )
 
 macro(add_grammar SRC_FILE)
