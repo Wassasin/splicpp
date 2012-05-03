@@ -15,6 +15,7 @@ namespace splicpp
 			op_minus,
 			op_mul,
 			op_div,
+			op_mod,
 			op_and,
 			op_or,
 			op_lshift,

@@ -10,11 +10,6 @@
 
 namespace splicpp
 {
-	void ast_fun_call::add_arg(s_ptr<ast_exp> exp)
-	{
-		args.push_back(exp);
-	}
-	
 	void ast_fun_call::assign_ids(const varcontext& c)
 	{
 		id->assign_ids(c);

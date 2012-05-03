@@ -34,10 +34,10 @@ namespace splicpp
 	
 	class ast_decl_var : public ast_decl
 	{
-		s_ptr<ast_var_decl> v;
-	
 	public:
-		ast_decl_var(__decltype(v) v, const sloc sl)
+		const s_ptr<ast_var_decl> v;
+		
+		ast_decl_var(decltype(v) v, const sloc sl)
 		: ast_decl(sl)
 		, v(v)
 		{}
@@ -51,10 +51,10 @@ namespace splicpp
 	
 	class ast_decl_fun : public ast_decl
 	{
-		s_ptr<ast_fun_decl> f;
-		
 	public:
-		ast_decl_fun(__decltype(f) f, const sloc sl)
+		const s_ptr<ast_fun_decl> f;
+	
+		ast_decl_fun(decltype(f) f, const sloc sl)
 		: ast_decl(sl)
 		, f(f)
 		{}

@@ -18,10 +18,10 @@ namespace splicpp
 
 	class ast_f_arg : public ast
 	{
-		s_ptr<ast_type> t;
-		s_ptr<ast_id> id;
-
 	public:	
+		const s_ptr<ast_type> t;
+		const s_ptr<ast_id> id;
+		
 		ast_f_arg(__decltype(t) t, __decltype(id) id, const sloc sl)
 		: ast(sl)
 		, t(t)

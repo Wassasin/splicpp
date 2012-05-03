@@ -11,6 +11,19 @@
 #include "../typing/types/sl_type_unbound.hpp"
 #include "../typing/types/sl_type_tuple.hpp"
 
+#include "../ir/ircontext.hpp"
+
+#include "../ir/ir_exp_binop.hpp"
+#include "../ir/ir_exp_const.hpp"
+#include "../ir/ir_exp_eseq.hpp"
+#include "../ir/ir_exp_name.hpp"
+#include "../ir/ir_exp_temp.hpp"
+
+#include "../ir/ir_stmt_cjump.hpp"
+#include "../ir/ir_stmt_jump.hpp"
+#include "../ir/ir_stmt_label.hpp"
+#include "../ir/ir_stmt_move.hpp"
+
 namespace splicpp
 {
 	/* ast_exp_id */
@@ -114,6 +127,108 @@ namespace splicpp
 		return t->apply(s2)->unify(r->apply(s2)).composite(s2);
 	}
 	
+	ir_exp_binop::binop translate_int_op(const ast_exp_op2::op_type o)
+	{
+		switch(o)
+		{
+			case ast_exp_op2::op_plus:
+				return ir_exp_binop::op_plus;
+			case ast_exp_op2::op_minus:
+				return ir_exp_binop::op_minus;
+			case ast_exp_op2::op_times:
+				return ir_exp_binop::op_mul;
+			case ast_exp_op2::op_divides:
+				return ir_exp_binop::op_div;
+			case ast_exp_op2::op_mod:
+				return ir_exp_binop::op_mod;
+			case ast_exp_op2::op_conjunction:
+				return ir_exp_binop::op_and;
+			case ast_exp_op2::op_disjunction:
+				return ir_exp_binop::op_or;
+			default:
+				throw std::logic_error("Unknown ast_exp_op2::op_type");
+		}
+	}
+	
+	ir_stmt_cjump::relop translate_bool_op(const ast_exp_op2::op_type o)
+	{
+		switch(o)
+		{
+			case ast_exp_op2::op_eq:
+				return ir_stmt_cjump::op_eq;
+			case ast_exp_op2::op_lesser:
+				return ir_stmt_cjump::op_lt;
+			case ast_exp_op2::op_greater:
+				return ir_stmt_cjump::op_gt;
+			case ast_exp_op2::op_leq:
+				return ir_stmt_cjump::op_le;
+			case ast_exp_op2::op_geq:
+				return ir_stmt_cjump::op_ge;
+			case ast_exp_op2::op_neq:
+				return ir_stmt_cjump::op_ne;
+			default:
+				throw std::logic_error("Unknown ast_exp_op2::op_type");
+		}
+	}
+	
+	s_ptr<const ir_exp> ast_exp_op2::translate(ircontext& c) const
+	{
+		switch(optype())
+		{
+			case op_plus:
+			case op_minus:
+			case op_times:
+			case op_divides:
+			case op_mod:
+			case op_conjunction:
+			case op_disjunction:
+				return ir_exp_binop::create(
+					translate_int_op(optype()),
+					e_left->translate(c),
+					e_right->translate(c)
+				);
+			case op_eq:
+			case op_lesser:
+			case op_greater:
+			case op_leq:
+			case op_geq:
+			case op_neq:
+			{
+				ir_temp t = c.create_temporary();
+				ir_label l_true = c.create_label();
+				ir_label l_false = c.create_label();
+				ir_label l_done = c.create_label();
+				
+				s_ptr<const ir_stmt> r(ir_stmt_cjump::create(
+					translate_bool_op(optype()),
+					e_left->translate(c),
+					e_right->translate(c),
+					l_true,
+					l_false
+				));
+				
+				ir_stmt::cat(r, ir_stmt_label::create(l_true));
+				ir_stmt::cat(r, ir_stmt_move::create(
+					ir_exp_temp::create(t),
+					ir_exp_const::create(true)
+				));
+				ir_stmt::cat(r, ir_stmt_jump::create(ir_exp_name::create(l_done)));
+				ir_stmt::cat(r, ir_stmt_label::create(l_false));
+				ir_stmt::cat(r, ir_stmt_move::create(
+					ir_exp_temp::create(t),
+					ir_exp_const::create(false)
+				));
+				ir_stmt::cat(r, ir_stmt_label::create(l_done));
+				
+				return ir_exp_eseq::create(r, ir_exp_temp::create(t));
+			}
+			case op_cons:
+			{
+				//TODO
+			}
+		}
+	}
+	
 	/* ast_exp_negation */
 	
 	void ast_exp_negation::assign_ids(const varcontext& c)
@@ -139,6 +254,15 @@ namespace splicpp
 		return t->apply(s)->unify(b).composite(s);
 	}
 	
+	s_ptr<const ir_exp> ast_exp_negation::translate(ircontext& c) const
+	{
+		return ir_exp_binop::create(
+			ir_exp_binop::op_xor,
+			exp->translate(c),
+			ir_exp_const::create(true)
+		);
+	}
+	
 	/* ast_exp_int */
 	
 	void ast_exp_int::assign_ids(const varcontext&)
@@ -159,6 +283,11 @@ namespace splicpp
 	substitution ast_exp_int::infer_type(const typecontext&, const s_ptr<const sl_type> t) const
 	{
 		return t->unify(s_ptr<const sl_type>(new sl_type_int(sl)));
+	}
+	
+	s_ptr<const ir_exp> ast_exp_int::translate(ircontext&) const
+	{
+		return ir_exp_const::create(i);
 	}
 	
 	/* ast_exp_bool */
@@ -186,6 +315,11 @@ namespace splicpp
 		return t->unify(s_ptr<const sl_type>(new sl_type_bool(sl)));
 	}
 	
+	s_ptr<const ir_exp> ast_exp_bool::translate(ircontext&) const
+	{
+		return ir_exp_const::create(b);
+	}
+	
 	/* ast_exp_exp */
 	
 	void ast_exp_exp::assign_ids(const varcontext& c)
@@ -208,6 +342,11 @@ namespace splicpp
 	substitution ast_exp_exp::infer_type(const typecontext& c, const s_ptr<const sl_type> t) const
 	{
 		return exp->infer_type(c, t);
+	}
+	
+	s_ptr<const ir_exp> ast_exp_exp::translate(ircontext& c) const
+	{
+		return exp->translate(c);
 	}
 	
 	/* ast_exp_fun_call */

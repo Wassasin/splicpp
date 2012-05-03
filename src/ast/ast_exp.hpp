@@ -16,6 +16,8 @@ namespace splicpp
 	class varcontext;
 	class sl_type;
 	class typecontext;
+	class ircontext;
+	class ir_exp;
 
 	class ast_exp : public ast
 	{
@@ -42,13 +44,15 @@ namespace splicpp
 		virtual ast_exp_type type() const = 0;
 		virtual void pretty_print(std::ostream& s, const uint tab) const = 0;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const = 0;
+		
+		virtual s_ptr<const ir_exp> translate(ircontext& c) const = 0;
 	};
 	
 	class ast_exp_id : public ast_exp
 	{
-		s_ptr<ast_id> id;
-	
 	public:
+		const s_ptr<ast_id> id;
+		
 		ast_exp_id(__decltype(id) id, const sloc sl)
 		: ast_exp(sl)
 		, id(id)
@@ -59,6 +63,8 @@ namespace splicpp
 		virtual ast_exp_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
+		
+		virtual s_ptr<const ir_exp> translate(ircontext& c) const;
 	};
 	
 	class ast_exp_op2 : public ast_exp
@@ -72,17 +78,18 @@ namespace splicpp
 		};
 	
 	private:
-		s_ptr<ast_exp> e_left, e_right;
-		op_type t;
-		
 		const boost::array<const std::string, OP_TYPE_LENGTH> string_map;
+		
 	public:
+		const s_ptr<ast_exp> e_left, e_right;
+		const op_type t;
+	
 		ast_exp_op2(const __decltype(e_left) e_left, const op_type t, const __decltype(e_right) e_right, const sloc sl)
 		: ast_exp(sl)
+		, string_map({ { "+", "-", "*", "/", "%", "==", "<", ">", "<=", ">=", "!=", "&&", "||", ":" } })
 		, e_left(e_left)
 		, e_right(e_right)
 		, t(t)
-		, string_map({ { "+", "-", "*", "/", "%", "==", "<", ">", "<=", ">=", "!=", "&&", "||", ":" } })
 		{}
 	
 		op_type optype() const;
@@ -92,13 +99,15 @@ namespace splicpp
 		virtual ast_exp_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
+		
+		virtual s_ptr<const ir_exp> translate(ircontext& c) const;
 	};
 	
 	class ast_exp_negation : public ast_exp
 	{
-		s_ptr<ast_exp> exp;
-	
 	public:
+		const s_ptr<ast_exp> exp;
+	
 		ast_exp_negation(__decltype(exp) exp, const sloc sl)
 		: ast_exp(sl)
 		, exp(exp)
@@ -109,13 +118,15 @@ namespace splicpp
 		virtual ast_exp_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
+		
+		virtual s_ptr<const ir_exp> translate(ircontext& c) const;
 	};
 	
 	class ast_exp_int : public ast_exp
 	{
-		int i;
-	
 	public:
+		const int i;
+	
 		ast_exp_int(__decltype(i) i, const sloc sl)
 		: ast_exp(sl)
 		, i(i)
@@ -126,13 +137,15 @@ namespace splicpp
 		virtual ast_exp_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
+		
+		virtual s_ptr<const ir_exp> translate(ircontext& c) const;
 	};
 	
 	class ast_exp_bool : public ast_exp
 	{
-		bool b;
-	
 	public:
+		const bool b;
+		
 		ast_exp_bool(__decltype(b) b, const sloc sl)
 		: ast_exp(sl)
 		, b(b)
@@ -143,13 +156,15 @@ namespace splicpp
 		virtual ast_exp_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
+		
+		virtual s_ptr<const ir_exp> translate(ircontext& c) const;
 	};
 	
 	class ast_exp_exp : public ast_exp
 	{
-		s_ptr<ast_exp> exp;
-	
 	public:
+		const s_ptr<ast_exp> exp;
+		
 		ast_exp_exp(__decltype(exp) exp, const sloc sl)
 		: ast_exp(sl)
 		, exp(exp)
@@ -160,13 +175,15 @@ namespace splicpp
 		virtual ast_exp_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
+		
+		virtual s_ptr<const ir_exp> translate(ircontext& c) const;
 	};
 	
 	class ast_exp_fun_call : public ast_exp
 	{
-		s_ptr<ast_fun_call> c;
-	
 	public:
+		const s_ptr<ast_fun_call> c;
+	
 		ast_exp_fun_call(__decltype(c) c, const sloc sl)
 		: ast_exp(sl)
 		, c(c)
@@ -177,6 +194,8 @@ namespace splicpp
 		virtual ast_exp_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
+		
+		virtual s_ptr<const ir_exp> translate(ircontext& c) const;
 	};
 	
 	class ast_exp_nil : public ast_exp
@@ -191,14 +210,16 @@ namespace splicpp
 		virtual ast_exp_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
+		
+		virtual s_ptr<const ir_exp> translate(ircontext& c) const;
 	};
 	
 	class ast_exp_tuple : public ast_exp
 	{
-		s_ptr<ast_exp> e_left, e_right;
-	
 	public:
-		ast_exp_tuple(__decltype(e_left) e_left, __decltype(e_right) e_right, const sloc sl)
+		const s_ptr<ast_exp> e_left, e_right;
+	
+		ast_exp_tuple(decltype(e_left) e_left, decltype(e_right) e_right, const sloc sl)
 		: ast_exp(sl)
 		, e_left(e_left)
 		, e_right(e_right)
@@ -209,6 +230,8 @@ namespace splicpp
 		virtual ast_exp_type type() const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
+		
+		virtual s_ptr<const ir_exp> translate(ircontext& c) const;
 	};
 }
 

@@ -185,7 +185,7 @@ namespace splicpp
 			n.assert_stid(g, "nl_f_args");
 			
 			if(n.size() == 2)
-				return create_vector_ptr<ast_f_arg>(s_ptr<ast_f_arg>(new ast_f_arg(parse_type(str, n[0]->as_node()), parse_id(str, n[1]), n.sl())));
+				return create_vector<s_ptr<ast_f_arg>>(s_ptr<ast_f_arg>(new ast_f_arg(parse_type(str, n[0]->as_node()), parse_id(str, n[1]), n.sl())));
 			else if(n.size() == 4)
 			{
 				n[1]->assert_token(g, "l_comma");
@@ -287,18 +287,14 @@ namespace splicpp
 				n[1]->assert_token(g, "l_bracket_left");
 				n[2]->assert_token(g, "l_bracket_right");
 				
-				return s_ptr<ast_fun_call>(new ast_fun_call(parse_id(str, n[0]), n.sl()));
+				return s_ptr<ast_fun_call>(new ast_fun_call(parse_id(str, n[0]), std::vector<s_ptr<ast_exp>>(), n.sl()));
 			}
 			if(n.size() == 4)
 			{
 				n[1]->assert_token(g, "l_bracket_left");
 				n[3]->assert_token(g, "l_bracket_right");
 			
-				s_ptr<ast_fun_call> f(new ast_fun_call(parse_id(str, n[0]), n.sl()));
-				for(auto arg : parse_act_args(str, n[2]->as_node()))
-					f->add_arg(arg);
-				
-				return f;
+				return s_ptr<ast_fun_call>(new ast_fun_call(parse_id(str, n[0]), parse_act_args(str, n[2]->as_node()), n.sl()));
 			}
 			else
 				throw parse_error("unexpected rule");

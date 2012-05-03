@@ -22,6 +22,14 @@ namespace splicpp
 		{
 			return s_ptr<const ir_exp>(new ir_exp_const(i));
 		}
+		
+		static s_ptr<const ir_exp> create(const bool b)
+		{
+			if(b)
+				return create(1);
+			else
+				return create(0);
+		}
 	};
 }
 

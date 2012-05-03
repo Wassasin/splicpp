@@ -3,6 +3,8 @@
 
 #include <ostream>
 
+#include "../common/typedefs.hpp"
+
 namespace splicpp
 {
 	class ir_stmt
@@ -14,6 +16,8 @@ namespace splicpp
 		virtual void print(std::ostream& s, const uint tab) const = 0;
 		
 		virtual ~ir_stmt() {}
+		
+		static void cat(s_ptr<const ir_stmt>& r, const s_ptr<const ir_stmt> x);
 		
 		static void print_newline(std::ostream& s, const uint tab)
 		{

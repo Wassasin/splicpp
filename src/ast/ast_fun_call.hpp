@@ -18,17 +18,15 @@ namespace splicpp
 
 	class ast_fun_call : public ast
 	{
-		s_ptr<ast_id> id;
-		std::vector<s_ptr<ast_exp>> args;
-		
 	public:
-		ast_fun_call(__decltype(id) id, const sloc sl)
+		const s_ptr<ast_id> id;
+		const std::vector<s_ptr<ast_exp>> args;
+		
+		ast_fun_call(decltype(id) id, decltype(args) args, const sloc sl)
 		: ast(sl)
 		, id(id)
-		, args()
+		, args(args)
 		{}
-		
-		void add_arg(s_ptr<ast_exp> exp);
 		
 		void assign_ids(const varcontext& c);
 		substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;

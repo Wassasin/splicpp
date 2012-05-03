@@ -51,6 +51,7 @@ add_executable(splicpp
 	typing/types/sl_type_unbound.cpp
 	typing/types/sl_type_void.cpp
 	
+	ir/ircontext.cpp
 	ir/ir_exp.cpp
 	ir/ir_exp_binop.cpp
 	ir/ir_exp_call.cpp

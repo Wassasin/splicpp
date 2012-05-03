@@ -14,16 +14,16 @@ namespace splicpp
 	public:
 		enum relop
 		{
-			eq,
-			ne,
-			lt,
-			gt,
-			le,
-			ge,
-			ult,
-			ule,
-			ugt,
-			uge
+			op_eq,
+			op_ne,
+			op_lt,
+			op_gt,
+			op_le,
+			op_ge,
+			op_ult,
+			op_ule,
+			op_ugt,
+			op_uge
 		};
 	
 	private:

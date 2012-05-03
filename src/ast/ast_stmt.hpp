@@ -17,6 +17,8 @@ namespace splicpp
 	class symboltable;
 	class varcontext;
 	class typecontext;
+	class ircontext;
+	class ir_stmt;
 
 	class ast_stmt : public ast
 	{
@@ -42,6 +44,8 @@ namespace splicpp
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const = 0;
 		
 		virtual bool contains_return() const = 0;
+		
+		virtual s_ptr<const ir_stmt> translate(ircontext& c) const = 0;
 	};
 	
 	class ast_stmt_stmts : public ast_stmt
@@ -63,6 +67,8 @@ namespace splicpp
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual bool contains_return() const;
+		
+		virtual s_ptr<const ir_stmt> translate(ircontext& c) const;
 	};
 	
 	class ast_stmt_if : public ast_stmt
@@ -93,6 +99,8 @@ namespace splicpp
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual bool contains_return() const;
+		
+		virtual s_ptr<const ir_stmt> translate(ircontext& c) const;
 	};
 	
 	class ast_stmt_while : public ast_stmt
@@ -114,6 +122,8 @@ namespace splicpp
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual bool contains_return() const;
+		
+		virtual s_ptr<const ir_stmt> translate(ircontext& c) const;
 	};
 	
 	class ast_stmt_assignment : public ast_stmt
@@ -135,6 +145,8 @@ namespace splicpp
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual bool contains_return() const;
+		
+		virtual s_ptr<const ir_stmt> translate(ircontext& c) const;
 	};
 	
 	class ast_stmt_fun_call : public ast_stmt
@@ -154,6 +166,8 @@ namespace splicpp
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual bool contains_return() const;
+		
+		virtual s_ptr<const ir_stmt> translate(ircontext& c) const;
 	};
 	
 	class ast_stmt_return : public ast_stmt
@@ -178,6 +192,8 @@ namespace splicpp
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual bool contains_return() const;
+		
+		virtual s_ptr<const ir_stmt> translate(ircontext& c) const;
 	};
 }
 
