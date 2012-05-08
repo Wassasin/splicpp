@@ -11,6 +11,9 @@
 #include "ast_exp.hpp"
 #include "ast_type.hpp"
 
+#include "../ir/ircontext.hpp"
+#include "../ir/ir_stmt_move.hpp"
+
 namespace splicpp
 {
 	void ast_var_decl::assign(sid i)
@@ -21,6 +24,11 @@ namespace splicpp
 	std::string ast_var_decl::fetch_name() const
 	{
 		return id->fetch_name();
+	}
+	
+	sid ast_var_decl::fetch_id() const
+	{
+		return id->fetch_id();
 	}
 	
 	void ast_var_decl::assign_ids(const varcontext& c)
@@ -46,6 +54,14 @@ namespace splicpp
 		
 		c.register_type(id->fetch_id(), t);
 		return s;
+	}
+	
+	s_ptr<const ir_stmt> ast_var_decl::translate(const ircontext& c) const
+	{
+		return ir_stmt_move::create(
+			c.fetch_memloc(id->fetch_id()),
+			exp->translate(c)
+		);
 	}
 
 	void ast_var_decl::pretty_print(std::ostream& s, const uint tab) const

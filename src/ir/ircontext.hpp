@@ -34,7 +34,9 @@ namespace splicpp
 		
 		ir_label create_label() const;
 		ir_temp create_temporary() const;
+		
 		s_ptr<const ir_exp> fetch_memloc(const sid i) const;
+		void register_memloc(const sid i, const s_ptr<const ir_exp> e);
 	};
 }
 

@@ -16,6 +16,14 @@
 #include "ast_f_arg.hpp"
 #include "ast_stmt.hpp"
 
+#include "../ir/ircontext.hpp"
+#include "../ir/ir_exp_binop.hpp"
+#include "../ir/ir_exp_const.hpp"
+#include "../ir/ir_exp_mem.hpp"
+#include "../ir/ir_exp_temp.hpp"
+#include "../ir/ir_stmt_label.hpp"
+#include "../ir/ir_stmt_move.hpp"
+
 namespace splicpp
 {
 	void ast_fun_decl::add_arg(s_ptr<ast_f_arg> arg)
@@ -108,6 +116,40 @@ namespace splicpp
 		
 		c.register_type(id->fetch_id(), sl_polytype::qualify(c.apply(s), ft->apply(s)));
 		return s;
+	}
+	
+	s_ptr<const ir_stmt> ast_fun_decl::translate(const ircontext& c) const
+	{
+		ircontext ccopy = c;
+	
+		ir_label l_function = c.create_label();
+		const s_ptr<const ir_exp> r_frame(ir_exp_temp::create(c.frame_reg));
+	
+		for(size_t i = 0; i < args.size(); i++)
+			ccopy.register_memloc(args[i]->fetch_id(), ir_exp_binop::create(
+				ir_exp_binop::op_plus,
+				r_frame,
+				ir_exp_const::create((int)(i + 2)) //[FP + 2 + i], where 2 = offset for old FP and return address
+			));
+		
+		for(size_t i = 0; i < decls.size(); i++)
+			ccopy.register_memloc(decls[i]->fetch_id(), ir_exp_binop::create(
+				ir_exp_binop::op_plus,
+				r_frame,
+				ir_exp_const::create((int)(i + args.size() + 2)) //[FP + args + 2 + i], where 2 = offset for old FP and return address
+			));
+		
+		s_ptr<const ir_stmt> r(ir_stmt_label::create(l_function));
+		
+		for(const auto decl : decls)
+			ir_stmt::cat(r, decl->translate(ccopy));
+		
+		for(const auto stmt : stmts)
+			ir_stmt::cat(r, stmt->translate(ccopy));
+		
+		//TODO does not check for absence of return-statement
+		
+		return r;
 	}
 	
 	void ast_fun_decl::pretty_print(std::ostream& s, const uint tab) const

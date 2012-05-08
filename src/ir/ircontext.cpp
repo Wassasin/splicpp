@@ -16,4 +16,9 @@ namespace splicpp
 	{
 		return memmap.at(i);
 	}
+	
+	void ircontext::register_memloc(const sid i, const s_ptr<const ir_exp> e)
+	{
+		memmap[i] = e;
+	}
 }
