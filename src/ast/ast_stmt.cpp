@@ -13,11 +13,13 @@
 
 #include "../ir/ircontext.hpp"
 #include "../ir/ir_exp_const.hpp"
+#include "../ir/ir_exp_mem.hpp"
 #include "../ir/ir_exp_name.hpp"
 #include "../ir/ir_stmt_cjump.hpp"
 #include "../ir/ir_stmt_jump.hpp"
-#include "../ir/ir_stmt_seq.hpp"
 #include "../ir/ir_stmt_label.hpp"
+#include "../ir/ir_stmt_move.hpp"
+#include "../ir/ir_stmt_seq.hpp"
 
 namespace splicpp
 {
@@ -69,14 +71,14 @@ namespace splicpp
 		return false;
 	}
 	
-	s_ptr<const ir_stmt> ast_stmt_stmts::translate(ircontext& c) const
+	s_ptr<const ir_stmt> ast_stmt_stmts::translate(const ir_temp return_reg, ircontext& c) const
 	{
 		if(stmts.empty())
 			throw std::logic_error("An empty set of stmts does not make sense");
 		
-		s_ptr<const ir_stmt> result = (*stmts.crbegin())->translate(c);
-		for(auto r = stmts.crbegin()+1; r != stmts.crend(); r++)
-			result = ir_stmt_seq::create((*r)->translate(c), result);
+		s_ptr<const ir_stmt> result = (*stmts.cbegin())->translate(return_reg, c);
+		for(auto r = stmts.cbegin()+1; r != stmts.cend(); r++)
+			ir_stmt::cat(result, (*r)->translate(return_reg, c));
   			
 		return result;
 	}
@@ -130,7 +132,7 @@ namespace splicpp
 		return stmt_true->contains_return() || (stmt_false && stmt_false.get()->contains_return());
 	}
 	
-	s_ptr<const ir_stmt> ast_stmt_if::translate(ircontext& c) const
+	s_ptr<const ir_stmt> ast_stmt_if::translate(const ir_temp return_reg, ircontext& c) const
 	{
 		const ir_label l_true = c.create_label();
 		const ir_label l_false = c.create_label();
@@ -147,16 +149,16 @@ namespace splicpp
 		if(!stmt_false)
 		{
 			ir_stmt::cat(r, ir_stmt_label::create(l_true));
-			ir_stmt::cat(r, stmt_true->translate(c));
+			ir_stmt::cat(r, stmt_true->translate(return_reg, c));
 			ir_stmt::cat(r, ir_stmt_label::create(l_false));
 		}
 		else
 		{
 			ir_stmt::cat(r, ir_stmt_label::create(l_true));
-			ir_stmt::cat(r, stmt_true->translate(c));
+			ir_stmt::cat(r, stmt_true->translate(return_reg, c));
 			ir_stmt::cat(r, ir_stmt_jump::create(ir_exp_name::create(l_done)));
 			ir_stmt::cat(r, ir_stmt_label::create(l_false));
-			ir_stmt::cat(r, stmt_false.get()->translate(c));
+			ir_stmt::cat(r, stmt_false.get()->translate(return_reg, c));
 			ir_stmt::cat(r, ir_stmt_label::create(l_done));
 		}
 		
@@ -196,7 +198,7 @@ namespace splicpp
 		return stmt->contains_return();
 	}
 	
-	s_ptr<const ir_stmt> ast_stmt_while::translate(ircontext& c) const
+	s_ptr<const ir_stmt> ast_stmt_while::translate(const ir_temp return_reg, ircontext& c) const
 	{
 		const ir_label l_test = c.create_label();
 		const ir_label l_body = c.create_label();
@@ -212,7 +214,7 @@ namespace splicpp
 			l_done
 		));
 		ir_stmt::cat(r, ir_stmt_label::create(l_body));
-		ir_stmt::cat(r, stmt->translate(c));
+		ir_stmt::cat(r, stmt->translate(return_reg, c));
 		ir_stmt::cat(r, ir_stmt_jump::create(ir_exp_name::create(l_test)));
 		ir_stmt::cat(r, ir_stmt_label::create(l_done));
 		
@@ -261,6 +263,14 @@ namespace splicpp
 	bool ast_stmt_assignment::contains_return() const
 	{
 		return false;
+	}
+	
+	s_ptr<const ir_stmt> ast_stmt_assignment::translate(const ir_temp, ircontext& c) const
+	{
+		return ir_stmt_move::create(
+			ir_exp_mem::create(ir_exp_name::create(id->fetch_id())),
+			exp->translate(c)
+		);
 	}
 	
 	/* ast_stmt_fun_call */

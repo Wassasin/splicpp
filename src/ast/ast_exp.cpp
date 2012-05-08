@@ -16,6 +16,7 @@
 #include "../ir/ir_exp_binop.hpp"
 #include "../ir/ir_exp_const.hpp"
 #include "../ir/ir_exp_eseq.hpp"
+#include "../ir/ir_exp_mem.hpp"
 #include "../ir/ir_exp_name.hpp"
 #include "../ir/ir_exp_temp.hpp"
 
@@ -46,6 +47,19 @@ namespace splicpp
 	substitution ast_exp_id::infer_type(const typecontext& c, const s_ptr<const sl_type> t) const
 	{
 		return id->infer_type(c, t);
+	}
+	
+	s_ptr<const ir_exp> ast_exp_id::translate(ircontext& c) const
+	{
+		const ir_temp t = c.create_temporary();
+	
+		return ir_exp_eseq::create(
+			ir_stmt_move::create(
+				ir_exp_temp::create(t),
+				ir_exp_mem::create(ir_exp_name::create(c.fetch_label(id->fetch_id())))
+			),
+			ir_exp_temp::create(t)
+		);
 	}
 	
 	/* ast_exp_op2 */
@@ -224,7 +238,42 @@ namespace splicpp
 			}
 			case op_cons:
 			{
-				//TODO
+				const ir_temp t = c.create_temporary();
+				const s_ptr<const ir_exp> temp = ir_exp_temp::create(t);
+				const s_ptr<const ir_exp> heapr = ir_exp_temp::create(c.heap_reg);
+				
+				//Cons location
+				s_ptr<const ir_stmt> r(ir_stmt_move::create(temp, heapr));
+				
+				//Create room on heap for cons
+				ir_stmt::cat(r, ir_stmt_move::create(
+					heapr,
+					ir_exp_binop::create(
+						ir_exp_binop::op_plus,
+						heapr,
+						ir_exp_const::create(2) //Listcons size
+					)
+				));
+				
+				//Copy first part of cons into cons-struct on heap
+				ir_stmt::cat(r, ir_stmt_move::create(
+					ir_exp_mem::create(temp),
+					e_left->translate(c)
+				));
+				
+				//Copy second part
+				ir_stmt::cat(r, ir_stmt_move::create(
+					ir_exp_mem::create(
+						ir_exp_binop::create(
+							ir_exp_binop::op_plus,
+							temp,
+							ir_exp_const::create(1)
+						)
+					),
+					e_right->translate(c)
+				));
+				
+				return ir_exp_eseq::create(r, ir_exp_temp::create(t));
 			}
 		}
 	}
@@ -393,6 +442,11 @@ namespace splicpp
 		return t->unify(s_ptr<const sl_type>(new sl_type_array(c.create_fresh(sl), sl)));
 	}
 	
+	s_ptr<const ir_exp> ast_exp_nil::translate(ircontext& c) const
+	{
+		return ir_exp_name::create(c.l_nil);
+	}
+	
 	/* ast_exp_tuple */
 	
 	void ast_exp_tuple::assign_ids(const varcontext& c)
@@ -426,5 +480,45 @@ namespace splicpp
 		const substitution s2 = e_right->infer_type(c.apply(s1), a2).composite(s1);
 	
 		return t->apply(s2)->unify(r->apply(s2)).composite(s2);
+	}
+	
+	s_ptr<const ir_exp> ast_exp_tuple::translate(ircontext& c) const
+	{
+		const ir_temp t = c.create_temporary();
+		const s_ptr<const ir_exp> temp = ir_exp_temp::create(t);
+		const s_ptr<const ir_exp> heapr = ir_exp_temp::create(c.heap_reg);
+		
+		//Tuple location
+		s_ptr<const ir_stmt> r(ir_stmt_move::create(temp, heapr));
+		
+		//Create room on heap for cons
+		ir_stmt::cat(r, ir_stmt_move::create(
+			heapr,
+			ir_exp_binop::create(
+				ir_exp_binop::op_plus,
+				heapr,
+				ir_exp_const::create(2) //Tuple size
+			)
+		));
+		
+		//Copy left part
+		ir_stmt::cat(r, ir_stmt_move::create(
+			ir_exp_mem::create(temp),
+			e_left->translate(c)
+		));
+		
+		//Copy right part
+		ir_stmt::cat(r, ir_stmt_move::create(
+			ir_exp_mem::create(
+				ir_exp_binop::create(
+					ir_exp_binop::op_plus,
+					temp,
+					ir_exp_const::create(1)
+				)
+			),
+			e_right->translate(c)
+		));
+		
+		return ir_exp_eseq::create(r, ir_exp_temp::create(t));
 	}
 }
