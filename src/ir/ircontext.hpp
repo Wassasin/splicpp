@@ -5,6 +5,8 @@
 
 #include "../common/typedefs.hpp"
 
+#include "ir_exp.hpp"
+
 namespace splicpp
 {
 	class ircontext
@@ -12,10 +14,11 @@ namespace splicpp
 		s_ptr<ir_label> lcount;
 		s_ptr<ir_temp> tcount;
 		
-		std::map<sid, ir_label> memmap;
+		std::map<sid, s_ptr<const ir_exp>> memmap;
 	public:
 		const ir_temp heap_reg;
 		const ir_temp frame_reg;
+		const ir_temp stack_reg;
 		
 		const ir_label l_nil;
 		
@@ -25,12 +28,13 @@ namespace splicpp
 		, memmap()
 		, heap_reg(create_temporary())
 		, frame_reg(create_temporary())
+		, stack_reg(create_temporary())
 		, l_nil(create_label())
 		{}
 		
-		ir_label create_label();
-		ir_temp create_temporary();
-		ir_label fetch_label(const sid i) const;
+		ir_label create_label() const;
+		ir_temp create_temporary() const;
+		s_ptr<const ir_exp> fetch_memloc(const sid i) const;
 	};
 }
 

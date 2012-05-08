@@ -15,6 +15,8 @@ namespace splicpp
 	class typecontext;
 	class ast_id;
 	class ast_exp;
+	class ir_stmt;
+	class ircontext;
 
 	class ast_fun_call : public ast
 	{
@@ -30,6 +32,8 @@ namespace splicpp
 		
 		void assign_ids(const varcontext& c);
 		substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
+		
+		s_ptr<const ir_stmt> translate(const ir_temp return_reg, ircontext& c) const;
 		
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};

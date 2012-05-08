@@ -56,7 +56,7 @@ namespace splicpp
 		return ir_exp_eseq::create(
 			ir_stmt_move::create(
 				ir_exp_temp::create(t),
-				ir_exp_mem::create(ir_exp_name::create(c.fetch_label(id->fetch_id())))
+				ir_exp_mem::create(c.fetch_memloc(id->fetch_id()))
 			),
 			ir_exp_temp::create(t)
 		);
@@ -418,6 +418,12 @@ namespace splicpp
 	substitution ast_exp_fun_call::infer_type(const typecontext& c, const s_ptr<const sl_type> t) const
 	{
 		return this->c->infer_type(c, t);
+	}
+	
+	s_ptr<const ir_exp> ast_exp_fun_call::translate(ircontext& c) const
+	{
+		const ir_temp t = c.create_temporary();
+		return ir_exp_eseq::create(this->c->translate(t, c), ir_exp_temp::create(t));
 	}
 	
 	/* ast_exp_nil */

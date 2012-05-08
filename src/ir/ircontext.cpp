@@ -2,17 +2,17 @@
 
 namespace splicpp
 {
-	ir_label ircontext::create_label()
+	ir_label ircontext::create_label() const
 	{
 		return (*lcount)++;
 	}
 	
-	ir_temp ircontext::create_temporary()
+	ir_temp ircontext::create_temporary() const
 	{
 		return (*tcount)++;
 	}
 
-	ir_label ircontext::fetch_label(const sid i) const
+	s_ptr<const ir_exp> ircontext::fetch_memloc(const sid i) const
 	{
 		return memmap.at(i);
 	}
