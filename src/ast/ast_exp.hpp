@@ -45,7 +45,7 @@ namespace splicpp
 		virtual void pretty_print(std::ostream& s, const uint tab) const = 0;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const = 0;
 		
-		virtual s_ptr<const ir_exp> translate(ircontext& c) const = 0;
+		virtual s_ptr<const ir_exp> translate(const ircontext& c) const = 0;
 	};
 	
 	class ast_exp_id : public ast_exp
@@ -64,7 +64,7 @@ namespace splicpp
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
-		virtual s_ptr<const ir_exp> translate(ircontext& c) const;
+		virtual s_ptr<const ir_exp> translate(const ircontext& c) const;
 	};
 	
 	class ast_exp_op2 : public ast_exp
@@ -100,7 +100,7 @@ namespace splicpp
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
-		virtual s_ptr<const ir_exp> translate(ircontext& c) const;
+		virtual s_ptr<const ir_exp> translate(const ircontext& c) const;
 	};
 	
 	class ast_exp_negation : public ast_exp
@@ -119,7 +119,7 @@ namespace splicpp
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
-		virtual s_ptr<const ir_exp> translate(ircontext& c) const;
+		virtual s_ptr<const ir_exp> translate(const ircontext& c) const;
 	};
 	
 	class ast_exp_int : public ast_exp
@@ -138,7 +138,7 @@ namespace splicpp
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
-		virtual s_ptr<const ir_exp> translate(ircontext& c) const;
+		virtual s_ptr<const ir_exp> translate(const ircontext& c) const;
 	};
 	
 	class ast_exp_bool : public ast_exp
@@ -157,7 +157,7 @@ namespace splicpp
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
-		virtual s_ptr<const ir_exp> translate(ircontext& c) const;
+		virtual s_ptr<const ir_exp> translate(const ircontext& c) const;
 	};
 	
 	class ast_exp_exp : public ast_exp
@@ -176,7 +176,7 @@ namespace splicpp
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
-		virtual s_ptr<const ir_exp> translate(ircontext& c) const;
+		virtual s_ptr<const ir_exp> translate(const ircontext& c) const;
 	};
 	
 	class ast_exp_fun_call : public ast_exp
@@ -195,7 +195,7 @@ namespace splicpp
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
-		virtual s_ptr<const ir_exp> translate(ircontext& c) const;
+		virtual s_ptr<const ir_exp> translate(const ircontext& c) const;
 	};
 	
 	class ast_exp_nil : public ast_exp
@@ -211,7 +211,7 @@ namespace splicpp
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
-		virtual s_ptr<const ir_exp> translate(ircontext& c) const;
+		virtual s_ptr<const ir_exp> translate(const ircontext& c) const;
 	};
 	
 	class ast_exp_tuple : public ast_exp
@@ -231,7 +231,7 @@ namespace splicpp
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
-		virtual s_ptr<const ir_exp> translate(ircontext& c) const;
+		virtual s_ptr<const ir_exp> translate(const ircontext& c) const;
 	};
 }
 

@@ -45,7 +45,7 @@ namespace splicpp
 		
 		virtual bool contains_return() const = 0;
 		
-		virtual s_ptr<const ir_stmt> translate(ircontext& c) const = 0;
+		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const = 0;
 	};
 	
 	class ast_stmt_stmts : public ast_stmt
@@ -68,7 +68,7 @@ namespace splicpp
 		
 		virtual bool contains_return() const;
 		
-		virtual s_ptr<const ir_stmt> translate(ircontext& c) const;
+		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const;
 	};
 	
 	class ast_stmt_if : public ast_stmt
@@ -100,7 +100,7 @@ namespace splicpp
 		
 		virtual bool contains_return() const;
 		
-		virtual s_ptr<const ir_stmt> translate(ircontext& c) const;
+		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const;
 	};
 	
 	class ast_stmt_while : public ast_stmt
@@ -123,7 +123,7 @@ namespace splicpp
 		
 		virtual bool contains_return() const;
 		
-		virtual s_ptr<const ir_stmt> translate(ircontext& c) const;
+		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const;
 	};
 	
 	class ast_stmt_assignment : public ast_stmt
@@ -146,7 +146,7 @@ namespace splicpp
 		
 		virtual bool contains_return() const;
 		
-		virtual s_ptr<const ir_stmt> translate(ircontext& c) const;
+		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const;
 	};
 	
 	class ast_stmt_fun_call : public ast_stmt
@@ -167,7 +167,7 @@ namespace splicpp
 		
 		virtual bool contains_return() const;
 		
-		virtual s_ptr<const ir_stmt> translate(ircontext& c) const;
+		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const;
 	};
 	
 	class ast_stmt_return : public ast_stmt
@@ -193,7 +193,7 @@ namespace splicpp
 		
 		virtual bool contains_return() const;
 		
-		virtual s_ptr<const ir_stmt> translate(ircontext& c) const;
+		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const;
 	};
 }
 

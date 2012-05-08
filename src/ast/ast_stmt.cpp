@@ -75,7 +75,7 @@ namespace splicpp
 		return false;
 	}
 	
-	s_ptr<const ir_stmt> ast_stmt_stmts::translate(ircontext& c) const
+	s_ptr<const ir_stmt> ast_stmt_stmts::translate(const ircontext& c) const
 	{
 		if(stmts.empty())
 			throw std::logic_error("An empty set of stmts does not make sense");
@@ -136,7 +136,7 @@ namespace splicpp
 		return stmt_true->contains_return() || (stmt_false && stmt_false.get()->contains_return());
 	}
 	
-	s_ptr<const ir_stmt> ast_stmt_if::translate(ircontext& c) const
+	s_ptr<const ir_stmt> ast_stmt_if::translate(const ircontext& c) const
 	{
 		const ir_label l_true = c.create_label();
 		const ir_label l_false = c.create_label();
@@ -202,7 +202,7 @@ namespace splicpp
 		return stmt->contains_return();
 	}
 	
-	s_ptr<const ir_stmt> ast_stmt_while::translate(ircontext& c) const
+	s_ptr<const ir_stmt> ast_stmt_while::translate(const ircontext& c) const
 	{
 		const ir_label l_test = c.create_label();
 		const ir_label l_body = c.create_label();
@@ -269,7 +269,7 @@ namespace splicpp
 		return false;
 	}
 	
-	s_ptr<const ir_stmt> ast_stmt_assignment::translate(ircontext& c) const
+	s_ptr<const ir_stmt> ast_stmt_assignment::translate(const ircontext& c) const
 	{
 		return ir_stmt_move::create(
 			ir_exp_mem::create(ir_exp_name::create(id->fetch_id())),
@@ -305,7 +305,7 @@ namespace splicpp
 		return false;
 	}
 	
-	s_ptr<const ir_stmt> ast_stmt_fun_call::translate(ircontext& c) const
+	s_ptr<const ir_stmt> ast_stmt_fun_call::translate(const ircontext& c) const
 	{
 		return f->translate(c.create_temporary(), c); //Use a fresh temporary, throw result away, if there even is a result
 	}
@@ -347,7 +347,7 @@ namespace splicpp
 		return true;
 	}
 	
-	s_ptr<const ir_stmt> ast_stmt_return::translate(ircontext& c) const
+	s_ptr<const ir_stmt> ast_stmt_return::translate(const ircontext& c) const
 	{
 		//Jump to return address [FP + 1]
 		s_ptr<const ir_stmt> r(ir_stmt_jump::create(
@@ -361,10 +361,7 @@ namespace splicpp
 		));
 		
 		if(exp) //Push result to stack, before jumping to return address
-			r = ir_stmt_seq::create(
-				ir_stmt::push(create_vector_ptr<const ir_exp>(exp.get()->translate(c)), c),
-				r
-			);
+			r = ir_stmt_seq::create(ir_stmt::push(create_vector_ptr<const ir_exp>(exp.get()->translate(c)), c), r);
 		
 		return r;
 	}

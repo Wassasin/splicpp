@@ -40,7 +40,7 @@ namespace splicpp
 		return s;
 	}
 	
-	s_ptr<const ir_stmt> ast_fun_call::translate(const ir_temp return_reg, ircontext& c) const
+	s_ptr<const ir_stmt> ast_fun_call::translate(const ir_temp return_reg, const ircontext& c) const
 	{
 		const ir_label l_return = c.create_label();
 		

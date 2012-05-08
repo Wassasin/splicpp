@@ -49,7 +49,7 @@ namespace splicpp
 		return id->infer_type(c, t);
 	}
 	
-	s_ptr<const ir_exp> ast_exp_id::translate(ircontext& c) const
+	s_ptr<const ir_exp> ast_exp_id::translate(const ircontext& c) const
 	{
 		const ir_temp t = c.create_temporary();
 	
@@ -185,7 +185,7 @@ namespace splicpp
 		}
 	}
 	
-	s_ptr<const ir_exp> ast_exp_op2::translate(ircontext& c) const
+	s_ptr<const ir_exp> ast_exp_op2::translate(const ircontext& c) const
 	{
 		switch(optype())
 		{
@@ -303,7 +303,7 @@ namespace splicpp
 		return t->apply(s)->unify(b).composite(s);
 	}
 	
-	s_ptr<const ir_exp> ast_exp_negation::translate(ircontext& c) const
+	s_ptr<const ir_exp> ast_exp_negation::translate(const ircontext& c) const
 	{
 		return ir_exp_binop::create(
 			ir_exp_binop::op_xor,
@@ -334,7 +334,7 @@ namespace splicpp
 		return t->unify(s_ptr<const sl_type>(new sl_type_int(sl)));
 	}
 	
-	s_ptr<const ir_exp> ast_exp_int::translate(ircontext&) const
+	s_ptr<const ir_exp> ast_exp_int::translate(const ircontext&) const
 	{
 		return ir_exp_const::create(i);
 	}
@@ -364,7 +364,7 @@ namespace splicpp
 		return t->unify(s_ptr<const sl_type>(new sl_type_bool(sl)));
 	}
 	
-	s_ptr<const ir_exp> ast_exp_bool::translate(ircontext&) const
+	s_ptr<const ir_exp> ast_exp_bool::translate(const ircontext&) const
 	{
 		return ir_exp_const::create(b);
 	}
@@ -393,7 +393,7 @@ namespace splicpp
 		return exp->infer_type(c, t);
 	}
 	
-	s_ptr<const ir_exp> ast_exp_exp::translate(ircontext& c) const
+	s_ptr<const ir_exp> ast_exp_exp::translate(const ircontext& c) const
 	{
 		return exp->translate(c);
 	}
@@ -420,7 +420,7 @@ namespace splicpp
 		return this->c->infer_type(c, t);
 	}
 	
-	s_ptr<const ir_exp> ast_exp_fun_call::translate(ircontext& c) const
+	s_ptr<const ir_exp> ast_exp_fun_call::translate(const ircontext& c) const
 	{
 		const ir_temp t = c.create_temporary();
 		return ir_exp_eseq::create(this->c->translate(t, c), ir_exp_temp::create(t));
@@ -448,7 +448,7 @@ namespace splicpp
 		return t->unify(s_ptr<const sl_type>(new sl_type_array(c.create_fresh(sl), sl)));
 	}
 	
-	s_ptr<const ir_exp> ast_exp_nil::translate(ircontext& c) const
+	s_ptr<const ir_exp> ast_exp_nil::translate(const ircontext& c) const
 	{
 		return ir_exp_name::create(c.l_nil);
 	}
@@ -488,7 +488,7 @@ namespace splicpp
 		return t->apply(s2)->unify(r->apply(s2)).composite(s2);
 	}
 	
-	s_ptr<const ir_exp> ast_exp_tuple::translate(ircontext& c) const
+	s_ptr<const ir_exp> ast_exp_tuple::translate(const ircontext& c) const
 	{
 		const ir_temp t = c.create_temporary();
 		const s_ptr<const ir_exp> temp = ir_exp_temp::create(t);
