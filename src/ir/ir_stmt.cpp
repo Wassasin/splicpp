@@ -29,7 +29,7 @@ namespace splicpp
 		ir_stmt::cat(r, ir_stmt_move::create(
 			stack,
 			ir_exp_binop::create(
-				ir_exp_binop::op_plus,
+				ir_exp_binop::op_minus,
 				stack,
 				ir_exp_const::create((int)xs.size())
 			)
@@ -38,7 +38,7 @@ namespace splicpp
 		for(size_t i = 0; i < xs.size(); i++)
 			ir_stmt::cat(r, ir_stmt_move::create(
 				ir_exp_mem::create(ir_exp_binop::create(
-						ir_exp_binop::op_plus,
+						ir_exp_binop::op_minus,
 						temp,
 						ir_exp_const::create((int)i)
 				)),
@@ -55,7 +55,7 @@ namespace splicpp
 		return ir_stmt_move::create(
 			stack,
 			ir_exp_binop::create(
-				ir_exp_binop::op_minus,
+				ir_exp_binop::op_plus,
 				stack,
 				ir_exp_const::create((int)count)
 			)

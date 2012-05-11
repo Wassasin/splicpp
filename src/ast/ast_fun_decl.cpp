@@ -131,14 +131,14 @@ namespace splicpp
 	
 		for(size_t i = 0; i < args.size(); i++)
 			ccopy.register_memloc(args[i]->fetch_id(), ir_exp_binop::create(
-				ir_exp_binop::op_plus,
+				ir_exp_binop::op_minus,
 				r_frame,
 				ir_exp_const::create((int)(i + 2)) //[FP + 2 + i], where 2 = offset for old FP and return address
 			));
 		
 		for(size_t i = 0; i < decls.size(); i++)
 			ccopy.register_memloc(decls[i]->fetch_id(), ir_exp_binop::create(
-				ir_exp_binop::op_plus,
+				ir_exp_binop::op_minus,
 				r_frame,
 				ir_exp_const::create((int)(i + args.size() + 2)) //[FP + args + 2 + i], where 2 = offset for old FP and return address
 			));

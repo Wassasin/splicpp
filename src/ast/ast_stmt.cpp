@@ -353,7 +353,7 @@ namespace splicpp
 		s_ptr<const ir_stmt> r(ir_stmt_jump::create(
 			ir_exp_mem::create(
 				ir_exp_binop::create(
-					ir_exp_binop::op_plus,
+					ir_exp_binop::op_minus,
 					ir_exp_temp::create(c.frame_reg),
 					ir_exp_const::create(1)
 				)
