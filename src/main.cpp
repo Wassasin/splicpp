@@ -6,6 +6,8 @@
 #include "ast/ast_prog.hpp"
 #include "typing/symboltable.hpp"
 #include "typing/unification_error.hpp"
+#include "ir/ircontext.hpp"
+#include "ir/ir_stmt.hpp"
 
 int main(int argc, char **argv)
 {
@@ -116,6 +118,12 @@ int main(int argc, char **argv)
 			std::cerr << std::endl;
 			return -1;
 		}
+		
+		if(phase < 4)
+			return 0;
+		
+		splicpp::ircontext c;
+		prog->translate(c)->print(std::cout, 0);
 		
 		return 0;
 	}
