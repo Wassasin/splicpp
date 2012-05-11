@@ -118,11 +118,10 @@ namespace splicpp
 		return s;
 	}
 	
-	s_ptr<const ir_stmt> ast_fun_decl::translate(const ircontext& c) const
+	s_ptr<const ir_stmt> ast_fun_decl::translate(const ir_label l_function, const ircontext& c) const
 	{
 		ircontext ccopy = c;
-	
-		ir_label l_function = c.create_label();
+		
 		const s_ptr<const ir_exp> r_frame(ir_exp_temp::create(c.frame_reg));
 	
 		for(size_t i = 0; i < args.size(); i++)

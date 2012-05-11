@@ -13,12 +13,14 @@ namespace splicpp
 	class sl_type;
 	class sl_polytype;
 	class typecontext;
+	class ircontext;
+	class ir_stmt;
 
 	class ast_construct : public ast
 	{
-		boost::optional<sid> id;
-	
 	protected:
+		boost::optional<sid> id;
+		
 		virtual s_ptr<const sl_type> fetch_type(const typecontext& c) const = 0;
 	public:
 		ast_construct()
@@ -29,6 +31,7 @@ namespace splicpp
 		void assign(const sid i);
 		substitution declare_type(typecontext& c) const;
 		
+		virtual s_ptr<const ir_stmt> translate(const ir_label l_construct, const ircontext& c) const = 0;
 		virtual std::string fetch_name() const = 0;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
@@ -40,6 +43,7 @@ namespace splicpp
 	protected:
 		virtual s_ptr<const sl_type> fetch_type(const typecontext& c) const;
 	public:
+		virtual s_ptr<const ir_stmt> translate(const ir_label l_construct, const ircontext& c) const;
 		virtual std::string fetch_name() const;
 	};
 	
@@ -48,6 +52,7 @@ namespace splicpp
 	protected:
 		virtual s_ptr<const sl_type> fetch_type(const typecontext& c) const;
 	public:
+		virtual s_ptr<const ir_stmt> translate(const ir_label l_construct, const ircontext& c) const;
 		virtual std::string fetch_name() const;
 	};
 	
@@ -56,6 +61,7 @@ namespace splicpp
 	protected:
 		virtual s_ptr<const sl_type> fetch_type(const typecontext& c) const;
 	public:
+		virtual s_ptr<const ir_stmt> translate(const ir_label l_construct, const ircontext& c) const;
 		virtual std::string fetch_name() const;
 	};
 	
@@ -64,6 +70,7 @@ namespace splicpp
 	protected:
 		virtual s_ptr<const sl_type> fetch_type(const typecontext& c) const;
 	public:
+		virtual s_ptr<const ir_stmt> translate(const ir_label l_construct, const ircontext& c) const;
 		virtual std::string fetch_name() const;
 	};
 	
@@ -72,6 +79,7 @@ namespace splicpp
 	protected:
 		virtual s_ptr<const sl_type> fetch_type(const typecontext& c) const;
 	public:
+		virtual s_ptr<const ir_stmt> translate(const ir_label l_construct, const ircontext& c) const;
 		virtual std::string fetch_name() const;
 	};
 	
@@ -80,6 +88,7 @@ namespace splicpp
 	protected:
 		virtual s_ptr<const sl_type> fetch_type(const typecontext& c) const;
 	public:
+		virtual s_ptr<const ir_stmt> translate(const ir_label l_construct, const ircontext& c) const;
 		virtual std::string fetch_name() const;
 	};
 }

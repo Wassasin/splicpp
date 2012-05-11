@@ -56,7 +56,7 @@ namespace splicpp
 		s_ptr<const sl_type> fetch_assigned_type(const typecontext& c) const;
 		substitution declare_type(ltypecontext& c) const;
 		
-		s_ptr<const ir_stmt> translate(const ircontext& c) const;
+		s_ptr<const ir_stmt> translate(const ir_label l_function, const ircontext& c) const;
 		
 		virtual void pretty_print(std::ostream& s, const uint tab) const;
 	};
