@@ -36,6 +36,11 @@ namespace splicpp
 		id = i;
 	}
 	
+	sid ast_construct::fetch_id() const
+	{
+		return id.get();
+	}
+	
 	substitution ast_construct::declare_type(typecontext& c) const
 	{
 		c.register_type(id.get(), sl_polytype::qualify(c, fetch_type(c)));

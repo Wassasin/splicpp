@@ -29,6 +29,7 @@ namespace splicpp
 		{}
 		
 		void assign(const sid i);
+		sid fetch_id() const;
 		substitution declare_type(typecontext& c) const;
 		
 		virtual s_ptr<const ir_stmt> translate(const ir_label l_construct, const ircontext& c) const = 0;

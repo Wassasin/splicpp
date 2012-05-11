@@ -50,6 +50,7 @@ namespace splicpp
 		
 		void assign(sid i);
 		std::string fetch_name() const;
+		sid fetch_id() const;
 		
 		void register_locals(symboltable& s, varcontext& c);
 		

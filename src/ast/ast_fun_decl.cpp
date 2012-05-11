@@ -51,6 +51,11 @@ namespace splicpp
 		return id->fetch_name();
 	}
 	
+	sid ast_fun_decl::fetch_id() const
+	{
+		return id->fetch_id();
+	}
+	
 	void ast_fun_decl::register_locals(symboltable& s, varcontext& c)
 	{
 		varcontext cvar = c;

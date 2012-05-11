@@ -11,6 +11,8 @@ namespace splicpp
 	class varcontext;
 	class ast_fun_decl;
 	class ast_var_decl;
+	class ircontext;
+	class ir_stmt;
 	
 	class ast_decl : public ast
 	{
@@ -24,6 +26,8 @@ namespace splicpp
 		ast_decl(const sloc sl)
 		: ast(sl)
 		{}
+		
+		virtual sid fetch_id() const = 0;
 		
 		virtual void register_globals(symboltable&, varcontext& c) = 0;
 		virtual void register_locals(symboltable&, varcontext& c) = 0;
@@ -42,6 +46,8 @@ namespace splicpp
 		, v(v)
 		{}
 	
+		virtual sid fetch_id() const;
+	
 		virtual void register_globals(symboltable&, varcontext& c);
 		virtual void register_locals(symboltable&, varcontext& c);
 		
@@ -58,6 +64,8 @@ namespace splicpp
 		: ast_decl(sl)
 		, f(f)
 		{}
+		
+		virtual sid fetch_id() const;
 		
 		virtual void register_globals(symboltable&, varcontext& c);
 		virtual void register_locals(symboltable&, varcontext& c);

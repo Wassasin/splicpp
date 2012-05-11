@@ -21,6 +21,8 @@ namespace splicpp
 		const ir_temp stack_reg;
 		
 		const ir_label l_nil;
+		const ir_label l_heap;
+		const ir_label l_stack;
 		
 		ircontext()
 		: lcount(new ir_label(0))
@@ -30,6 +32,8 @@ namespace splicpp
 		, frame_reg(create_temporary())
 		, stack_reg(create_temporary())
 		, l_nil(create_label())
+		, l_heap(create_label())
+		, l_stack(create_label())
 		{}
 		
 		ir_label create_label() const;
