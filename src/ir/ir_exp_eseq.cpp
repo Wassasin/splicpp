@@ -16,11 +16,11 @@ namespace splicpp
 		s << "ESEQ(";
 		
 		print_newline(s, tab+1);
-		e->print(s, tab+1);
+		this->s->print(s, tab+1);
 		s << ",";
 		
 		print_newline(s, tab+1);
-		this->s->print(s, tab+1);
+		e->print(s, tab+1);
 		
 		print_newline(s, tab);
 		s << ")";
