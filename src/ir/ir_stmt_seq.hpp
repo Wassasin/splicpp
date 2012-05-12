@@ -9,9 +9,9 @@ namespace splicpp
 {
 	class ir_stmt_seq : public ir_stmt
 	{
-		const s_ptr<const ir_stmt> s_left, s_right;
-		
 	public:
+		const s_ptr<const ir_stmt> s_left, s_right;
+	
 		ir_stmt_seq(const s_ptr<const ir_stmt> s_left, const s_ptr<const ir_stmt> s_right)
 		: s_left(s_left)
 		, s_right(s_right)

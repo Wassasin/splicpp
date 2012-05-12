@@ -65,6 +65,8 @@ add_executable(splicpp
 	ir/ir_stmt_label.cpp
 	ir/ir_stmt_move.cpp
 	ir/ir_stmt_seq.cpp
+	
+	transformers/ir_desequencer.cpp
 )
 
 macro(add_grammar SRC_FILE)

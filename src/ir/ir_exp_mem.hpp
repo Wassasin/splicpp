@@ -9,9 +9,9 @@ namespace splicpp
 {
 	class ir_exp_mem : public ir_exp
 	{
-		const s_ptr<const ir_exp> e;
-		
 	public:
+		const s_ptr<const ir_exp> e;
+	
 		ir_exp_mem(const s_ptr<const ir_exp> e)
 		: e(e)
 		{}

@@ -11,9 +11,9 @@ namespace splicpp
 
 	class ir_stmt_move : public ir_stmt
 	{
-		const s_ptr<const ir_exp> e_left, e_right;
-		
 	public:
+		const s_ptr<const ir_exp> e_left, e_right;
+	
 		ir_stmt_move(const s_ptr<const ir_exp> e_left, const s_ptr<const ir_exp> e_right)
 		: e_left(e_left)
 		, e_right(e_right)

@@ -26,12 +26,10 @@ namespace splicpp
 			op_uge
 		};
 	
-	private:
 		const relop r;
 		const s_ptr<const ir_exp> e_left, e_right;
 		const ir_label l_left, l_right;
 		
-	public:
 		ir_stmt_cjump(const relop r, const s_ptr<const ir_exp> e_left, const s_ptr<const ir_exp> e_right, const ir_label l_left, const ir_label l_right)
 		: r(r)
 		, e_left(e_left)

@@ -11,9 +11,9 @@ namespace splicpp
 
 	class ir_stmt_jump : public ir_stmt
 	{
-		const s_ptr<const ir_exp> e;
-		
 	public:
+		const s_ptr<const ir_exp> e;
+	
 		ir_stmt_jump(const s_ptr<const ir_exp> e)
 		: e(e)
 		{}

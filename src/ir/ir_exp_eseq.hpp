@@ -11,10 +11,10 @@ namespace splicpp
 
 	class ir_exp_eseq : public ir_exp
 	{
+	public:
 		const s_ptr<const ir_stmt> s;
 		const s_ptr<const ir_exp> e;
-		
-	public:
+	
 		ir_exp_eseq(const s_ptr<const ir_stmt> s, const s_ptr<const ir_exp> e)
 		: s(s)
 		, e(e)

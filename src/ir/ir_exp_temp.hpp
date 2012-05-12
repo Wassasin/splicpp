@@ -9,9 +9,9 @@ namespace splicpp
 {
 	class ir_exp_temp : public ir_exp
 	{
-		const ir_temp t;
-		
 	public:
+		const ir_temp t;
+	
 		ir_exp_temp(const ir_temp t)
 		: t(t)
 		{}

@@ -9,9 +9,9 @@ namespace splicpp
 {
 	class ir_exp_name : public ir_exp
 	{
-		const ir_label l;
-		
 	public:
+		const ir_label l;
+	
 		ir_exp_name(const ir_label l)
 		: l(l)
 		{}
