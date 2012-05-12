@@ -1,6 +1,6 @@
 #include "ir_exp_binop.hpp"
 
-#include "../transformers/generic/ir_exp_transformer.hpp"
+#include "../mappers/generic/ir_exp_mapper.hpp"
 
 namespace splicpp
 {
@@ -33,9 +33,9 @@ namespace splicpp
 		}
 	}
 
-	void ir_exp_binop::transform(ir_exp_transformer& t) const
+	void ir_exp_binop::map(ir_exp_mapper& t) const
 	{
-		t.transform(std::static_pointer_cast<const ir_exp_binop>(shared_from_this()));
+		t.map(std::static_pointer_cast<const ir_exp_binop>(shared_from_this()));
 	}
 
 	void ir_exp_binop::print(std::ostream& s, const uint tab) const

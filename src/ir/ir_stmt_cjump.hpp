@@ -38,7 +38,7 @@ namespace splicpp
 		, l_right(l_right)
 		{}
 	
-		virtual void transform(ir_stmt_transformer& t) const;
+		virtual void map(ir_stmt_mapper& t) const;
 		virtual void print(std::ostream& s, const uint tab) const;
 		
 		static s_ptr<const ir_stmt> create(const relop r, const s_ptr<const ir_exp> e_left, const s_ptr<const ir_exp> e_right, const ir_label l_left, const ir_label l_right)

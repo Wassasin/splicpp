@@ -8,7 +8,7 @@
 
 namespace splicpp
 {
-	class ir_stmt_transformer;
+	class ir_stmt_mapper;
 	class ircontext;
 	class ir_exp;
 
@@ -20,7 +20,7 @@ namespace splicpp
 	
 		virtual ~ir_stmt() {}
 	
-		virtual void transform(ir_stmt_transformer& t) const = 0;
+		virtual void map(ir_stmt_mapper& t) const = 0;
 		virtual void print(std::ostream& s, const uint tab) const = 0;
 		
 		static void cat(s_ptr<const ir_stmt>& r, const s_ptr<const ir_stmt> x);

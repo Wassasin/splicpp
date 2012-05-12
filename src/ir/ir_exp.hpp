@@ -6,7 +6,7 @@
 
 namespace splicpp
 {
-	class ir_exp_transformer;
+	class ir_exp_mapper;
 	
 	class ir_exp : public std::enable_shared_from_this<ir_exp>
 	{
@@ -16,7 +16,7 @@ namespace splicpp
 		
 		virtual ~ir_exp() {}
 		
-		virtual void transform(ir_exp_transformer& t) const = 0;
+		virtual void map(ir_exp_mapper& t) const = 0;
 		virtual void print(std::ostream& s, const uint tab) const = 0;
 		
 		static void print_newline(std::ostream& s, const uint tab)

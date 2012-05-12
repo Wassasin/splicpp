@@ -2,13 +2,13 @@
 
 #include "ir_exp.hpp"
 
-#include "../transformers/generic/ir_stmt_transformer.hpp"
+#include "../mappers/generic/ir_stmt_mapper.hpp"
 
 namespace splicpp
 {
-	void ir_stmt_move::transform(ir_stmt_transformer& t) const
+	void ir_stmt_move::map(ir_stmt_mapper& t) const
 	{
-		t.transform(std::static_pointer_cast<const ir_stmt_move>(shared_from_this()));
+		t.map(std::static_pointer_cast<const ir_stmt_move>(shared_from_this()));
 	}
 	
 	void ir_stmt_move::print(std::ostream& s, const uint tab) const

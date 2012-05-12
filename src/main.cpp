@@ -8,7 +8,7 @@
 #include "typing/unification_error.hpp"
 #include "ir/ircontext.hpp"
 #include "ir/ir_stmt.hpp"
-#include "transformers/ir_desequencer.hpp"
+#include "mappers/ir_desequencer.hpp"
 
 int main(int argc, char **argv)
 {
@@ -125,7 +125,7 @@ int main(int argc, char **argv)
 		
 		splicpp::ircontext c;
 		splicpp::ir_desequencer d;
-		for(const auto stmt : d.transform(prog->translate(c)))
+		for(const auto stmt : d.desequence(prog->translate(c)))
 		{
 			stmt->print(std::cout, 0);
 			std::cout << std::endl;
