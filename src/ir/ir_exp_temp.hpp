@@ -16,6 +16,7 @@ namespace splicpp
 		: t(t)
 		{}
 	
+		virtual void transform(ir_exp_transformer& t) const;
 		virtual void print(std::ostream& s, const uint tab) const;
 		
 		static s_ptr<const ir_exp> create(const ir_temp t)

@@ -54,7 +54,6 @@ add_executable(splicpp
 	ir/ircontext.cpp
 	ir/ir_exp.cpp
 	ir/ir_exp_binop.cpp
-	ir/ir_exp_call.cpp
 	ir/ir_exp_const.cpp
 	ir/ir_exp_eseq.cpp
 	ir/ir_exp_mem.cpp
@@ -62,7 +61,6 @@ add_executable(splicpp
 	ir/ir_exp_temp.cpp
 	ir/ir_stmt.cpp
 	ir/ir_stmt_cjump.cpp
-	ir/ir_stmt_exp.cpp
 	ir/ir_stmt_jump.cpp
 	ir/ir_stmt_label.cpp
 	ir/ir_stmt_move.cpp
@@ -83,7 +81,7 @@ endmacro()
 add_grammar(bnf.bnf)
 add_grammar(spl.bnf)
 
-add_definitions("-Wall -Wextra -Weffc++ -std=c++0x -pedantic -g3")
+add_definitions("-Wall -Wextra -Weffc++ -std=c++0x -pedantic -g3 -O3")
 
 find_package(Boost COMPONENTS system program_options regex filesystem serialization REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})

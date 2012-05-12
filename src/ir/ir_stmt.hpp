@@ -8,18 +8,20 @@
 
 namespace splicpp
 {
+	class ir_stmt_transformer;
 	class ircontext;
 	class ir_exp;
 
-	class ir_stmt
+	class ir_stmt : public std::enable_shared_from_this<ir_stmt>
 	{
 	public:
 		ir_stmt()
 		{}
 	
-		virtual void print(std::ostream& s, const uint tab) const = 0;
-		
 		virtual ~ir_stmt() {}
+	
+		virtual void transform(ir_stmt_transformer& t) const = 0;
+		virtual void print(std::ostream& s, const uint tab) const = 0;
 		
 		static void cat(s_ptr<const ir_stmt>& r, const s_ptr<const ir_stmt> x);
 		static s_ptr<const ir_stmt> push(const std::vector<s_ptr<const ir_exp>>& xs, const ircontext& c);
