@@ -20,6 +20,11 @@ namespace splicpp
 		
 		void produce(s_ptr<const ir_exp> r);
 	public:
+		ir_desequencer()
+		: stmts()
+		, acc()
+		{}
+	
 		s_ptr<const ir_exp> desequence(const s_ptr<const ir_exp> x);
 		std::list<s_ptr<const ir_stmt>> desequence(const s_ptr<const ir_stmt> x);
 	

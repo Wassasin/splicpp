@@ -30,6 +30,8 @@ namespace splicpp
 				return "C>>";
 			case op_xor:
 				return "^";
+			default:
+				return "unknown";
 		}
 	}
 

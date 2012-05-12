@@ -13,6 +13,8 @@ namespace splicpp
 	class ir_exp_mapper
 	{
 	public:
+		virtual ~ir_exp_mapper() {}
+	
 		virtual void map(const s_ptr<const ir_exp_binop> x) = 0;
 		virtual void map(const s_ptr<const ir_exp_const> x) = 0;
 		virtual void map(const s_ptr<const ir_exp_eseq> x) = 0;
