@@ -28,6 +28,7 @@ namespace splicpp
 		const binop op;
 		const s_ptr<const ir_exp> e_left, e_right;
 		
+		static std::string binop_to_string(const binop op);
 	public:
 		ir_exp_binop(const binop op, const s_ptr<const ir_exp> e_left, const s_ptr<const ir_exp> e_right)
 		: op(op)
