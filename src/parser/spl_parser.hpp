@@ -2,12 +2,6 @@
 #define SPL_PARSER_H
 
 #include <boost/optional.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/filesystem/convenience.hpp>
-
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/serialization/base_object.hpp>
 
 #include "../common/errors.hpp"
 

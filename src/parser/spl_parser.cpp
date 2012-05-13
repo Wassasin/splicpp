@@ -1,5 +1,12 @@
 #include "spl_parser.hpp"
 
+#include <boost/lexical_cast.hpp>
+#include <boost/filesystem/convenience.hpp>
+
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/serialization/base_object.hpp>
+
 #include "../common/sloc.hpp"
 
 #include "ptable.hpp"
