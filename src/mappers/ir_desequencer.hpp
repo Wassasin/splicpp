@@ -19,14 +19,16 @@ namespace splicpp
 		s_ptr<const ir_exp> acc;
 		
 		void produce(s_ptr<const ir_exp> r);
-	public:
+		
+		s_ptr<const ir_exp> map(const s_ptr<const ir_exp> x);
+		void map(const s_ptr<const ir_stmt> x);
+		
 		ir_desequencer()
 		: stmts()
 		, acc()
 		{}
-	
-		s_ptr<const ir_exp> desequence(const s_ptr<const ir_exp> x);
-		std::vector<s_ptr<const ir_stmt>> desequence(const s_ptr<const ir_stmt> x);
+	public:
+		static std::vector<s_ptr<const ir_stmt>> desequence(const s_ptr<const ir_stmt> x);
 	
 		virtual void map(const s_ptr<const ir_exp_binop> x);
 		virtual void map(const s_ptr<const ir_exp_const> x);

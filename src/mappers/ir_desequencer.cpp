@@ -20,16 +20,22 @@ namespace splicpp
 		acc = r;
 	}
 	
-	s_ptr<const ir_exp> ir_desequencer::desequence(const s_ptr<const ir_exp> x)
+	s_ptr<const ir_exp> ir_desequencer::map(const s_ptr<const ir_exp> x)
 	{
 		x->map(*this);
 		return acc;
 	}
 	
-	std::vector<s_ptr<const ir_stmt>> ir_desequencer::desequence(const s_ptr<const ir_stmt> x)
+	void ir_desequencer::map(const s_ptr<const ir_stmt> x)
 	{
 		x->map(*this);
-		return stmts;
+	}
+	
+	std::vector<s_ptr<const ir_stmt>> ir_desequencer::desequence(const s_ptr<const ir_stmt> x)
+	{
+		ir_desequencer d;
+		d.map(x);
+		return d.stmts;
 	}
 	
 	//Inherited from ir_exp_transformer
@@ -37,8 +43,8 @@ namespace splicpp
 	{
 		produce(ir_exp_binop::create(
 			x->op,
-			desequence(x->e_left),
-			desequence(x->e_right)
+			map(x->e_left),
+			map(x->e_right)
 		));
 	}
 	
@@ -49,13 +55,13 @@ namespace splicpp
 	
 	void ir_desequencer::map(const s_ptr<const ir_exp_eseq> x)
 	{
-		desequence(x->s);
-		produce(desequence(x->e));
+		map(x->s);
+		produce(map(x->e));
 	}
 	
 	void ir_desequencer::map(const s_ptr<const ir_exp_mem> x)
 	{
-		produce(ir_exp_mem::create(desequence(x->e)));
+		produce(ir_exp_mem::create(map(x->e)));
 	}
 	
 	void ir_desequencer::map(const s_ptr<const ir_exp_name> x)
@@ -73,8 +79,8 @@ namespace splicpp
 	{
 		stmts.push_back(ir_stmt_cjump::create(
 			x->r,
-			desequence(x->e_left),
-			desequence(x->e_right),
+			map(x->e_left),
+			map(x->e_right),
 			x->l_left,
 			x->l_right
 		));
@@ -83,7 +89,7 @@ namespace splicpp
 	void ir_desequencer::map(const s_ptr<const ir_stmt_jump> x)
 	{
 		stmts.push_back(ir_stmt_jump::create(
-			desequence(x->e)
+			map(x->e)
 		));
 	}
 	
@@ -95,14 +101,14 @@ namespace splicpp
 	void ir_desequencer::map(const s_ptr<const ir_stmt_move> x)
 	{
 		stmts.push_back(ir_stmt_move::create(
-			desequence(x->e_left),
-			desequence(x->e_right)
+			map(x->e_left),
+			map(x->e_right)
 		));
 	}
 	
 	void ir_desequencer::map(const s_ptr<const ir_stmt_seq> x)
 	{
-		desequence(x->s_left);
-		desequence(x->s_right);
+		map(x->s_left);
+		map(x->s_right);
 	}
 }
