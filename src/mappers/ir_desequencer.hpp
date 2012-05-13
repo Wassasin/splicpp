@@ -1,7 +1,7 @@
 #ifndef IR_DESEQUENCER_H
 #define IR_DESEQUENCER_H
 
-#include <list>
+#include <vector>
 
 #include "../common/typedefs.hpp"
 
@@ -15,7 +15,7 @@ namespace splicpp
 	
 	class ir_desequencer : public ir_exp_mapper, public ir_stmt_mapper
 	{
-		std::list<s_ptr<const ir_stmt>> stmts;
+		std::vector<s_ptr<const ir_stmt>> stmts;
 		s_ptr<const ir_exp> acc;
 		
 		void produce(s_ptr<const ir_exp> r);
@@ -26,7 +26,7 @@ namespace splicpp
 		{}
 	
 		s_ptr<const ir_exp> desequence(const s_ptr<const ir_exp> x);
-		std::list<s_ptr<const ir_stmt>> desequence(const s_ptr<const ir_stmt> x);
+		std::vector<s_ptr<const ir_stmt>> desequence(const s_ptr<const ir_stmt> x);
 	
 		virtual void map(const s_ptr<const ir_exp_binop> x);
 		virtual void map(const s_ptr<const ir_exp_const> x);

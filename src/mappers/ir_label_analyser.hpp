@@ -2,7 +2,7 @@
 #define IR_LABEL_ANALYSER_H
 
 #include <map>
-#include <list>
+#include <vector>
 
 #include "../common/typedefs.hpp"
 
@@ -22,7 +22,7 @@ namespace splicpp
 		, index()
 		{}
 	public:
-		static std::map<ir_label, size_t> analyse(const std::list<s_ptr<const ir_stmt>>& stmts);
+		static std::map<ir_label, size_t> analyse(const std::vector<s_ptr<const ir_stmt>>& stmts);
 		
 		virtual void map(const s_ptr<const ir_stmt_cjump> x);
 		virtual void map(const s_ptr<const ir_stmt_jump> x);

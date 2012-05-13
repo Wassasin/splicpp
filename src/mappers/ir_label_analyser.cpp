@@ -10,7 +10,7 @@
 
 namespace splicpp
 {
-	std::map<ir_label, size_t> ir_label_analyser::analyse(const std::list<s_ptr<const ir_stmt>>& stmts)
+	std::map<ir_label, size_t> ir_label_analyser::analyse(const std::vector<s_ptr<const ir_stmt>>& stmts)
 	{
 		ir_label_analyser a;
 		

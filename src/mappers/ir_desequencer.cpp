@@ -26,7 +26,7 @@ namespace splicpp
 		return acc;
 	}
 	
-	std::list<s_ptr<const ir_stmt>> ir_desequencer::desequence(const s_ptr<const ir_stmt> x)
+	std::vector<s_ptr<const ir_stmt>> ir_desequencer::desequence(const s_ptr<const ir_stmt> x)
 	{
 		x->map(*this);
 		return stmts;
