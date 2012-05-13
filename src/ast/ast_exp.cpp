@@ -525,6 +525,6 @@ namespace splicpp
 			e_right->translate(c)
 		));
 		
-		return ir_exp_eseq::create(r, ir_exp_temp::create(t));
+		return ir_exp_eseq::create(r, temp);
 	}
 }
