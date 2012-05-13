@@ -68,6 +68,7 @@ add_executable(splicpp
 	
 	mappers/ir_desequencer.cpp
 	mappers/ir_label_analyser.cpp
+	mappers/ir_temp_analyser.cpp
 )
 
 macro(add_grammar SRC_FILE)
