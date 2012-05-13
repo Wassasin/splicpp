@@ -361,7 +361,7 @@ namespace splicpp
 		));
 		
 		if(exp) //Push result to stack, before jumping to return address
-			r = ir_stmt_seq::create(ir_stmt::push(create_vector_ptr<const ir_exp>(exp.get()->translate(c)), c), r);
+			r = ir_stmt_seq::create(ir_stmt_move::create(ir_exp_temp::create(c.return_reg), exp.get()->translate(c)), r);
 		
 		return r;
 	}

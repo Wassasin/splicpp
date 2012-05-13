@@ -48,6 +48,7 @@ namespace splicpp
 		const s_ptr<const ir_exp> r_frame(ir_exp_temp::create(c.frame_reg));
 		const s_ptr<const ir_exp> r_stack(ir_exp_temp::create(c.stack_reg));
 		const s_ptr<const ir_exp> r_return(ir_exp_temp::create(return_reg));
+		const s_ptr<const ir_exp> r_tmp_return(ir_exp_temp::create(c.return_reg));
 		
 		//Function call stack items
 		std::vector<s_ptr<const ir_exp>> items;
@@ -64,7 +65,7 @@ namespace splicpp
 		
 		//Clean up after function has been called
 		ir_stmt::cat(r, ir_stmt_label::create(l_return));
-		ir_stmt::cat(r, ir_stmt_move::create(r_return, ir_exp_mem::create(r_stack))); //Copy the function-result
+		ir_stmt::cat(r, ir_stmt_move::create(r_return, r_tmp_return));
 		ir_stmt::cat(r, ir_stmt_move::create(r_stack, r_frame)); //Clean up all deprecated entries on stack
 		ir_stmt::cat(r, ir_stmt_move::create(r_frame, ir_exp_mem::create(r_frame))); //Set the old frame_ptr back
 		

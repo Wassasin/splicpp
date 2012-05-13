@@ -19,6 +19,7 @@ namespace splicpp
 		const ir_temp heap_reg;
 		const ir_temp frame_reg;
 		const ir_temp stack_reg;
+		const ir_temp return_reg;
 		
 		const ir_label l_nil;
 		const ir_label l_heap;
@@ -31,6 +32,7 @@ namespace splicpp
 		, heap_reg(create_temporary())
 		, frame_reg(create_temporary())
 		, stack_reg(create_temporary())
+		, return_reg(create_temporary())
 		, l_nil(create_label())
 		, l_heap(create_label())
 		, l_stack(create_label())
