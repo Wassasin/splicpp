@@ -60,6 +60,7 @@ add_executable(splicpp
 	ir/ir_exp_name.cpp
 	ir/ir_exp_temp.cpp
 	ir/ir_stmt.cpp
+	ir/ir_stmt_call.cpp
 	ir/ir_stmt_cjump.cpp
 	ir/ir_stmt_jump.cpp
 	ir/ir_stmt_label.cpp

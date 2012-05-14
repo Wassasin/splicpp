@@ -11,6 +11,7 @@
 #include "../ir/ir_exp_name.hpp"
 #include "../ir/ir_exp_temp.hpp"
 
+#include "../ir/ir_stmt_call.hpp"
 #include "../ir/ir_stmt_cjump.hpp"
 #include "../ir/ir_stmt_jump.hpp"
 #include "../ir/ir_stmt_label.hpp"
@@ -78,6 +79,14 @@ namespace splicpp
 	}
 
 	//Inherited from ir_stmt_transformer
+	void ir_temp_analyser::map(const s_ptr<const ir_stmt_call> x)
+	{
+		analyse(x->e);
+		
+		for(const auto arg : x->args)
+			analyse(arg);
+	}
+	
 	void ir_temp_analyser::map(const s_ptr<const ir_stmt_cjump> x)
 	{
 		analyse(x->e_left);

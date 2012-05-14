@@ -23,6 +23,11 @@ namespace splicpp
 		return a.index;
 	}
 
+	void ir_label_analyser::map(const s_ptr<const ir_stmt_call>)
+	{
+		//Do nothing
+	}
+
 	void ir_label_analyser::map(const s_ptr<const ir_stmt_cjump>)
 	{
 		//Do nothing

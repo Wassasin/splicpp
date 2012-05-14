@@ -12,7 +12,7 @@
 #include "../ir/ir_exp_mem.hpp"
 #include "../ir/ir_exp_name.hpp"
 #include "../ir/ir_exp_temp.hpp"
-#include "../ir/ir_stmt_jump.hpp"
+#include "../ir/ir_stmt_call.hpp"
 #include "../ir/ir_stmt_label.hpp"
 #include "../ir/ir_stmt_move.hpp"
 
@@ -42,6 +42,9 @@ namespace splicpp
 	
 	s_ptr<const ir_stmt> ast_fun_call::translate(const ir_temp return_reg, const ircontext& c) const
 	{
+		/*
+		OLD IMPLEMENTATION; PRESERVED FOR UNDERSTANDING
+		
 		const ir_label l_return = c.create_label();
 		
 		const s_ptr<const ir_exp> r_temp(ir_exp_temp::create(c.create_temporary()));
@@ -61,13 +64,24 @@ namespace splicpp
 		s_ptr<const ir_stmt> r(ir_stmt_move::create(r_temp, r_stack));
 		ir_stmt::cat(r, ir_stmt::push(items, c));
 		ir_stmt::cat(r, ir_stmt_move::create(r_frame, r_temp)); //Set old stack_ptr as frame_ptr
-		ir_stmt::cat(r, ir_stmt_jump::create(c.fetch_memloc(id->fetch_id())));
+		ir_stmt::cat(r, ir_stmt_call::create(c.fetch_memloc(id->fetch_id())));
 		
 		//Clean up after function has been called
 		ir_stmt::cat(r, ir_stmt_label::create(l_return));
 		ir_stmt::cat(r, ir_stmt_move::create(r_return, r_tmp_return));
 		ir_stmt::cat(r, ir_stmt_move::create(r_stack, r_frame)); //Clean up all deprecated entries on stack
 		ir_stmt::cat(r, ir_stmt_move::create(r_frame, ir_exp_mem::create(r_frame))); //Set the old frame_ptr back
+		*/
+		
+		const s_ptr<const ir_exp> r_return(ir_exp_temp::create(return_reg));
+		const s_ptr<const ir_exp> r_tmp_return(ir_exp_temp::create(c.return_reg));
+		
+		std::vector<s_ptr<const ir_exp>> items;
+		for(const auto arg : args)
+			items.push_back(arg->translate(c));
+		
+		s_ptr<const ir_stmt> r(ir_stmt_call::create(c.fetch_memloc(id->fetch_id()), items));
+		ir_stmt::cat(r, ir_stmt_move::create(r_return, r_tmp_return));
 		
 		return r;
 	}

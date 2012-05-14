@@ -48,6 +48,7 @@ namespace splicpp
 		virtual void map(const s_ptr<const ir_exp_name> x);
 		virtual void map(const s_ptr<const ir_exp_temp> x);
 		
+		virtual void map(const s_ptr<const ir_stmt_call> x);
 		virtual void map(const s_ptr<const ir_stmt_cjump> x);
 		virtual void map(const s_ptr<const ir_stmt_jump> x);
 		virtual void map(const s_ptr<const ir_stmt_label> x);

@@ -24,6 +24,7 @@ namespace splicpp
 	public:
 		static std::map<ir_label, size_t> analyse(const std::vector<s_ptr<const ir_stmt>>& stmts);
 		
+		virtual void map(const s_ptr<const ir_stmt_call> x);
 		virtual void map(const s_ptr<const ir_stmt_cjump> x);
 		virtual void map(const s_ptr<const ir_stmt_jump> x);
 		virtual void map(const s_ptr<const ir_stmt_label> x);

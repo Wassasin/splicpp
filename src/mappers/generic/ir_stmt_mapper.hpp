@@ -3,6 +3,7 @@
 
 namespace splicpp
 {
+	class ir_stmt_call;
 	class ir_stmt_cjump;
 	class ir_stmt_jump;
 	class ir_stmt_label;
@@ -14,6 +15,7 @@ namespace splicpp
 	public:
 		virtual ~ir_stmt_mapper() {}
 		
+		virtual void map(const s_ptr<const ir_stmt_call> x) = 0;
 		virtual void map(const s_ptr<const ir_stmt_cjump> x) = 0;
 		virtual void map(const s_ptr<const ir_stmt_jump> x) = 0;
 		virtual void map(const s_ptr<const ir_stmt_label> x) = 0;

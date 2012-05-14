@@ -7,6 +7,7 @@
 #include "../ir/ir_exp_name.hpp"
 #include "../ir/ir_exp_temp.hpp"
 
+#include "../ir/ir_stmt_call.hpp"
 #include "../ir/ir_stmt_cjump.hpp"
 #include "../ir/ir_stmt_jump.hpp"
 #include "../ir/ir_stmt_label.hpp"
@@ -75,6 +76,18 @@ namespace splicpp
 	}
 	
 	//Inherited from ir_stmt_transformer
+	void ir_desequencer::map(const s_ptr<const ir_stmt_call> x)
+	{
+		std::vector<s_ptr<const ir_exp>> args;
+		for(const auto arg : x->args)
+			args.push_back(map(arg));
+	
+		stmts.push_back(ir_stmt_call::create(
+			map(x->e),
+			args
+		));
+	}
+	
 	void ir_desequencer::map(const s_ptr<const ir_stmt_cjump> x)
 	{
 		stmts.push_back(ir_stmt_cjump::create(
