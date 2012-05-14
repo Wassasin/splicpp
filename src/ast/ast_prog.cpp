@@ -1,5 +1,7 @@
 #include "ast_prog.hpp"
 
+#include <stdexcept>
+
 #include "../typing/varcontext.hpp"
 #include "../typing/symboltable.hpp"
 
@@ -8,6 +10,7 @@
 #include "../ir/ircontext.hpp"
 #include "../ir/ir_exp_name.hpp"
 #include "../ir/ir_exp_temp.hpp"
+#include "../ir/ir_stmt_call.hpp"
 #include "../ir/ir_stmt_label.hpp"
 #include "../ir/ir_stmt_move.hpp"
 
@@ -57,6 +60,20 @@ namespace splicpp
 			decl->register_locals(s, c);
 	}
 	
+	s_ptr<ast_decl_fun> ast_prog::fetch_main() const
+	{
+		for(const auto decl : decls)
+			if(decl->type() == ast_decl::t_fun_decl)
+			{
+				const s_ptr<ast_decl_fun> f(std::dynamic_pointer_cast<ast_decl_fun>(decl));
+				
+				if(f->f->fetch_name() == "main")
+					return f;
+			}
+		
+		throw std::logic_error("Program does not contain a function 'main'");
+	}
+	
 	s_ptr<const ir_stmt> ast_prog::translate(ircontext& c) const
 	{
 		const ir_label l_start = c.create_label();
@@ -95,6 +112,9 @@ namespace splicpp
 			if(decl->type() == ast_decl::t_var_decl)
 				ir_stmt::cat(r, std::dynamic_pointer_cast<ast_decl_var>(decl)->v->translate(c));
 		
+		//Call main
+		ir_stmt::cat(r, ir_stmt_call::create(c.fetch_memloc(fetch_main()->fetch_id())));
+		
 		//Translate code for language constructs
 		for(const auto cons : constrs)
 			ir_stmt::cat(r, cons->translate(labelmap.at(cons->fetch_id()), c));
@@ -103,8 +123,6 @@ namespace splicpp
 		for(const auto decl : decls)
 			if(decl->type() == ast_decl::t_fun_decl)
 				ir_stmt::cat(r, std::dynamic_pointer_cast<ast_decl_fun>(decl)->f->translate(labelmap.at(decl->fetch_id()), c));
-		
-		//TODO Call main
 		
 		ir_stmt::cat(r, ir_stmt_label::create(l_end));
 		

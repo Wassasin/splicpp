@@ -10,6 +10,7 @@
 namespace splicpp
 {
 	class ast_decl;
+	class ast_decl_fun;
 	class ast_construct;
 	class symboltable;
 	class varcontext;
@@ -23,6 +24,8 @@ namespace splicpp
 		std::vector<s_ptr<ast_construct>> constrs;
 	
 		static std::vector<s_ptr<ast_construct>> init_constrs();
+		
+		s_ptr<ast_decl_fun> fetch_main() const;
 	public:
 		ast_prog(const sloc sl)
 		: ast(sl)
