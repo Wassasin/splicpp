@@ -53,6 +53,6 @@ namespace splicpp
 	
 	void ir_label_analyser::map(const s_ptr<const ir_stmt_seq>)
 	{
-		//Do nothing
+		throw std::logic_error("ir_stmt_seq is not allowed in this stage; run the ir_desequencer first");
 	}
 }
