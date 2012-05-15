@@ -25,6 +25,8 @@
 #include "../ir/ir_stmt_move.hpp"
 #include "../ir/ir_stmt_seq.hpp"
 
+#include "../mappers/generic/ast_stmt_mapper.hpp"
+
 namespace splicpp
 {
 	/* ast_stmt_stmts */
@@ -85,6 +87,11 @@ namespace splicpp
 			ir_stmt::cat(result, (*r)->translate(c));
   			
 		return result;
+	}
+	
+	void ast_stmt_stmts::apply(ast_stmt_mapper& m) const
+	{
+		m.map(std::dynamic_pointer_cast<const ast_stmt_stmts>(shared_from_this()));
 	}
 	
 	/* ast_stmt_if */
@@ -169,6 +176,11 @@ namespace splicpp
 		return r;
 	}
 	
+	void ast_stmt_if::apply(ast_stmt_mapper& m) const
+	{
+		m.map(std::dynamic_pointer_cast<const ast_stmt_if>(shared_from_this()));
+	}
+	
 	/* ast_stmt_while */
 	
 	void ast_stmt_while::assign_ids(const varcontext& c)
@@ -225,6 +237,11 @@ namespace splicpp
 		return r;
 	}
 	
+	void ast_stmt_while::apply(ast_stmt_mapper& m) const
+	{
+		m.map(std::dynamic_pointer_cast<const ast_stmt_while>(shared_from_this()));
+	}
+	
 	/* ast_stmt_assignment */
 	
 	void ast_stmt_assignment::assign_ids(const varcontext& c)
@@ -277,6 +294,11 @@ namespace splicpp
 		);
 	}
 	
+	void ast_stmt_assignment::apply(ast_stmt_mapper& m) const
+	{
+		m.map(std::dynamic_pointer_cast<const ast_stmt_assignment>(shared_from_this()));
+	}
+	
 	/* ast_stmt_fun_call */
 	
 	void ast_stmt_fun_call::assign_ids(const varcontext& c)
@@ -308,6 +330,11 @@ namespace splicpp
 	s_ptr<const ir_stmt> ast_stmt_fun_call::translate(const ircontext& c) const
 	{
 		return f->translate(c.create_temporary(), c); //Use a fresh temporary, throw result away, if there even is a result
+	}
+	
+	void ast_stmt_fun_call::apply(ast_stmt_mapper& m) const
+	{
+		m.map(std::dynamic_pointer_cast<const ast_stmt_fun_call>(shared_from_this()));
 	}
 	
 	/* ast_stmt_return */
@@ -364,5 +391,10 @@ namespace splicpp
 			r = ir_stmt_seq::create(ir_stmt_move::create(ir_exp_temp::create(c.return_reg), exp.get()->translate(c)), r);
 		
 		return r;
+	}
+	
+	void ast_stmt_return::apply(ast_stmt_mapper& m) const
+	{
+		m.map(std::dynamic_pointer_cast<const ast_stmt_return>(shared_from_this()));
 	}
 }

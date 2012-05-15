@@ -19,8 +19,9 @@ namespace splicpp
 	class typecontext;
 	class ircontext;
 	class ir_stmt;
+	class ast_stmt_mapper;
 
-	class ast_stmt : public ast
+	class ast_stmt : public std::enable_shared_from_this<ast_stmt>, public ast
 	{
 	public:
 		enum ast_stmt_type
@@ -46,6 +47,8 @@ namespace splicpp
 		virtual bool contains_return() const = 0;
 		
 		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const = 0;
+		
+		virtual void apply(ast_stmt_mapper& m) const = 0;
 	};
 	
 	class ast_stmt_stmts : public ast_stmt
@@ -69,6 +72,8 @@ namespace splicpp
 		virtual bool contains_return() const;
 		
 		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const;
+		
+		virtual void apply(ast_stmt_mapper& m) const;
 	};
 	
 	class ast_stmt_if : public ast_stmt
@@ -101,6 +106,8 @@ namespace splicpp
 		virtual bool contains_return() const;
 		
 		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const;
+		
+		virtual void apply(ast_stmt_mapper& m) const;
 	};
 	
 	class ast_stmt_while : public ast_stmt
@@ -124,6 +131,8 @@ namespace splicpp
 		virtual bool contains_return() const;
 		
 		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const;
+		
+		virtual void apply(ast_stmt_mapper& m) const;
 	};
 	
 	class ast_stmt_assignment : public ast_stmt
@@ -147,6 +156,8 @@ namespace splicpp
 		virtual bool contains_return() const;
 		
 		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const;
+		
+		virtual void apply(ast_stmt_mapper& m) const;
 	};
 	
 	class ast_stmt_fun_call : public ast_stmt
@@ -168,6 +179,8 @@ namespace splicpp
 		virtual bool contains_return() const;
 		
 		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const;
+		
+		virtual void apply(ast_stmt_mapper& m) const;
 	};
 	
 	class ast_stmt_return : public ast_stmt
@@ -194,6 +207,8 @@ namespace splicpp
 		virtual bool contains_return() const;
 		
 		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const;
+		
+		virtual void apply(ast_stmt_mapper& m) const;
 	};
 }
 
