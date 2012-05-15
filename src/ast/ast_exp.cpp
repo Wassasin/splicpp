@@ -25,6 +25,8 @@
 #include "../ir/ir_stmt_label.hpp"
 #include "../ir/ir_stmt_move.hpp"
 
+#include "../mappers/generic/ast_exp_mapper.hpp"
+
 namespace splicpp
 {
 	/* ast_exp_id */
@@ -60,6 +62,11 @@ namespace splicpp
 			),
 			ir_exp_temp::create(t)
 		);
+	}
+	
+	void ast_exp_id::map(ast_exp_mapper& m) const
+	{
+		m.map(std::dynamic_pointer_cast<const ast_exp_id>(shared_from_this()));
 	}
 	
 	/* ast_exp_op2 */
@@ -278,6 +285,11 @@ namespace splicpp
 		}
 	}
 	
+	void ast_exp_op2::map(ast_exp_mapper& m) const
+	{
+		m.map(std::dynamic_pointer_cast<const ast_exp_op2>(shared_from_this()));
+	}
+	
 	/* ast_exp_negation */
 	
 	void ast_exp_negation::assign_ids(const varcontext& c)
@@ -312,6 +324,11 @@ namespace splicpp
 		);
 	}
 	
+	void ast_exp_negation::map(ast_exp_mapper& m) const
+	{
+		m.map(std::dynamic_pointer_cast<const ast_exp_negation>(shared_from_this()));
+	}
+	
 	/* ast_exp_int */
 	
 	void ast_exp_int::assign_ids(const varcontext&)
@@ -337,6 +354,11 @@ namespace splicpp
 	s_ptr<const ir_exp> ast_exp_int::translate(const ircontext&) const
 	{
 		return ir_exp_const::create(i);
+	}
+	
+	void ast_exp_int::map(ast_exp_mapper& m) const
+	{
+		m.map(std::dynamic_pointer_cast<const ast_exp_int>(shared_from_this()));
 	}
 	
 	/* ast_exp_bool */
@@ -369,6 +391,11 @@ namespace splicpp
 		return ir_exp_const::create(b);
 	}
 	
+	void ast_exp_bool::map(ast_exp_mapper& m) const
+	{
+		m.map(std::dynamic_pointer_cast<const ast_exp_bool>(shared_from_this()));
+	}
+	
 	/* ast_exp_exp */
 	
 	void ast_exp_exp::assign_ids(const varcontext& c)
@@ -396,6 +423,11 @@ namespace splicpp
 	s_ptr<const ir_exp> ast_exp_exp::translate(const ircontext& c) const
 	{
 		return exp->translate(c);
+	}
+	
+	void ast_exp_exp::map(ast_exp_mapper& m) const
+	{
+		m.map(std::dynamic_pointer_cast<const ast_exp_exp>(shared_from_this()));
 	}
 	
 	/* ast_exp_fun_call */
@@ -426,6 +458,11 @@ namespace splicpp
 		return ir_exp_eseq::create(this->c->translate(t, c), ir_exp_temp::create(t));
 	}
 	
+	void ast_exp_fun_call::map(ast_exp_mapper& m) const
+	{
+		m.map(std::dynamic_pointer_cast<const ast_exp_fun_call>(shared_from_this()));
+	}
+	
 	/* ast_exp_nil */
 	
 	void ast_exp_nil::assign_ids(const varcontext&)
@@ -451,6 +488,11 @@ namespace splicpp
 	s_ptr<const ir_exp> ast_exp_nil::translate(const ircontext& c) const
 	{
 		return ir_exp_name::create(c.l_nil);
+	}
+	
+	void ast_exp_nil::map(ast_exp_mapper& m) const
+	{
+		m.map(std::dynamic_pointer_cast<const ast_exp_nil>(shared_from_this()));
 	}
 	
 	/* ast_exp_tuple */
@@ -526,5 +568,10 @@ namespace splicpp
 		));
 		
 		return ir_exp_eseq::create(r, temp);
+	}
+	
+	void ast_exp_tuple::map(ast_exp_mapper& m) const
+	{
+		m.map(std::dynamic_pointer_cast<const ast_exp_tuple>(shared_from_this()));
 	}
 }

@@ -18,8 +18,9 @@ namespace splicpp
 	class typecontext;
 	class ircontext;
 	class ir_exp;
+	class ast_exp_mapper;
 
-	class ast_exp : public ast
+	class ast_exp : public std::enable_shared_from_this<ast_exp>, public ast
 	{
 	public:
 		enum ast_exp_type
@@ -46,6 +47,8 @@ namespace splicpp
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const = 0;
 		
 		virtual s_ptr<const ir_exp> translate(const ircontext& c) const = 0;
+		
+		virtual void map(ast_exp_mapper& m) const = 0;
 	};
 	
 	class ast_exp_id : public ast_exp
@@ -65,6 +68,8 @@ namespace splicpp
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual s_ptr<const ir_exp> translate(const ircontext& c) const;
+		
+		virtual void map(ast_exp_mapper& m) const;
 	};
 	
 	class ast_exp_op2 : public ast_exp
@@ -101,6 +106,8 @@ namespace splicpp
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual s_ptr<const ir_exp> translate(const ircontext& c) const;
+		
+		virtual void map(ast_exp_mapper& m) const;
 	};
 	
 	class ast_exp_negation : public ast_exp
@@ -120,6 +127,8 @@ namespace splicpp
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual s_ptr<const ir_exp> translate(const ircontext& c) const;
+		
+		virtual void map(ast_exp_mapper& m) const;
 	};
 	
 	class ast_exp_int : public ast_exp
@@ -139,6 +148,8 @@ namespace splicpp
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual s_ptr<const ir_exp> translate(const ircontext& c) const;
+		
+		virtual void map(ast_exp_mapper& m) const;
 	};
 	
 	class ast_exp_bool : public ast_exp
@@ -158,6 +169,8 @@ namespace splicpp
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual s_ptr<const ir_exp> translate(const ircontext& c) const;
+		
+		virtual void map(ast_exp_mapper& m) const;
 	};
 	
 	class ast_exp_exp : public ast_exp
@@ -177,6 +190,8 @@ namespace splicpp
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual s_ptr<const ir_exp> translate(const ircontext& c) const;
+		
+		virtual void map(ast_exp_mapper& m) const;
 	};
 	
 	class ast_exp_fun_call : public ast_exp
@@ -196,6 +211,8 @@ namespace splicpp
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual s_ptr<const ir_exp> translate(const ircontext& c) const;
+		
+		virtual void map(ast_exp_mapper& m) const;
 	};
 	
 	class ast_exp_nil : public ast_exp
@@ -212,6 +229,8 @@ namespace splicpp
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual s_ptr<const ir_exp> translate(const ircontext& c) const;
+		
+		virtual void map(ast_exp_mapper& m) const;
 	};
 	
 	class ast_exp_tuple : public ast_exp
@@ -232,6 +251,8 @@ namespace splicpp
 		virtual substitution infer_type(const typecontext& c, const s_ptr<const sl_type> t) const;
 		
 		virtual s_ptr<const ir_exp> translate(const ircontext& c) const;
+		
+		virtual void map(ast_exp_mapper& m) const;
 	};
 }
 
