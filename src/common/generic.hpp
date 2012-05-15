@@ -2,6 +2,7 @@
 #define GENERIC_H
 
 #include <vector>
+#include <boost/optional.hpp>
 
 namespace splicpp
 {
@@ -96,6 +97,16 @@ namespace splicpp
 	static std::vector<s_ptr<T>> create_vector_ptr(const s_ptr<T> x)
 	{
 		return create_vector<s_ptr<T>>(x);
+	}
+	
+	template <typename T>
+	static boost::optional<size_t> find(const T x, const std::vector<T>& xs)
+	{
+		for(size_t i = 0; i < xs.size(); i++)
+			if(xs[i] == x)
+				return i;
+		
+		return boost::optional<size_t>();
 	}
 }
 

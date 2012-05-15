@@ -19,7 +19,7 @@ namespace splicpp
 			g.add_edge(i, i+1);
 	}
 	
-	cfgraph ir_cf_analyser::analyse(const std::vector<s_ptr<const ir_stmt>>& stmts, const std::map<ir_label, size_t>& labelmap)
+	dgraph<size_t> ir_cf_analyser::analyse(const std::vector<s_ptr<const ir_stmt>>& stmts, const std::map<ir_label, size_t>& labelmap)
 	{
 		ir_cf_analyser a(stmts.size(), labelmap);
 		
