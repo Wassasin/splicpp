@@ -31,6 +31,6 @@ namespace splicpp
 	
 	s_ptr<const sl_type> sl_type_array::apply(const substitution& s) const
 	{
-		return s_ptr<const sl_type>(new sl_type_array(t->apply(s), sl));
+		return make_s<sl_type_array>(t->apply(s), sl);
 	}
 }

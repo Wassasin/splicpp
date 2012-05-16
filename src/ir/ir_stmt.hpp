@@ -12,6 +12,13 @@ namespace splicpp
 	class ircontext;
 	class ir_exp;
 
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Weffc++"
+	/*
+		Ignore non-virtual-destructor warning
+		This is a bug in GCC4.6
+		See http://stackoverflow.com/questions/2571850/why-does-enable-shared-from-this-have-a-non-virtual-destructor
+	*/
 	class ir_stmt : public std::enable_shared_from_this<ir_stmt>
 	{
 	public:
@@ -34,6 +41,7 @@ namespace splicpp
 				s << "\t";
 		}
 	};
+	#pragma GCC diagnostic pop
 }
 
 #endif

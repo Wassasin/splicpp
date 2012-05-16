@@ -21,6 +21,13 @@ namespace splicpp
 	class ir_stmt;
 	class ast_stmt_mapper;
 
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Weffc++"
+	/*
+		Ignore non-virtual-destructor warning
+		This is a bug in GCC4.6
+		See http://stackoverflow.com/questions/2571850/why-does-enable-shared-from-this-have-a-non-virtual-destructor
+	*/
 	class ast_stmt : public std::enable_shared_from_this<ast_stmt>, public ast
 	{
 	public:
@@ -50,19 +57,18 @@ namespace splicpp
 		
 		virtual void apply(ast_stmt_mapper& m) const = 0;
 	};
+	#pragma GCC diagnostic pop
 	
 	class ast_stmt_stmts : public ast_stmt
 	{
-		std::vector<s_ptr<ast_stmt>> stmts;
-	
 	public:
-		ast_stmt_stmts(const sloc sl)
+		const std::vector<s_ptr<ast_stmt>> stmts;
+	
+		ast_stmt_stmts(const std::vector<s_ptr<ast_stmt>> stmts, const sloc sl)
 		: ast_stmt(sl)
-		, stmts()
+		, stmts(stmts)
 		{}
-	
-		void add_stmt(s_ptr<ast_stmt> stmt);
-	
+
 		virtual void assign_ids(const varcontext& c);
 	
 		virtual ast_stmt_type type() const;

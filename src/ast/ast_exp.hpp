@@ -20,6 +20,13 @@ namespace splicpp
 	class ir_exp;
 	class ast_exp_mapper;
 
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Weffc++"
+	/*
+		Ignore non-virtual-destructor warning
+		This is a bug in GCC4.6
+		See http://stackoverflow.com/questions/2571850/why-does-enable-shared-from-this-have-a-non-virtual-destructor
+	*/
 	class ast_exp : public std::enable_shared_from_this<ast_exp>, public ast
 	{
 	public:
@@ -50,6 +57,7 @@ namespace splicpp
 		
 		virtual void map(ast_exp_mapper& m) const = 0;
 	};
+	#pragma GCC diagnostic pop
 	
 	class ast_exp_id : public ast_exp
 	{

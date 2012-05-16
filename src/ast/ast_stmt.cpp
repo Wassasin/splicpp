@@ -31,11 +31,6 @@ namespace splicpp
 {
 	/* ast_stmt_stmts */
 
-	void ast_stmt_stmts::add_stmt(s_ptr<ast_stmt> stmt)
-	{
-		stmts.push_back(stmt);
-	}
-	
 	void ast_stmt_stmts::assign_ids(const varcontext& c)
 	{
 		for(auto stmt : stmts)

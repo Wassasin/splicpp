@@ -3,6 +3,8 @@
 #include <iostream>
 
 #include "sl_type.hpp"
+
+#include "../../common/generic.hpp"
 #include "../unification_error.hpp"
 
 namespace splicpp
@@ -54,13 +56,11 @@ namespace splicpp
 	
 	std::vector<s_ptr<const sl_type_unbound>> sl_type_unbound::tv() const
 	{
-		std::vector<s_ptr<const sl_type_unbound>> result;
-		result.push_back(s_ptr<const sl_type_unbound>(new sl_type_unbound(*this)));
-		return result;
+		return create_vector_ptr<const sl_type_unbound>(make_s<sl_type_unbound>(*this));
 	}
 	
 	s_ptr<const sl_type> sl_type_unbound::apply(const substitution& s) const
 	{
-		return s.substitute(s_ptr<const sl_type_unbound>(new sl_type_unbound(*this)));
+		return s.substitute(make_s<sl_type_unbound>(*this));
 	}
 }

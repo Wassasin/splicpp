@@ -49,7 +49,7 @@ namespace splicpp
 				if(!is_in_ptr<const sl_type_unbound>(fv, fvs))
 					result->bind(fv);
 		
-		return std::static_pointer_cast<sl_polytype>(result);
+		return result;
 	}
 	
 	void sl_polytype_forall::print(std::ostream& s) const
@@ -69,12 +69,12 @@ namespace splicpp
 	
 	s_ptr<const sl_polytype> sl_polytype::qualify(const typecontext& c, const s_ptr<const sl_type> t)
 	{
-		return std::static_pointer_cast<const sl_polytype>(sl_polytype_forall::qualify(c, t));
+		return sl_polytype_forall::qualify(c, t);
 	}
 	
 	s_ptr<const sl_polytype> sl_polytype::not_qualify(const s_ptr<const sl_type> t)
 	{
-		return std::static_pointer_cast<const sl_polytype>(sl_polytype_forall::not_qualify(t));
+		return sl_polytype_forall::not_qualify(t);
 	}
 	
 	s_ptr<const sl_polytype_forall> sl_polytype_forall::qualify(const typecontext& c, const s_ptr<const sl_type> t)
@@ -114,7 +114,7 @@ namespace splicpp
 	{
 		const auto u = c.create_fresh(sloc()); //Virtual position in code
 		bindings->push_back(u);
-		return std::static_pointer_cast<const sl_type>(u);
+		return u;
 	}
 		
 	std::vector<s_ptr<const sl_type_unbound>> sl_polytype_exists::tv() const

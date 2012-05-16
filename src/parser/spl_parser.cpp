@@ -69,12 +69,7 @@ namespace splicpp
 		s_ptr<ast_prog> spl_parser::parse_prog(const std::string str, const cst_node n) const
 		{
 			n.assert_stid(g, "nl_prog");
-			
-			s_ptr<ast_prog> result(new ast_prog(n.sl()));
-			for(auto decl : autoparse_plus<s_ptr<ast_decl>>(str, n[0]->as_node(), &spl_parser::parse_decl))
-				result->add_decl(decl);
-			
-			return result;
+			return make_s<ast_prog>(autoparse_plus<s_ptr<ast_decl>>(str, n[0]->as_node(), &spl_parser::parse_decl), n.sl());
 		}
 		
 		s_ptr<ast_decl> spl_parser::parse_decl(const std::string str, const cst_node n) const
@@ -84,9 +79,9 @@ namespace splicpp
 			if(n.size() == 1)
 			{
 				if(n[0]->is_node(g, "nl_var_decl"))
-					return s_ptr<ast_decl>(new ast_decl_var(parse_var_decl(str, n[0]->as_node()), n.sl()));
+					return make_s<ast_decl_var>(parse_var_decl(str, n[0]->as_node()), n.sl());
 				else if(n[0]->is_node(g, "nl_fun_decl"))
-					return s_ptr<ast_decl>(new ast_decl_fun(parse_fun_decl(str, n[0]->as_node()), n.sl()));
+					return make_s<ast_decl_fun>(parse_fun_decl(str, n[0]->as_node()), n.sl());
 				else
 					throw parse_error("unexpected rule");				
 			}
@@ -102,13 +97,11 @@ namespace splicpp
 			n[2]->assert_token(g, "l_assignment");
 			n[4]->assert_token(g, "l_semicolon");
 			
-			return s_ptr<ast_var_decl>(
-				new ast_var_decl(
-					parse_type(str, n[0]->as_node()),
-					parse_id(str, n[1]),
-					parse_exp(str, n[3]->as_node()),
-					n.sl()
-				)
+			return make_s<ast_var_decl>(
+				parse_type(str, n[0]->as_node()),
+				parse_id(str, n[1]),
+				parse_exp(str, n[3]->as_node()),
+				n.sl()
 			);
 		}
 		
@@ -126,7 +119,7 @@ namespace splicpp
 			if(n[0]->is_node(g, "nl_type"))
 				rtype = parse_type(str, n[0]->as_node());
 			else if(n[0]->is_token(g, "l_void"))
-				rtype = s_ptr<ast_type>(new ast_type_void(n[0]->as_token().as_sloc()));
+				rtype = make_s<ast_type_void>(n[0]->as_token().as_sloc());
 			else
 				throw unexpected_element(n[0]);
 			
@@ -150,11 +143,11 @@ namespace splicpp
 			if(n.size() == 1)
 			{
 				if(n[0]->is_token(g, "l_int"))
-					return s_ptr<ast_type>(new ast_type_int(n.sl()));
+					return make_s<ast_type_int>(n.sl());
 				else if(n[0]->is_token(g, "l_bool"))
-					return s_ptr<ast_type>(new ast_type_bool(n.sl()));
+					return make_s<ast_type_bool>(n.sl());
 				else if(n[0]->is_token(g, "l_id"))
-					return s_ptr<ast_type>(new ast_type_id(parse_id(str, n[0]), n.sl()));
+					return make_s<ast_type_id>(parse_id(str, n[0]), n.sl());
 				else
 					throw unexpected_element(n[0]);
 			}
@@ -163,7 +156,7 @@ namespace splicpp
 				n[0]->assert_token(g, "l_sbracket_left");
 				n[2]->assert_token(g, "l_sbracket_right");
 				
-				return s_ptr<ast_type>(new ast_type_array(parse_type(str, n[1]->as_node()), n.sl()));
+				return make_s<ast_type_array>(parse_type(str, n[1]->as_node()), n.sl());
 			}
 			else if(n.size() == 5)
 			{
@@ -171,7 +164,7 @@ namespace splicpp
 				n[2]->assert_token(g, "l_comma");
 				n[4]->assert_token(g, "l_bracket_right");
 				
-				return s_ptr<ast_type>(new ast_type_tuple(parse_type(str, n[1]->as_node()), parse_type(str, n[3]->as_node()), n.sl()));
+				return make_s<ast_type_tuple>(parse_type(str, n[1]->as_node()), parse_type(str, n[3]->as_node()), n.sl());
 			}
 			else
 				throw parse_error("unexpected rule");
@@ -184,15 +177,14 @@ namespace splicpp
 			n.assert_stid(g, "nl_f_args");
 			
 			if(n.size() == 2)
-				return create_vector<s_ptr<ast_f_arg>>(s_ptr<ast_f_arg>(new ast_f_arg(parse_type(str, n[0]->as_node()), parse_id(str, n[1]), n.sl())));
+				return create_vector<s_ptr<ast_f_arg>>(make_s<ast_f_arg>(parse_type(str, n[0]->as_node()), parse_id(str, n[1]), n.sl()));
 			else if(n.size() == 4)
 			{
 				n[1]->assert_token(g, "l_comma");
 			
 				auto args = parse_f_args(str, n[0]->as_node());
-				s_ptr<ast_f_arg> arg(new ast_f_arg(parse_type(str, n[2]->as_node()), parse_id(str, n[3]), n.sl()));
+				args.push_back(make_s<ast_f_arg>(parse_type(str, n[2]->as_node()), parse_id(str, n[3]), n.sl()));
 				
-				args.push_back(arg);
 				return args;
 			}
 			else
@@ -206,7 +198,7 @@ namespace splicpp
 			if(n.size() == 2)
 			{
 				n[1]->assert_token(g, "l_semicolon");
-				return s_ptr<ast_stmt>(new ast_stmt_fun_call(parse_fun_call(str, n[0]->as_node()), n.sl()));
+				return make_s<ast_stmt_fun_call>(parse_fun_call(str, n[0]->as_node()), n.sl());
 			}
 			else if(n.size() == 3)
 			{
@@ -215,11 +207,7 @@ namespace splicpp
 					n[0]->assert_token(g, "l_cbracket_left");
 					n[2]->assert_token(g, "l_cbracket_right");
 				
-					s_ptr<ast_stmt_stmts> result(new ast_stmt_stmts(n.sl()));
-					for(auto stmt : autoparse_kleene<s_ptr<ast_stmt>>(str, n[1]->as_node(), &spl_parser::parse_stmt))
-						result->add_stmt(stmt);
-						
-					return std::static_pointer_cast<ast_stmt>(result);
+					return make_s<ast_stmt_stmts>(autoparse_kleene<s_ptr<ast_stmt>>(str, n[1]->as_node(), &spl_parser::parse_stmt), n.sl());
 				}
 				else if(n[0]->is_token(g, "l_return"))
 				{
@@ -228,9 +216,9 @@ namespace splicpp
 					
 					auto opt_decl = autoparse_opt<s_ptr<ast_exp>>(str, n[1]->as_node(), &spl_parser::parse_exp);
 					if(opt_decl)
-						return s_ptr<ast_stmt>(new ast_stmt_return(opt_decl.get(), n.sl()));
+						return make_s<ast_stmt_return>(opt_decl.get(), n.sl());
 					else
-						return s_ptr<ast_stmt>(new ast_stmt_return(n.sl()));
+						return make_s<ast_stmt_return>(n.sl());
 				}
 				else
 					throw unexpected_element(n[0]);
@@ -241,7 +229,7 @@ namespace splicpp
 				n[1]->assert_token(g, "l_assignment");
 				n[3]->assert_token(g, "l_semicolon");
 				
-				return s_ptr<ast_stmt>(new ast_stmt_assignment(parse_id(str, n[0]), parse_exp(str, n[2]->as_node()), n.sl()));
+				return make_s<ast_stmt_assignment>(parse_id(str, n[0]), parse_exp(str, n[2]->as_node()), n.sl());
 			}
 			else if(n.size() == 5)
 			{
@@ -251,7 +239,7 @@ namespace splicpp
 					n[1]->assert_token(g, "l_bracket_left");
 					n[3]->assert_token(g, "l_bracket_right");
 					
-					return s_ptr<ast_stmt>(new ast_stmt_while(parse_exp(str, n[2]->as_node()), parse_stmt(str, n[4]->as_node()), n.sl()));
+					return make_s<ast_stmt_while>(parse_exp(str, n[2]->as_node()), parse_stmt(str, n[4]->as_node()), n.sl());
 				}
 				else if(n[0]->is_token(g, "l_if"))
 				{
@@ -259,7 +247,7 @@ namespace splicpp
 					n[1]->assert_token(g, "l_bracket_left");
 					n[3]->assert_token(g, "l_bracket_right");
 					
-					return s_ptr<ast_stmt>(new ast_stmt_if(parse_exp(str, n[2]->as_node()), parse_stmt(str, n[4]->as_node()), n.sl()));
+					return make_s<ast_stmt_if>(parse_exp(str, n[2]->as_node()), parse_stmt(str, n[4]->as_node()), n.sl());
 				}
 				else
 					throw parse_error("unexpected rule");
@@ -271,7 +259,7 @@ namespace splicpp
 				n[3]->assert_token(g, "l_bracket_right");
 				n[5]->assert_token(g, "l_else");
 				
-				return s_ptr<ast_stmt>(new ast_stmt_if(parse_exp(str, n[2]->as_node()), parse_stmt(str, n[4]->as_node()), parse_stmt(str, n[6]->as_node()), n.sl()));
+				return make_s<ast_stmt_if>(parse_exp(str, n[2]->as_node()), parse_stmt(str, n[4]->as_node()), parse_stmt(str, n[6]->as_node()), n.sl());
 			}
 			else
 					throw parse_error("unexpected rule");
@@ -286,14 +274,14 @@ namespace splicpp
 				n[1]->assert_token(g, "l_bracket_left");
 				n[2]->assert_token(g, "l_bracket_right");
 				
-				return s_ptr<ast_fun_call>(new ast_fun_call(parse_id(str, n[0]), std::vector<s_ptr<ast_exp>>(), n.sl()));
+				return make_s<ast_fun_call>(parse_id(str, n[0]), std::vector<s_ptr<ast_exp>>(), n.sl());
 			}
 			if(n.size() == 4)
 			{
 				n[1]->assert_token(g, "l_bracket_left");
 				n[3]->assert_token(g, "l_bracket_right");
 			
-				return s_ptr<ast_fun_call>(new ast_fun_call(parse_id(str, n[0]), parse_act_args(str, n[2]->as_node()), n.sl()));
+				return make_s<ast_fun_call>(parse_id(str, n[0]), parse_act_args(str, n[2]->as_node()), n.sl());
 			}
 			else
 				throw parse_error("unexpected rule");
@@ -332,7 +320,7 @@ namespace splicpp
 			else if(n.size() == 3)
 			{
 				n[1]->assert_token(g, "l_disjunction");
-				return s_ptr<ast_exp>(new ast_exp_op2(parse_exp2(str, n[0]->as_node()), ast_exp_op2::op_type::op_disjunction, parse_exp1(str, n[2]->as_node()), n.sl()));
+				return make_s<ast_exp_op2>(parse_exp2(str, n[0]->as_node()), ast_exp_op2::op_type::op_disjunction, parse_exp1(str, n[2]->as_node()), n.sl());
 			}
 			else
 				throw parse_error("unexpected rule");
@@ -346,7 +334,7 @@ namespace splicpp
 			else if(n.size() == 3)
 			{
 				n[1]->assert_token(g, "l_conjunction");
-				return s_ptr<ast_exp>(new ast_exp_op2(parse_exp3(str, n[0]->as_node()), ast_exp_op2::op_type::op_conjunction, parse_exp2(str, n[2]->as_node()), n.sl()));
+				return make_s<ast_exp_op2>(parse_exp3(str, n[0]->as_node()), ast_exp_op2::op_type::op_conjunction, parse_exp2(str, n[2]->as_node()), n.sl());
 			}
 			else
 				throw parse_error("unexpected rule");
@@ -358,7 +346,7 @@ namespace splicpp
 			if(n.size() == 1)
 				return parse_exp4(str, n[0]->as_node());
 			else if(n.size() == 3)
-				return s_ptr<ast_exp>(new ast_exp_op2(parse_exp3(str, n[0]->as_node()), parse_compr_op(n[1]->as_node()), parse_exp4(str, n[2]->as_node()), n.sl()));
+				return make_s<ast_exp_op2>(parse_exp3(str, n[0]->as_node()), parse_compr_op(n[1]->as_node()), parse_exp4(str, n[2]->as_node()), n.sl());
 			else
 				throw parse_error("unexpected rule");
 		}
@@ -390,7 +378,7 @@ namespace splicpp
 			if(n.size() == 1)
 				return parse_exp5(str, n[0]->as_node());
 			else if(n.size() == 3)
-				return s_ptr<ast_exp>(new ast_exp_op2(parse_exp4(str, n[0]->as_node()), parse_sum_op(n[1]->as_node()), parse_exp5(str, n[2]->as_node()), n.sl()));
+				return make_s<ast_exp_op2>(parse_exp4(str, n[0]->as_node()), parse_sum_op(n[1]->as_node()), parse_exp5(str, n[2]->as_node()), n.sl());
 			else
 				throw parse_error("unexpected rule");
 		}
@@ -414,7 +402,7 @@ namespace splicpp
 			if(n.size() == 1)
 				return parse_exp6(str, n[0]->as_node());
 			else if(n.size() == 3)
-				return s_ptr<ast_exp>(new ast_exp_op2(parse_exp5(str, n[0]->as_node()), parse_product_op(n[1]->as_node()), parse_exp6(str, n[2]->as_node()), n.sl()));
+				return make_s<ast_exp_op2>(parse_exp5(str, n[0]->as_node()), parse_product_op(n[1]->as_node()), parse_exp6(str, n[2]->as_node()), n.sl());
 			else
 				throw parse_error("unexpected rule");
 		}
@@ -442,7 +430,7 @@ namespace splicpp
 			else if(n.size() == 2)
 			{
 				n[0]->assert_token(g, "l_negation");
-				return s_ptr<ast_exp>(new ast_exp_negation(parse_exp6(str, n[1]->as_node()), n.sl()));
+				return make_s<ast_exp_negation>(parse_exp6(str, n[1]->as_node()), n.sl());
 			}
 			else
 				throw parse_error("unexpected rule");
@@ -456,7 +444,7 @@ namespace splicpp
 			else if(n.size() == 3)
 			{
 				n[1]->assert_token(g, "l_colon");
-				return s_ptr<ast_exp>(new ast_exp_op2(parse_exp8(str, n[0]->as_node()), ast_exp_op2::op_cons, parse_exp7(str, n[2]->as_node()), n.sl()));
+				return make_s<ast_exp_op2>(parse_exp8(str, n[0]->as_node()), ast_exp_op2::op_cons, parse_exp7(str, n[2]->as_node()), n.sl());
 			}
 			else
 				throw parse_error("unexpected rule");
@@ -469,15 +457,15 @@ namespace splicpp
 			if(n.size() == 1)
 			{
 				if(n[0]->is_node(g, "nl_fun_call"))
-					return s_ptr<ast_exp>(new ast_exp_fun_call(parse_fun_call(str, n[0]->as_node()), n.sl()));
+					return make_s<ast_exp_fun_call>(parse_fun_call(str, n[0]->as_node()), n.sl());
 				else if(n[0]->is_node(g, "nl_digit"))
 					return parse_digit(str, n[0]->as_node());
 				else if(n[0]->is_token(g, "l_id"))
-					return s_ptr<ast_exp>(new ast_exp_id(parse_id(str, n[0]), n.sl()));
+					return make_s<ast_exp_id>(parse_id(str, n[0]), n.sl());
 				else if(n[0]->is_token(g, "l_true"))
-					return s_ptr<ast_exp>(new ast_exp_bool(true, n.sl()));
+					return make_s<ast_exp_bool>(true, n.sl());
 				else if(n[0]->is_token(g, "l_false"))
-					return s_ptr<ast_exp>(new ast_exp_bool(false, n.sl()));
+					return make_s<ast_exp_bool>(false, n.sl());
 				else
 					throw parse_error("unexpected rule");
 			}
@@ -486,7 +474,7 @@ namespace splicpp
 				n[0]->assert_token(g, "l_sbracket_left");
 				n[1]->assert_token(g, "l_sbracket_right");
 				
-				return s_ptr<ast_exp>(new ast_exp_nil(n.sl()));
+				return make_s<ast_exp_nil>(n.sl());
 			}
 			else if(n.size() == 3)
 			{
@@ -501,7 +489,7 @@ namespace splicpp
 				n[2]->assert_token(g, "l_comma");
 				n[4]->assert_token(g, "l_bracket_right");
 				
-				return s_ptr<ast_exp>(new ast_exp_tuple(parse_exp(str, n[1]->as_node()), parse_exp(str, n[3]->as_node()), n.sl()));
+				return make_s<ast_exp_tuple>(parse_exp(str, n[1]->as_node()), parse_exp(str, n[3]->as_node()), n.sl());
 			}
 			else
 				throw parse_error("unexpected rule");
@@ -515,13 +503,13 @@ namespace splicpp
 			{
 				n[0]->assert_token(g, "l_digit");
 				const token t = n[0]->as_token();
-				return s_ptr<ast_exp_int>(new ast_exp_int(boost::lexical_cast<int>(t.as_string(str)), t.as_sloc()));
+				return make_s<ast_exp_int>(boost::lexical_cast<int>(t.as_string(str)), t.as_sloc());
 			}
 			else if(n.size() == 2)
 			{
 				n[0]->assert_token(g, "l_minus");
 				n[1]->assert_token(g, "l_digit");
-				return s_ptr<ast_exp_int>(new ast_exp_int(-1 * boost::lexical_cast<int>(n[1]->as_token().as_string(str)), n.sl()));
+				return make_s<ast_exp_int>(-1 * boost::lexical_cast<int>(n[1]->as_token().as_string(str)), n.sl());
 			}
 			else
 				throw parse_error("unexpected rule");
@@ -530,10 +518,9 @@ namespace splicpp
 		s_ptr<ast_id> spl_parser::parse_id(const std::string str, const s_ptr<cst_element> e) const
 		{
 			e->assert_token(g, "l_id");
-			const token t = e->as_token();
 			
-			s_ptr<ast_id> result(new ast_id(t.as_string(str), t.as_sloc()));
-			return result;
+			const token t = e->as_token();
+			return make_s<ast_id>(t.as_string(str), t.as_sloc());
 		}
 		
 		parse_error spl_parser::unexpected_element(const s_ptr<cst_element> e) const

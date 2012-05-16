@@ -282,6 +282,8 @@ namespace splicpp
 				
 				return make_s<ir_exp_eseq>(r, make_s<ir_exp_temp>(t));
 			}
+			default:
+				throw std::logic_error("Unknown op");
 		}
 	}
 	

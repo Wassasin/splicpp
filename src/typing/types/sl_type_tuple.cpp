@@ -52,6 +52,6 @@ namespace splicpp
 	
 	s_ptr<const sl_type> sl_type_tuple::apply(const substitution& s) const
 	{
-		return s_ptr<const sl_type>(new sl_type_tuple(t_left->apply(s), t_right->apply(s), sl));
+		return make_s<sl_type_tuple>(t_left->apply(s), t_right->apply(s), sl);
 	}
 }

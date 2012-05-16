@@ -103,7 +103,7 @@ namespace splicpp
 			if(t.t == acttransition::t_shift)
 			{
 				s_stack.push(t.state);
-				e_stack.push(s_ptr<cst_element>(new cst_element(a)));
+				e_stack.push(make_s<cst_element>(a));
 				
 				a = l.next();
 			}
@@ -129,7 +129,7 @@ namespace splicpp
 					throw std::exception();
 				
 				s_stack.push(gt.state);
-				e_stack.push(s_ptr<cst_element>(new cst_element(n)));
+				e_stack.push(make_s<cst_element>(n));
 			}
 			else if(t.t == acttransition::t_accept)
 				break;

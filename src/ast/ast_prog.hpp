@@ -20,20 +20,18 @@ namespace splicpp
 	
 	class ast_prog : public ast
 	{
-		std::vector<s_ptr<ast_decl>> decls;
-		std::vector<s_ptr<ast_construct>> constrs;
-	
 		static std::vector<s_ptr<ast_construct>> init_constrs();
 		
 		s_ptr<ast_decl_fun> fetch_main() const;
 	public:
-		ast_prog(const sloc sl)
+		const std::vector<s_ptr<ast_decl>> decls;
+		const std::vector<s_ptr<ast_construct>> constrs;
+	
+		ast_prog(const std::vector<s_ptr<ast_decl>> decls, const sloc sl)
 		: ast(sl)
-		, decls()
+		, decls(decls)
 		, constrs(init_constrs())
 		{}
-		
-		void add_decl(s_ptr<ast_decl> decl);
 		
 		void register_ids(symboltable& s);
 		void register_globals(symboltable&, varcontext& c);

@@ -30,11 +30,6 @@ namespace splicpp
 		return result;
 	}
 	
-	void ast_prog::add_decl(s_ptr<ast_decl> decl)
-	{
-		decls.push_back(decl);
-	}
-	
 	void ast_prog::register_ids(symboltable& s)
 	{
 		varcontext c;
