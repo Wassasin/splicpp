@@ -18,11 +18,6 @@ namespace splicpp
 	
 		virtual void map(ir_exp_mapper& t) const;
 		virtual void print(std::ostream& s, const uint tab) const;
-		
-		static s_ptr<const ir_exp> create(const s_ptr<const ir_exp> e)
-		{
-			return make_s<ir_exp_mem>(e);
-		}
 	};
 }
 

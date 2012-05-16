@@ -58,7 +58,7 @@ namespace splicpp
 	
 	s_ptr<const ir_stmt> ast_var_decl::translate(const ircontext& c) const
 	{
-		return ir_stmt_move::create(
+		return make_s<ir_stmt_move>(
 			c.fetch_memloc(id->fetch_id()),
 			exp->translate(c)
 		);

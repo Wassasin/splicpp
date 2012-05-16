@@ -23,6 +23,11 @@ namespace splicpp
 		const s_ptr<const ir_exp> e;
 		const std::vector<s_ptr<const ir_exp>> args;
 	
+		ir_stmt_call(const s_ptr<const ir_exp> e)
+		: e(e)
+		, args()
+		{}
+	
 		ir_stmt_call(const s_ptr<const ir_exp> e, const std::vector<s_ptr<const ir_exp>> args)
 		: e(e)
 		, args(args)
@@ -30,16 +35,6 @@ namespace splicpp
 		
 		virtual void map(ir_stmt_mapper& t) const;
 		virtual void print(std::ostream& s, const uint tab) const;
-		
-		static s_ptr<const ir_stmt> create(const s_ptr<const ir_exp> e)
-		{
-			return create(e, std::vector<s_ptr<const ir_exp>>());
-		}
-		
-		static s_ptr<const ir_stmt> create(const s_ptr<const ir_exp> e, const std::vector<s_ptr<const ir_exp>> args)
-		{
-			return make_s<ir_stmt_call>(e, args);
-		}
 	};
 }
 

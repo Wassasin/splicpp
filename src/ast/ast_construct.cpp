@@ -65,16 +65,16 @@ namespace splicpp
 	
 	s_ptr<const ir_stmt> ast_construct_print::translate(const ir_label l_construct, const ircontext& c) const
 	{
-		s_ptr<const ir_stmt> r(ir_stmt_label::create(l_construct));
+		s_ptr<const ir_stmt> r(make_s<ir_stmt_label>(l_construct));
 		
 		//TODO - No IR-code available to interact with console
 		
-		ir_stmt::cat(r, ir_stmt_jump::create(
-			ir_exp_mem::create(
-				ir_exp_binop::create(
+		ir_stmt::cat(r, make_s<ir_stmt_jump>(
+			make_s<ir_exp_mem>(
+				make_s<ir_exp_binop>(
 					ir_exp_binop::op_plus,
-					ir_exp_temp::create(c.frame_reg),
-					ir_exp_const::create(1)
+					make_s<ir_exp_temp>(c.frame_reg),
+					make_s<ir_exp_const>(1)
 				)
 			)
 		));
@@ -101,35 +101,35 @@ namespace splicpp
 		ir_label l_true = c.create_label();
 		ir_label l_false = c.create_label();
 		
-		const s_ptr<const ir_exp> e_return(ir_exp_mem::create(
-			ir_exp_binop::create(
+		const s_ptr<const ir_exp> e_return(make_s<ir_exp_mem>(
+			make_s<ir_exp_binop>(
 				ir_exp_binop::op_plus,
-				ir_exp_temp::create(c.frame_reg),
-				ir_exp_const::create(1)
+				make_s<ir_exp_temp>(c.frame_reg),
+				make_s<ir_exp_const>(1)
 			)
 		));
 	
-		s_ptr<const ir_stmt> r(ir_stmt_label::create(l_construct));
+		s_ptr<const ir_stmt> r(make_s<ir_stmt_label>(l_construct));
 		
-		ir_stmt::cat(r, ir_stmt_cjump::create(
+		ir_stmt::cat(r, make_s<ir_stmt_cjump>(
 			ir_stmt_cjump::op_eq,
-			ir_exp_mem::create(ir_exp_binop::create(
+			make_s<ir_exp_mem>(make_s<ir_exp_binop>(
 					ir_exp_binop::op_plus,
-					ir_exp_temp::create(c.frame_reg),
-					ir_exp_const::create(2) //First argument on stack
+					make_s<ir_exp_temp>(c.frame_reg),
+					make_s<ir_exp_const>(2) //First argument on stack
 			)),
-			ir_exp_name::create(c.l_nil),
+			make_s<ir_exp_name>(c.l_nil),
 			l_true,
 			l_false
 		));
 				
-		ir_stmt::cat(r, ir_stmt_label::create(l_true));
-		ir_stmt::cat(r, ir_stmt::push(create_vector_ptr<const ir_exp>(ir_exp_const::create(true)), c));
-		ir_stmt::cat(r, ir_stmt_jump::create(e_return));
+		ir_stmt::cat(r, make_s<ir_stmt_label>(l_true));
+		ir_stmt::cat(r, ir_stmt::push(create_vector_ptr<const ir_exp>(make_s<ir_exp_const>(true)), c));
+		ir_stmt::cat(r, make_s<ir_stmt_jump>(e_return));
 		
-		ir_stmt::cat(r, ir_stmt_label::create(l_false));
-		ir_stmt::cat(r, ir_stmt::push(create_vector_ptr<const ir_exp>(ir_exp_const::create(false)), c));
-		ir_stmt::cat(r, ir_stmt_jump::create(e_return));
+		ir_stmt::cat(r, make_s<ir_stmt_label>(l_false));
+		ir_stmt::cat(r, ir_stmt::push(create_vector_ptr<const ir_exp>(make_s<ir_exp_const>(false)), c));
+		ir_stmt::cat(r, make_s<ir_stmt_jump>(e_return));
 		
 		return r;
 	}
@@ -151,27 +151,27 @@ namespace splicpp
 	
 	s_ptr<const ir_stmt> ast_construct_head::translate(const ir_label l_construct, const ircontext& c) const
 	{
-		const s_ptr<const ir_exp> e_return(ir_exp_mem::create(
-			ir_exp_binop::create(
+		const s_ptr<const ir_exp> e_return(make_s<ir_exp_mem>(
+			make_s<ir_exp_binop>(
 				ir_exp_binop::op_plus,
-				ir_exp_temp::create(c.frame_reg),
-				ir_exp_const::create(1)
+				make_s<ir_exp_temp>(c.frame_reg),
+				make_s<ir_exp_const>(1)
 			)
 		));
 	
-		s_ptr<const ir_stmt> r(ir_stmt_label::create(l_construct));
+		s_ptr<const ir_stmt> r(make_s<ir_stmt_label>(l_construct));
 		
 		ir_stmt::cat(r, ir_stmt::push(create_vector_ptr<const ir_exp>(
-			ir_exp_mem::create(
-				ir_exp_mem::create(ir_exp_binop::create(
+			make_s<ir_exp_mem>(
+				make_s<ir_exp_mem>(make_s<ir_exp_binop>(
 					ir_exp_binop::op_plus,
-					ir_exp_temp::create(c.frame_reg),
-					ir_exp_const::create(2) //First argument on stack
+					make_s<ir_exp_temp>(c.frame_reg),
+					make_s<ir_exp_const>(2) //First argument on stack
 				))
 			)
 		), c));
 		
-		ir_stmt::cat(r, ir_stmt_jump::create(e_return));
+		ir_stmt::cat(r, make_s<ir_stmt_jump>(e_return));
 		
 		return r;
 	}
@@ -193,31 +193,31 @@ namespace splicpp
 	
 	s_ptr<const ir_stmt> ast_construct_tail::translate(const ir_label l_construct, const ircontext& c) const
 	{
-		const s_ptr<const ir_exp> e_return(ir_exp_mem::create(
-			ir_exp_binop::create(
+		const s_ptr<const ir_exp> e_return(make_s<ir_exp_mem>(
+			make_s<ir_exp_binop>(
 				ir_exp_binop::op_plus,
-				ir_exp_temp::create(c.frame_reg),
-				ir_exp_const::create(1)
+				make_s<ir_exp_temp>(c.frame_reg),
+				make_s<ir_exp_const>(1)
 			)
 		));
 	
-		s_ptr<const ir_stmt> r(ir_stmt_label::create(l_construct));
+		s_ptr<const ir_stmt> r(make_s<ir_stmt_label>(l_construct));
 		
 		ir_stmt::cat(r, ir_stmt::push(create_vector_ptr<const ir_exp>(
-			ir_exp_mem::create(
-				ir_exp_binop::create(
+			make_s<ir_exp_mem>(
+				make_s<ir_exp_binop>(
 					ir_exp_binop::op_plus,
-					ir_exp_mem::create(ir_exp_binop::create(
+					make_s<ir_exp_mem>(make_s<ir_exp_binop>(
 						ir_exp_binop::op_plus,
-						ir_exp_temp::create(c.frame_reg),
-						ir_exp_const::create(2) //First argument on stack
+						make_s<ir_exp_temp>(c.frame_reg),
+						make_s<ir_exp_const>(2) //First argument on stack
 					)),
-					ir_exp_const::create(1)
+					make_s<ir_exp_const>(1)
 				)
 			)
 		), c));
 		
-		ir_stmt::cat(r, ir_stmt_jump::create(e_return));
+		ir_stmt::cat(r, make_s<ir_stmt_jump>(e_return));
 		
 		return r;
 	}
@@ -241,27 +241,27 @@ namespace splicpp
 	
 	s_ptr<const ir_stmt> ast_construct_fst::translate(const ir_label l_construct, const ircontext& c) const
 	{
-		const s_ptr<const ir_exp> e_return(ir_exp_mem::create(
-			ir_exp_binop::create(
+		const s_ptr<const ir_exp> e_return(make_s<ir_exp_mem>(
+			make_s<ir_exp_binop>(
 				ir_exp_binop::op_plus,
-				ir_exp_temp::create(c.frame_reg),
-				ir_exp_const::create(1)
+				make_s<ir_exp_temp>(c.frame_reg),
+				make_s<ir_exp_const>(1)
 			)
 		));
 	
-		s_ptr<const ir_stmt> r(ir_stmt_label::create(l_construct));
+		s_ptr<const ir_stmt> r(make_s<ir_stmt_label>(l_construct));
 		
 		ir_stmt::cat(r, ir_stmt::push(create_vector_ptr<const ir_exp>(
-			ir_exp_mem::create(
-				ir_exp_mem::create(ir_exp_binop::create(
+			make_s<ir_exp_mem>(
+				make_s<ir_exp_mem>(make_s<ir_exp_binop>(
 					ir_exp_binop::op_plus,
-					ir_exp_temp::create(c.frame_reg),
-					ir_exp_const::create(2) //First argument on stack
+					make_s<ir_exp_temp>(c.frame_reg),
+					make_s<ir_exp_const>(2) //First argument on stack
 				))
 			)
 		), c));
 		
-		ir_stmt::cat(r, ir_stmt_jump::create(e_return));
+		ir_stmt::cat(r, make_s<ir_stmt_jump>(e_return));
 		
 		return r;
 	}
@@ -285,31 +285,31 @@ namespace splicpp
 	
 	s_ptr<const ir_stmt> ast_construct_snd::translate(const ir_label l_construct, const ircontext& c) const
 	{
-		const s_ptr<const ir_exp> e_return(ir_exp_mem::create(
-			ir_exp_binop::create(
+		const s_ptr<const ir_exp> e_return(make_s<ir_exp_mem>(
+			make_s<ir_exp_binop>(
 				ir_exp_binop::op_plus,
-				ir_exp_temp::create(c.frame_reg),
-				ir_exp_const::create(1)
+				make_s<ir_exp_temp>(c.frame_reg),
+				make_s<ir_exp_const>(1)
 			)
 		));
 	
-		s_ptr<const ir_stmt> r(ir_stmt_label::create(l_construct));
+		s_ptr<const ir_stmt> r(make_s<ir_stmt_label>(l_construct));
 		
 		ir_stmt::cat(r, ir_stmt::push(create_vector_ptr<const ir_exp>(
-			ir_exp_mem::create(
-				ir_exp_binop::create(
+			make_s<ir_exp_mem>(
+				make_s<ir_exp_binop>(
 					ir_exp_binop::op_plus,
-					ir_exp_mem::create(ir_exp_binop::create(
+					make_s<ir_exp_mem>(make_s<ir_exp_binop>(
 						ir_exp_binop::op_plus,
-						ir_exp_temp::create(c.frame_reg),
-						ir_exp_const::create(2) //First argument on stack
+						make_s<ir_exp_temp>(c.frame_reg),
+						make_s<ir_exp_const>(2) //First argument on stack
 					)),
-					ir_exp_const::create(1)
+					make_s<ir_exp_const>(1)
 				)
 			)
 		), c));
 		
-		ir_stmt::cat(r, ir_stmt_jump::create(e_return));
+		ir_stmt::cat(r, make_s<ir_stmt_jump>(e_return));
 		
 		return r;
 	}

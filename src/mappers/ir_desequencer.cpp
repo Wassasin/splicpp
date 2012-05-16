@@ -42,7 +42,7 @@ namespace splicpp
 	//Inherited from ir_exp_transformer
 	void ir_desequencer::map(const s_ptr<const ir_exp_binop> x)
 	{
-		produce(ir_exp_binop::create(
+		produce(make_s<ir_exp_binop>(
 			x->op,
 			map(x->e_left),
 			map(x->e_right)
@@ -62,7 +62,7 @@ namespace splicpp
 	
 	void ir_desequencer::map(const s_ptr<const ir_exp_mem> x)
 	{
-		produce(ir_exp_mem::create(map(x->e)));
+		produce(make_s<ir_exp_mem>(map(x->e)));
 	}
 	
 	void ir_desequencer::map(const s_ptr<const ir_exp_name> x)
@@ -82,7 +82,7 @@ namespace splicpp
 		for(const auto arg : x->args)
 			args.push_back(map(arg));
 	
-		stmts.push_back(ir_stmt_call::create(
+		stmts.push_back(make_s<ir_stmt_call>(
 			map(x->e),
 			args
 		));
@@ -90,7 +90,7 @@ namespace splicpp
 	
 	void ir_desequencer::map(const s_ptr<const ir_stmt_cjump> x)
 	{
-		stmts.push_back(ir_stmt_cjump::create(
+		stmts.push_back(make_s<ir_stmt_cjump>(
 			x->r,
 			map(x->e_left),
 			map(x->e_right),
@@ -101,7 +101,7 @@ namespace splicpp
 	
 	void ir_desequencer::map(const s_ptr<const ir_stmt_jump> x)
 	{
-		stmts.push_back(ir_stmt_jump::create(
+		stmts.push_back(make_s<ir_stmt_jump>(
 			map(x->e)
 		));
 	}
@@ -113,7 +113,7 @@ namespace splicpp
 	
 	void ir_desequencer::map(const s_ptr<const ir_stmt_move> x)
 	{
-		stmts.push_back(ir_stmt_move::create(
+		stmts.push_back(make_s<ir_stmt_move>(
 			map(x->e_left),
 			map(x->e_right)
 		));

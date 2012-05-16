@@ -149,28 +149,28 @@ namespace splicpp
 		const ir_label l_false = c.create_label();
 		const ir_label l_done = c.create_label();
 	
-		s_ptr<const ir_stmt> r(ir_stmt_cjump::create(
+		s_ptr<const ir_stmt> r(make_s<ir_stmt_cjump>(
 			ir_stmt_cjump::op_eq,
 			exp->translate(c),
-			ir_exp_const::create(true),
+			make_s<ir_exp_const>(true),
 			l_true,
 			l_false
 		));
 	
 		if(!stmt_false)
 		{
-			ir_stmt::cat(r, ir_stmt_label::create(l_true));
+			ir_stmt::cat(r, make_s<ir_stmt_label>(l_true));
 			ir_stmt::cat(r, stmt_true->translate(c));
-			ir_stmt::cat(r, ir_stmt_label::create(l_false));
+			ir_stmt::cat(r, make_s<ir_stmt_label>(l_false));
 		}
 		else
 		{
-			ir_stmt::cat(r, ir_stmt_label::create(l_true));
+			ir_stmt::cat(r, make_s<ir_stmt_label>(l_true));
 			ir_stmt::cat(r, stmt_true->translate(c));
-			ir_stmt::cat(r, ir_stmt_jump::create(ir_exp_name::create(l_done)));
-			ir_stmt::cat(r, ir_stmt_label::create(l_false));
+			ir_stmt::cat(r, make_s<ir_stmt_jump>(make_s<ir_exp_name>(l_done)));
+			ir_stmt::cat(r, make_s<ir_stmt_label>(l_false));
 			ir_stmt::cat(r, stmt_false.get()->translate(c));
-			ir_stmt::cat(r, ir_stmt_label::create(l_done));
+			ir_stmt::cat(r, make_s<ir_stmt_label>(l_done));
 		}
 		
 		return r;
@@ -220,19 +220,19 @@ namespace splicpp
 		const ir_label l_body = c.create_label();
 		const ir_label l_done = c.create_label();
 	
-		s_ptr<const ir_stmt> r(ir_stmt_label::create(l_test));
+		s_ptr<const ir_stmt> r(make_s<ir_stmt_label>(l_test));
 		
-		ir_stmt::cat(r, ir_stmt_cjump::create(
+		ir_stmt::cat(r, make_s<ir_stmt_cjump>(
 			ir_stmt_cjump::op_eq,
 			exp->translate(c),
-			ir_exp_const::create(true),
+			make_s<ir_exp_const>(true),
 			l_body,
 			l_done
 		));
-		ir_stmt::cat(r, ir_stmt_label::create(l_body));
+		ir_stmt::cat(r, make_s<ir_stmt_label>(l_body));
 		ir_stmt::cat(r, stmt->translate(c));
-		ir_stmt::cat(r, ir_stmt_jump::create(ir_exp_name::create(l_test)));
-		ir_stmt::cat(r, ir_stmt_label::create(l_done));
+		ir_stmt::cat(r, make_s<ir_stmt_jump>(make_s<ir_exp_name>(l_test)));
+		ir_stmt::cat(r, make_s<ir_stmt_label>(l_done));
 		
 		return r;
 	}
@@ -288,8 +288,8 @@ namespace splicpp
 	
 	s_ptr<const ir_stmt> ast_stmt_assignment::translate(const ircontext& c) const
 	{
-		return ir_stmt_move::create(
-			ir_exp_mem::create(ir_exp_name::create(id->fetch_id())),
+		return make_s<ir_stmt_move>(
+			make_s<ir_exp_mem>(make_s<ir_exp_name>(id->fetch_id())),
 			exp->translate(c)
 		);
 	}
@@ -377,18 +377,18 @@ namespace splicpp
 	s_ptr<const ir_stmt> ast_stmt_return::translate(const ircontext& c) const
 	{
 		//Jump to return address [FP + 1]
-		s_ptr<const ir_stmt> r(ir_stmt_jump::create(
-			ir_exp_mem::create(
-				ir_exp_binop::create(
+		s_ptr<const ir_stmt> r(make_s<ir_stmt_jump>(
+			make_s<ir_exp_mem>(
+				make_s<ir_exp_binop>(
 					ir_exp_binop::op_minus,
-					ir_exp_temp::create(c.frame_reg),
-					ir_exp_const::create(1)
+					make_s<ir_exp_temp>(c.frame_reg),
+					make_s<ir_exp_const>(1)
 				)
 			)
 		));
 		
 		if(exp) //Push result to stack, before jumping to return address
-			r = ir_stmt_seq::create(ir_stmt_move::create(ir_exp_temp::create(c.return_reg), exp.get()->translate(c)), r);
+			r = make_s<ir_stmt_seq>(make_s<ir_stmt_move>(make_s<ir_exp_temp>(c.return_reg), exp.get()->translate(c)), r);
 		
 		return r;
 	}

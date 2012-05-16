@@ -79,7 +79,7 @@ namespace splicpp
 		const ir_label l_start = c.create_label();
 		const ir_label l_end = c.create_label();
 		
-		s_ptr<const ir_stmt> r(ir_stmt_label::create(l_start));
+		s_ptr<const ir_stmt> r(make_s<ir_stmt_label>(l_start));
 		
 		//Create labels for vars and funs, store in context and in seperate 
 		std::map<sid, ir_label> labelmap;
@@ -89,7 +89,7 @@ namespace splicpp
 			const ir_label l_decl = c.create_label();
 			
 			labelmap[sid_decl] = l_decl;
-			c.register_memloc(sid_decl, ir_exp_name::create(l_decl));
+			c.register_memloc(sid_decl, make_s<ir_exp_name>(l_decl));
 		}
 		
 		for(const auto cons : constrs)
@@ -98,13 +98,13 @@ namespace splicpp
 			const ir_label l_cons = c.create_label();
 			
 			labelmap[sid_cons] = l_cons;
-			c.register_memloc(sid_cons, ir_exp_name::create(l_cons));
+			c.register_memloc(sid_cons, make_s<ir_exp_name>(l_cons));
 		}
 		
 		//Initialize registers
-		ir_stmt::cat(r, ir_stmt_move::create(ir_exp_temp::create(c.heap_reg), ir_exp_name::create(c.l_heap)));
-		ir_stmt::cat(r, ir_stmt_move::create(ir_exp_temp::create(c.stack_reg), ir_exp_name::create(c.l_stack)));
-		ir_stmt::cat(r, ir_stmt_move::create(ir_exp_temp::create(c.frame_reg), ir_exp_name::create(c.l_stack)));
+		ir_stmt::cat(r, make_s<ir_stmt_move>(make_s<ir_exp_temp>(c.heap_reg), make_s<ir_exp_name>(c.l_heap)));
+		ir_stmt::cat(r, make_s<ir_stmt_move>(make_s<ir_exp_temp>(c.stack_reg), make_s<ir_exp_name>(c.l_stack)));
+		ir_stmt::cat(r, make_s<ir_stmt_move>(make_s<ir_exp_temp>(c.frame_reg), make_s<ir_exp_name>(c.l_stack)));
 		
 		//Translate code for initializing and construction global variables
 		//TODO Variables might be dependant on each other: dependency graph, initialize in proper order
@@ -113,7 +113,7 @@ namespace splicpp
 				ir_stmt::cat(r, std::dynamic_pointer_cast<ast_decl_var>(decl)->v->translate(c));
 		
 		//Call main
-		ir_stmt::cat(r, ir_stmt_call::create(c.fetch_memloc(fetch_main()->fetch_id())));
+		ir_stmt::cat(r, make_s<ir_stmt_call>(c.fetch_memloc(fetch_main()->fetch_id())));
 		
 		//Translate code for language constructs
 		for(const auto cons : constrs)
@@ -124,7 +124,7 @@ namespace splicpp
 			if(decl->type() == ast_decl::t_fun_decl)
 				ir_stmt::cat(r, std::dynamic_pointer_cast<ast_decl_fun>(decl)->f->translate(labelmap.at(decl->fetch_id()), c));
 		
-		ir_stmt::cat(r, ir_stmt_label::create(l_end));
+		ir_stmt::cat(r, make_s<ir_stmt_label>(l_end));
 		
 		//TODO HALT
 		
@@ -132,7 +132,7 @@ namespace splicpp
 			if(decl->type() == ast_decl::t_var_decl)
 			{
 				//TODO: Force allocation of memory
-				ir_stmt::cat(r, ir_stmt_label::create(labelmap.at(decl->fetch_id())));
+				ir_stmt::cat(r, make_s<ir_stmt_label>(labelmap.at(decl->fetch_id())));
 			}
 		
 		return r;

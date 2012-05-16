@@ -12,25 +12,16 @@ namespace splicpp
 	public:
 		const int i;
 	
+		ir_exp_const(const bool b)
+		: i((int)b)
+		{}
+	
 		ir_exp_const(const int i)
 		: i(i)
 		{}
 	
 		virtual void map(ir_exp_mapper& t) const;
 		virtual void print(std::ostream& s, const uint tab) const;
-		
-		static s_ptr<const ir_exp> create(const int i)
-		{
-			return make_s<ir_exp_const>(i);
-		}
-		
-		static s_ptr<const ir_exp> create(const bool b)
-		{
-			if(b)
-				return create(1);
-			else
-				return create(0);
-		}
 	};
 }
 

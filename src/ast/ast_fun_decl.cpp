@@ -112,23 +112,23 @@ namespace splicpp
 	{
 		ircontext ccopy = c;
 		
-		const s_ptr<const ir_exp> r_frame(ir_exp_temp::create(c.frame_reg));
+		const s_ptr<const ir_exp> r_frame(make_s<ir_exp_temp>(c.frame_reg));
 	
 		for(size_t i = 0; i < args.size(); i++)
-			ccopy.register_memloc(args[i]->fetch_id(), ir_exp_binop::create(
+			ccopy.register_memloc(args[i]->fetch_id(), make_s<ir_exp_binop>(
 				ir_exp_binop::op_minus,
 				r_frame,
-				ir_exp_const::create((int)(i + 2)) //[FP + 2 + i], where 2 = offset for old FP and return address
+				make_s<ir_exp_const>((int)(i + 2)) //[FP + 2 + i], where 2 = offset for old FP and return address
 			));
 		
 		for(size_t i = 0; i < decls.size(); i++)
-			ccopy.register_memloc(decls[i]->fetch_id(), ir_exp_binop::create(
+			ccopy.register_memloc(decls[i]->fetch_id(), make_s<ir_exp_binop>(
 				ir_exp_binop::op_minus,
 				r_frame,
-				ir_exp_const::create((int)(i + args.size() + 2)) //[FP + args + 2 + i], where 2 = offset for old FP and return address
+				make_s<ir_exp_const>((int)(i + args.size() + 2)) //[FP + args + 2 + i], where 2 = offset for old FP and return address
 			));
 		
-		s_ptr<const ir_stmt> r(ir_stmt_label::create(l_function));
+		s_ptr<const ir_stmt> r(make_s<ir_stmt_label>(l_function));
 		
 		for(const auto decl : decls)
 			ir_stmt::cat(r, decl->translate(ccopy));

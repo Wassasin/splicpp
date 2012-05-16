@@ -55,12 +55,12 @@ namespace splicpp
 	{
 		const ir_temp t = c.create_temporary();
 	
-		return ir_exp_eseq::create(
-			ir_stmt_move::create(
-				ir_exp_temp::create(t),
-				ir_exp_mem::create(c.fetch_memloc(id->fetch_id()))
+		return make_s<ir_exp_eseq>(
+			make_s<ir_stmt_move>(
+				make_s<ir_exp_temp>(t),
+				make_s<ir_exp_mem>(c.fetch_memloc(id->fetch_id()))
 			),
-			ir_exp_temp::create(t)
+			make_s<ir_exp_temp>(t)
 		);
 	}
 	
@@ -203,7 +203,7 @@ namespace splicpp
 			case op_mod:
 			case op_conjunction:
 			case op_disjunction:
-				return ir_exp_binop::create(
+				return make_s<ir_exp_binop>(
 					translate_int_op(optype()),
 					e_left->translate(c),
 					e_right->translate(c)
@@ -220,7 +220,7 @@ namespace splicpp
 				ir_label l_false = c.create_label();
 				ir_label l_done = c.create_label();
 				
-				s_ptr<const ir_stmt> r(ir_stmt_cjump::create(
+				s_ptr<const ir_stmt> r(make_s<ir_stmt_cjump>(
 					translate_bool_op(optype()),
 					e_left->translate(c),
 					e_right->translate(c),
@@ -228,59 +228,59 @@ namespace splicpp
 					l_false
 				));
 				
-				ir_stmt::cat(r, ir_stmt_label::create(l_true));
-				ir_stmt::cat(r, ir_stmt_move::create(
-					ir_exp_temp::create(t),
-					ir_exp_const::create(true)
+				ir_stmt::cat(r, make_s<ir_stmt_label>(l_true));
+				ir_stmt::cat(r, make_s<ir_stmt_move>(
+					make_s<ir_exp_temp>(t),
+					make_s<ir_exp_const>(true)
 				));
-				ir_stmt::cat(r, ir_stmt_jump::create(ir_exp_name::create(l_done)));
-				ir_stmt::cat(r, ir_stmt_label::create(l_false));
-				ir_stmt::cat(r, ir_stmt_move::create(
-					ir_exp_temp::create(t),
-					ir_exp_const::create(false)
+				ir_stmt::cat(r, make_s<ir_stmt_jump>(make_s<ir_exp_name>(l_done)));
+				ir_stmt::cat(r, make_s<ir_stmt_label>(l_false));
+				ir_stmt::cat(r, make_s<ir_stmt_move>(
+					make_s<ir_exp_temp>(t),
+					make_s<ir_exp_const>(false)
 				));
-				ir_stmt::cat(r, ir_stmt_label::create(l_done));
+				ir_stmt::cat(r, make_s<ir_stmt_label>(l_done));
 				
-				return ir_exp_eseq::create(r, ir_exp_temp::create(t));
+				return make_s<ir_exp_eseq>(r, make_s<ir_exp_temp>(t));
 			}
 			case op_cons:
 			{
 				const ir_temp t = c.create_temporary();
-				const s_ptr<const ir_exp> temp = ir_exp_temp::create(t);
-				const s_ptr<const ir_exp> heapr = ir_exp_temp::create(c.heap_reg);
+				const s_ptr<const ir_exp> temp = make_s<ir_exp_temp>(t);
+				const s_ptr<const ir_exp> heapr = make_s<ir_exp_temp>(c.heap_reg);
 				
 				//Cons location
-				s_ptr<const ir_stmt> r(ir_stmt_move::create(temp, heapr));
+				s_ptr<const ir_stmt> r(make_s<ir_stmt_move>(temp, heapr));
 				
 				//Create room on heap for cons
-				ir_stmt::cat(r, ir_stmt_move::create(
+				ir_stmt::cat(r, make_s<ir_stmt_move>(
 					heapr,
-					ir_exp_binop::create(
+					make_s<ir_exp_binop>(
 						ir_exp_binop::op_plus,
 						heapr,
-						ir_exp_const::create(2) //Listcons size
+						make_s<ir_exp_const>(2) //Listcons size
 					)
 				));
 				
 				//Copy first part of cons into cons-struct on heap
-				ir_stmt::cat(r, ir_stmt_move::create(
-					ir_exp_mem::create(temp),
+				ir_stmt::cat(r, make_s<ir_stmt_move>(
+					make_s<ir_exp_mem>(temp),
 					e_left->translate(c)
 				));
 				
 				//Copy second part
-				ir_stmt::cat(r, ir_stmt_move::create(
-					ir_exp_mem::create(
-						ir_exp_binop::create(
+				ir_stmt::cat(r, make_s<ir_stmt_move>(
+					make_s<ir_exp_mem>(
+						make_s<ir_exp_binop>(
 							ir_exp_binop::op_plus,
 							temp,
-							ir_exp_const::create(1)
+							make_s<ir_exp_const>(1)
 						)
 					),
 					e_right->translate(c)
 				));
 				
-				return ir_exp_eseq::create(r, ir_exp_temp::create(t));
+				return make_s<ir_exp_eseq>(r, make_s<ir_exp_temp>(t));
 			}
 		}
 	}
@@ -317,10 +317,10 @@ namespace splicpp
 	
 	s_ptr<const ir_exp> ast_exp_negation::translate(const ircontext& c) const
 	{
-		return ir_exp_binop::create(
+		return make_s<ir_exp_binop>(
 			ir_exp_binop::op_xor,
 			exp->translate(c),
-			ir_exp_const::create(true)
+			make_s<ir_exp_const>(true)
 		);
 	}
 	
@@ -353,7 +353,7 @@ namespace splicpp
 	
 	s_ptr<const ir_exp> ast_exp_int::translate(const ircontext&) const
 	{
-		return ir_exp_const::create(i);
+		return make_s<ir_exp_const>(i);
 	}
 	
 	void ast_exp_int::map(ast_exp_mapper& m) const
@@ -388,7 +388,7 @@ namespace splicpp
 	
 	s_ptr<const ir_exp> ast_exp_bool::translate(const ircontext&) const
 	{
-		return ir_exp_const::create(b);
+		return make_s<ir_exp_const>(b);
 	}
 	
 	void ast_exp_bool::map(ast_exp_mapper& m) const
@@ -455,7 +455,7 @@ namespace splicpp
 	s_ptr<const ir_exp> ast_exp_fun_call::translate(const ircontext& c) const
 	{
 		const ir_temp t = c.create_temporary();
-		return ir_exp_eseq::create(this->c->translate(t, c), ir_exp_temp::create(t));
+		return make_s<ir_exp_eseq>(this->c->translate(t, c), make_s<ir_exp_temp>(t));
 	}
 	
 	void ast_exp_fun_call::map(ast_exp_mapper& m) const
@@ -487,7 +487,7 @@ namespace splicpp
 	
 	s_ptr<const ir_exp> ast_exp_nil::translate(const ircontext& c) const
 	{
-		return ir_exp_name::create(c.l_nil);
+		return make_s<ir_exp_name>(c.l_nil);
 	}
 	
 	void ast_exp_nil::map(ast_exp_mapper& m) const
@@ -533,41 +533,41 @@ namespace splicpp
 	s_ptr<const ir_exp> ast_exp_tuple::translate(const ircontext& c) const
 	{
 		const ir_temp t = c.create_temporary();
-		const s_ptr<const ir_exp> temp = ir_exp_temp::create(t);
-		const s_ptr<const ir_exp> heapr = ir_exp_temp::create(c.heap_reg);
+		const s_ptr<const ir_exp> temp = make_s<ir_exp_temp>(t);
+		const s_ptr<const ir_exp> heapr = make_s<ir_exp_temp>(c.heap_reg);
 		
 		//Tuple location
-		s_ptr<const ir_stmt> r(ir_stmt_move::create(temp, heapr));
+		s_ptr<const ir_stmt> r(make_s<ir_stmt_move>(temp, heapr));
 		
 		//Create room on heap for cons
-		ir_stmt::cat(r, ir_stmt_move::create(
+		ir_stmt::cat(r, make_s<ir_stmt_move>(
 			heapr,
-			ir_exp_binop::create(
+			make_s<ir_exp_binop>(
 				ir_exp_binop::op_plus,
 				heapr,
-				ir_exp_const::create(2) //Tuple size
+				make_s<ir_exp_const>(2) //Tuple size
 			)
 		));
 		
 		//Copy left part
-		ir_stmt::cat(r, ir_stmt_move::create(
-			ir_exp_mem::create(temp),
+		ir_stmt::cat(r, make_s<ir_stmt_move>(
+			make_s<ir_exp_mem>(temp),
 			e_left->translate(c)
 		));
 		
 		//Copy right part
-		ir_stmt::cat(r, ir_stmt_move::create(
-			ir_exp_mem::create(
-				ir_exp_binop::create(
+		ir_stmt::cat(r, make_s<ir_stmt_move>(
+			make_s<ir_exp_mem>(
+				make_s<ir_exp_binop>(
 					ir_exp_binop::op_plus,
 					temp,
-					ir_exp_const::create(1)
+					make_s<ir_exp_const>(1)
 				)
 			),
 			e_right->translate(c)
 		));
 		
-		return ir_exp_eseq::create(r, temp);
+		return make_s<ir_exp_eseq>(r, temp);
 	}
 	
 	void ast_exp_tuple::map(ast_exp_mapper& m) const

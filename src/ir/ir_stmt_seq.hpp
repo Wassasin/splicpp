@@ -19,11 +19,6 @@ namespace splicpp
 	
 		virtual void map(ir_stmt_mapper& t) const;
 		virtual void print(std::ostream& s, const uint tab) const;
-		
-		static s_ptr<const ir_stmt> create(const s_ptr<const ir_stmt> s_left, const s_ptr<const ir_stmt> s_right)
-		{
-			return make_s<ir_stmt_seq>(s_left, s_right);
-		}
 	};
 }
 
