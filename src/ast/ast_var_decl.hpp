@@ -23,11 +23,11 @@ namespace splicpp
 
 	class ast_var_decl : public ast
 	{
-		s_ptr<ast_type> t;
-		s_ptr<ast_id> id;
-		s_ptr<ast_exp> exp;
-	
 	public:
+		const s_ptr<ast_type> t;
+		const s_ptr<ast_id> id;
+		const s_ptr<ast_exp> exp;
+	
 		ast_var_decl(__decltype(t) t, __decltype(id) id, __decltype(exp) exp, const sloc sl)
 		: ast(sl)
 		, t(t)
