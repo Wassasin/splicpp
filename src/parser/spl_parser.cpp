@@ -130,24 +130,16 @@ namespace splicpp
 			else
 				throw unexpected_element(n[0]);
 			
-			auto id = parse_id(str, n[1]);
-			s_ptr<ast_fun_decl> result(new ast_fun_decl(rtype, id, n.sl()));
-			
-			auto args = autoparse_opt<std::vector<s_ptr<ast_f_arg>>>(str, n[3]->as_node(), &spl_parser::parse_f_args);
-			auto decls = autoparse_kleene<s_ptr<ast_var_decl>>(str, n[6]->as_node(), &spl_parser::parse_var_decl);
-			auto stmts = autoparse_plus<s_ptr<ast_stmt>>(str, n[7]->as_node(), &spl_parser::parse_stmt);
+			const auto id = parse_id(str, n[1]);
+
+			const auto args = autoparse_opt<std::vector<s_ptr<ast_f_arg>>>(str, n[3]->as_node(), &spl_parser::parse_f_args);
+			const auto decls = autoparse_kleene<s_ptr<ast_var_decl>>(str, n[6]->as_node(), &spl_parser::parse_var_decl);
+			const auto stmts = autoparse_plus<s_ptr<ast_stmt>>(str, n[7]->as_node(), &spl_parser::parse_stmt);
 			
 			if(args)
-				for(auto arg : args.get())
-					result->add_arg(arg);
-			
-			for(auto decl : decls)
-				result->add_decl(decl);
-			
-			for(auto stmt : stmts)
-				result->add_stmt(stmt);
-			
-			return result;
+				return std::make_shared<ast_fun_decl>(rtype, id, args.get(), decls, stmts, n.sl());
+			else
+				return std::make_shared<ast_fun_decl>(rtype, id, std::vector<s_ptr<ast_f_arg>>(), decls, stmts, n.sl());
 		}
 		
 		s_ptr<ast_type> spl_parser::parse_type(const std::string str, const cst_node n) const

@@ -26,21 +26,6 @@
 
 namespace splicpp
 {
-	void ast_fun_decl::add_arg(s_ptr<ast_f_arg> arg)
-	{
-		args.push_back(arg);
-	}
-	
-	void ast_fun_decl::add_decl(s_ptr<ast_var_decl> decl)
-	{
-		decls.push_back(decl);
-	}
-	
-	void ast_fun_decl::add_stmt(s_ptr<ast_stmt> stmt)
-	{
-		stmts.push_back(stmt);
-	}
-	
 	void ast_fun_decl::assign(sid i)
 	{
 		id->assign(i);

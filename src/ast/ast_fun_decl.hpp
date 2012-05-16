@@ -27,26 +27,22 @@ namespace splicpp
 
 	class ast_fun_decl : public ast
 	{
-		s_ptr<ast_type> t;
-		s_ptr<ast_id> id;
-		
-		std::vector<s_ptr<ast_f_arg>> args;
-		std::vector<s_ptr<ast_var_decl>> decls;
-		std::vector<s_ptr<ast_stmt>> stmts;
-	
 	public:
-		ast_fun_decl(__decltype(t) t, __decltype(id) id, const sloc sl)
+		const s_ptr<ast_type> t;
+		const s_ptr<ast_id> id;
+		
+		const std::vector<s_ptr<ast_f_arg>> args;
+		const std::vector<s_ptr<ast_var_decl>> decls;
+		const std::vector<s_ptr<ast_stmt>> stmts;
+	
+		ast_fun_decl(__decltype(t) t, __decltype(id) id, __decltype(args) args, __decltype(decls) decls, __decltype(stmts) stmts, const sloc sl)
 		: ast(sl)
 		, t(t)
 		, id(id)
-		, args()
-		, decls()
-		, stmts()
+		, args(args)
+		, decls(decls)
+		, stmts(stmts)
 		{}
-		
-		void add_arg(s_ptr<ast_f_arg> arg);
-		void add_decl(s_ptr<ast_var_decl> decl);
-		void add_stmt(s_ptr<ast_stmt> stmt);
 		
 		void assign(sid i);
 		std::string fetch_name() const;
