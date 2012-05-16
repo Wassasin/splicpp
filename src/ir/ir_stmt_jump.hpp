@@ -23,7 +23,7 @@ namespace splicpp
 		
 		static s_ptr<const ir_stmt> create(const s_ptr<const ir_exp> e)
 		{
-			return s_ptr<const ir_stmt>(new ir_stmt_jump(e));
+			return make_s<ir_stmt_jump>(e);
 		}
 	};
 }

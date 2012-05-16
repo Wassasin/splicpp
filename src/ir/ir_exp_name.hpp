@@ -21,7 +21,7 @@ namespace splicpp
 		
 		static s_ptr<const ir_exp> create(const ir_label l)
 		{
-			return s_ptr<const ir_exp>(new ir_exp_name(l));
+			return make_s<ir_exp_name>(l);
 		}
 	};
 }

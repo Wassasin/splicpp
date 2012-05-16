@@ -129,7 +129,7 @@ namespace splicpp
 	
 	substitution ast_stmt_if::infer_type(const typecontext& c, const s_ptr<const sl_type> t) const
 	{
-		substitution s = exp->infer_type(c, s_ptr<const sl_type>(new sl_type_bool(sl)));
+		substitution s = exp->infer_type(c, make_s<sl_type_bool>(sl));
 		s = stmt_true->infer_type(c.apply(s), t->apply(s)).composite(s);
 		
 		if(stmt_false)
@@ -205,7 +205,7 @@ namespace splicpp
 	
 	substitution ast_stmt_while::infer_type(const typecontext& c, const s_ptr<const sl_type> t) const
 	{
-		substitution s = exp->infer_type(c, s_ptr<const sl_type>(new sl_type_bool(sl)));
+		substitution s = exp->infer_type(c, make_s<sl_type_bool>(sl));
 		return stmt->infer_type(c.apply(s), t->apply(s)).composite(s);
 	}
 	
@@ -366,7 +366,7 @@ namespace splicpp
 		if(exp)
 			return exp.get()->infer_type(c, t);
 		else
-			return t->unify(s_ptr<const sl_type>(new sl_type_void(sl)));
+			return t->unify(make_s<sl_type_void>(sl));
 	}
 	
 	bool ast_stmt_return::contains_return() const

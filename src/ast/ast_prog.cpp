@@ -20,12 +20,12 @@ namespace splicpp
 	{
 		std::vector<s_ptr<ast_construct>> result;
 		
-		result.push_back(s_ptr<ast_construct>(new ast_construct_print()));
-		result.push_back(s_ptr<ast_construct>(new ast_construct_is_empty()));
-		result.push_back(s_ptr<ast_construct>(new ast_construct_head()));
-		result.push_back(s_ptr<ast_construct>(new ast_construct_tail()));
-		result.push_back(s_ptr<ast_construct>(new ast_construct_fst()));
-		result.push_back(s_ptr<ast_construct>(new ast_construct_snd()));
+		result.push_back(make_s<ast_construct_print>());
+		result.push_back(make_s<ast_construct_is_empty>());
+		result.push_back(make_s<ast_construct_head>());
+		result.push_back(make_s<ast_construct_tail>());
+		result.push_back(make_s<ast_construct_fst>());
+		result.push_back(make_s<ast_construct_snd>());
 		
 		return result;
 	}

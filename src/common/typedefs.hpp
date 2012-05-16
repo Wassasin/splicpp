@@ -19,6 +19,7 @@ namespace splicpp
 	typedef uint ir_temp;
 	
 	#define s_ptr std::shared_ptr
+	#define make_s std::make_shared
 }
 
 #endif

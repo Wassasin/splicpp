@@ -71,7 +71,7 @@ namespace splicpp
 		for(const auto arg : args)
 			t_args.push_back(arg->fetch_assigned_type(c));
 		
-		return s_ptr<const sl_type>(new sl_type_function(t_args, this->t->fetch_type(c), sl));
+		return make_s<const sl_type_function>(t_args, this->t->fetch_type(c), sl);
 	}
 	
 	substitution ast_fun_decl::declare_type(ltypecontext& c) const
@@ -83,7 +83,7 @@ namespace splicpp
 		for(size_t i = 0; i < args.size(); i++)
 			t_args.push_back(args[i]->declare_type(clocal));
 		
-		s_ptr<const sl_type_function> ft(new sl_type_function(t_args, r, sl));
+		s_ptr<const sl_type_function> ft(make_s<const sl_type_function>(t_args, r, sl));
 		
 		substitution s;
 		for(const auto decl : decls)
@@ -102,7 +102,7 @@ namespace splicpp
 		}
 		
 		if(!contains_return)
-			s = r->apply(s)->unify(s_ptr<const sl_type>(new sl_type_void(sl))).composite(s);
+			s = r->apply(s)->unify(make_s<const sl_type_void>(sl)).composite(s);
 		
 		c.register_type(id->fetch_id(), sl_polytype::qualify(c.apply(s), ft->apply(s)));
 		return s;

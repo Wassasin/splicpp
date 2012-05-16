@@ -22,7 +22,7 @@ namespace splicpp
 		
 		static s_ptr<const ir_stmt> create(const s_ptr<const ir_stmt> s_left, const s_ptr<const ir_stmt> s_right)
 		{
-			return s_ptr<const ir_stmt>(new ir_stmt_seq(s_left, s_right));
+			return make_s<ir_stmt_seq>(s_left, s_right);
 		}
 	};
 }

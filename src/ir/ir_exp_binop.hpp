@@ -42,7 +42,7 @@ namespace splicpp
 		
 		static s_ptr<const ir_exp> create(const binop op, const s_ptr<const ir_exp> e_left, const s_ptr<const ir_exp> e_right)
 		{
-			return s_ptr<const ir_exp>(new ir_exp_binop(op, e_left, e_right));
+			return make_s<ir_exp_binop>(op, e_left, e_right);
 		}
 	};
 }

@@ -33,12 +33,12 @@ namespace splicpp
 		
 		static s_ptr<const ir_stmt> create(const s_ptr<const ir_exp> e)
 		{
-			return s_ptr<const ir_stmt>(new ir_stmt_call(e, std::vector<s_ptr<const ir_exp>>()));
+			return create(e, std::vector<s_ptr<const ir_exp>>());
 		}
 		
 		static s_ptr<const ir_stmt> create(const s_ptr<const ir_exp> e, const std::vector<s_ptr<const ir_exp>> args)
 		{
-			return s_ptr<const ir_stmt>(new ir_stmt_call(e, args));
+			return make_s<ir_stmt_call>(e, args);
 		}
 	};
 }

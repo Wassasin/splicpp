@@ -31,7 +31,7 @@ namespace splicpp
 		for(size_t i = 0; i < args.size(); i++)
 			targs.push_back(std::static_pointer_cast<const sl_type>(c.create_fresh(sl)));
 		
-		s_ptr<const sl_type_function> ft(new sl_type_function(targs, t, sl));
+		s_ptr<const sl_type_function> ft(make_s<sl_type_function>(targs, t, sl));
 		substitution s = id->infer_type(c, ft);
 		
 		for(size_t i = 0; i < args.size(); i++)

@@ -43,7 +43,7 @@ namespace splicpp
 	
 	s_ptr<const sl_type> ast_type_int::fetch_type(const typecontext&) const
 	{
-		return s_ptr<const sl_type>(new sl_type_int(sl));
+		return make_s<sl_type_int>(sl);
 	}
 	
 	/* ast_type_bool */
@@ -60,7 +60,7 @@ namespace splicpp
 	
 	s_ptr<const sl_type> ast_type_bool::fetch_type(const typecontext&) const
 	{
-		return s_ptr<const sl_type>(new sl_type_bool(sl));
+		return make_s<sl_type_bool>(sl);
 	}
 	
 	/* ast_type_tuple */
@@ -87,7 +87,7 @@ namespace splicpp
 	
 	s_ptr<const sl_type> ast_type_tuple::fetch_type(const typecontext& c) const
 	{
-		return s_ptr<const sl_type>(new sl_type_tuple(t_left->fetch_type(c), t_right->fetch_type(c), sl));
+		return make_s<sl_type_tuple>(t_left->fetch_type(c), t_right->fetch_type(c), sl);
 	}
 	
 	/* ast_type_array */
@@ -111,7 +111,7 @@ namespace splicpp
 	
 	s_ptr<const sl_type> ast_type_array::fetch_type(const typecontext& c) const
 	{
-		return s_ptr<const sl_type>(new sl_type_array(t->fetch_type(c), sl));
+		return make_s<sl_type_array>(t->fetch_type(c), sl);
 	}
 	
 	/* ast_type_id */
@@ -155,6 +155,6 @@ namespace splicpp
 	
 	s_ptr<const sl_type> ast_type_void::fetch_type(const typecontext&) const
 	{
-		return s_ptr<const sl_type>(new sl_type_void(sl));
+		return make_s<sl_type_void>(sl);
 	}
 }

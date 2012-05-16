@@ -24,7 +24,7 @@ namespace splicpp
 		
 		static s_ptr<const ir_stmt> create(const s_ptr<const ir_exp> e_left, const s_ptr<const ir_exp> e_right)
 		{
-			return s_ptr<const ir_stmt>(new ir_stmt_move(e_left, e_right));
+			return make_s<ir_stmt_move>(e_left, e_right);
 		}
 	};
 }

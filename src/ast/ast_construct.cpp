@@ -60,9 +60,7 @@ namespace splicpp
 			std::static_pointer_cast<const sl_type>(c.create_fresh(sl))
 		));
 		
-		const s_ptr<const sl_type> r(new sl_type_void(sl));
-		
-		return s_ptr<const sl_type>(new sl_type_function(args, r, sl));
+		return make_s<sl_type_function>(args, make_s<sl_type_void>(sl), sl);
 	}
 	
 	s_ptr<const ir_stmt> ast_construct_print::translate(const ir_label l_construct, const ircontext& c) const
@@ -92,12 +90,10 @@ namespace splicpp
 	s_ptr<const sl_type> ast_construct_is_empty::fetch_type(const typecontext& c) const
 	{
 		const std::vector<s_ptr<const sl_type>> args(create_vector_ptr<const sl_type>(
-			s_ptr<const sl_type>(new sl_type_array(std::static_pointer_cast<const sl_type>(c.create_fresh(sl)), sl))
+			make_s<sl_type_array>(c.create_fresh(sl), sl)
 		));
 		
-		const s_ptr<const sl_type> r(new sl_type_bool(sl));
-		
-		return s_ptr<const sl_type>(new sl_type_function(args, r, sl));
+		return make_s<sl_type_function>(args, make_s<sl_type_bool>(sl), sl);
 	}
 	
 	s_ptr<const ir_stmt> ast_construct_is_empty::translate(const ir_label l_construct, const ircontext& c) const
@@ -145,12 +141,12 @@ namespace splicpp
 	
 	s_ptr<const sl_type> ast_construct_head::fetch_type(const typecontext& c) const
 	{
-		const s_ptr<const sl_type> a = std::static_pointer_cast<const sl_type>(c.create_fresh(sl));
+		const s_ptr<const sl_type> a(c.create_fresh(sl));
 		const std::vector<s_ptr<const sl_type>> args(create_vector_ptr<const sl_type>(
-			s_ptr<const sl_type>(new sl_type_array(a, sl))
+			make_s<sl_type_array>(a, sl)
 		));
 		
-		return s_ptr<const sl_type>(new sl_type_function(args, a, sl));
+		return make_s<sl_type_function>(args, a, sl);
 	}
 	
 	s_ptr<const ir_stmt> ast_construct_head::translate(const ir_label l_construct, const ircontext& c) const
@@ -187,12 +183,12 @@ namespace splicpp
 	
 	s_ptr<const sl_type> ast_construct_tail::fetch_type(const typecontext& c) const
 	{
-		const s_ptr<const sl_type> r(new sl_type_array(c.create_fresh(sl), sl));
+		const s_ptr<const sl_type> r(make_s<sl_type_array>(c.create_fresh(sl), sl));
 		const std::vector<s_ptr<const sl_type>> args(create_vector_ptr<const sl_type>(
 			s_ptr<const sl_type>(r)
 		));
 		
-		return s_ptr<const sl_type>(new sl_type_function(args, r, sl));
+		return make_s<sl_type_function>(args, r, sl);
 	}
 	
 	s_ptr<const ir_stmt> ast_construct_tail::translate(const ir_label l_construct, const ircontext& c) const
@@ -237,10 +233,10 @@ namespace splicpp
 		const s_ptr<const sl_type> a2 = std::static_pointer_cast<const sl_type>(c.create_fresh(sl));
 		
 		const std::vector<s_ptr<const sl_type>> args(create_vector_ptr<const sl_type>(
-			s_ptr<const sl_type>(new sl_type_tuple(a1, a2, sl))
+			make_s<sl_type_tuple>(a1, a2, sl)
 		));
 		
-		return s_ptr<const sl_type>(new sl_type_function(args, a1, sl));
+		return make_s<sl_type_function>(args, a1, sl);
 	}
 	
 	s_ptr<const ir_stmt> ast_construct_fst::translate(const ir_label l_construct, const ircontext& c) const
@@ -281,10 +277,10 @@ namespace splicpp
 		const s_ptr<const sl_type> a2 = std::static_pointer_cast<const sl_type>(c.create_fresh(sl));
 		
 		const std::vector<s_ptr<const sl_type>> args(create_vector_ptr<const sl_type>(
-			s_ptr<const sl_type>(new sl_type_tuple(a1, a2, sl))
+			make_s<sl_type_tuple>(a1, a2, sl)
 		));
 		
-		return s_ptr<const sl_type>(new sl_type_function(args, a2, sl));
+		return make_s<sl_type_function>(args, a2, sl);
 	}
 	
 	s_ptr<const ir_stmt> ast_construct_snd::translate(const ir_label l_construct, const ircontext& c) const
