@@ -21,6 +21,7 @@
 #include "../ir/ir_exp_const.hpp"
 #include "../ir/ir_exp_mem.hpp"
 #include "../ir/ir_exp_temp.hpp"
+#include "../ir/ir_stmt_jump.hpp"
 #include "../ir/ir_stmt_label.hpp"
 #include "../ir/ir_stmt_move.hpp"
 
@@ -136,7 +137,16 @@ namespace splicpp
 		for(const auto stmt : stmts)
 			ir_stmt::cat(r, stmt->translate(ccopy));
 		
-		//TODO does not check for absence of return-statement
+		//Always add a return void-statement; just to be sure. May be removed later in the IR-tree.
+		ir_stmt::cat(r, make_s<ir_stmt_jump>(
+			make_s<ir_exp_mem>(
+				make_s<ir_exp_binop>(
+					ir_exp_binop::op_minus,
+					make_s<ir_exp_temp>(c.frame_reg),
+					make_s<ir_exp_const>(1)
+				)
+			)
+		));
 		
 		return r;
 	}
