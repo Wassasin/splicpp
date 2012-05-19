@@ -74,6 +74,29 @@ namespace splicpp
 				edges.erase(i);
 		}
 		
+		size_t in_edges_count(const T x) const
+		{
+			const size_t i = vertices.at(x);
+			return in_edges.at(i).size();
+		}
+		
+		size_t out_edges_count(const T x) const
+		{
+			const size_t i = vertices.at(x);
+			return out_edges.at(i).size();
+		}
+		
+		std::unordered_set<const T> leaves() const
+		{
+			std::unordered_set<const T> result;
+			
+			for(const std::pair<const T, const size_t> p : vertices)
+				if(out_edges.at(p.second).size == 0)
+					result.push_back(p.first);
+			
+			return result;
+		}
+		
 		/*std::vector<node> succ(const node n) const
 		{
 			std::queue<node> q;

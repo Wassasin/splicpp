@@ -84,7 +84,7 @@ namespace splicpp
 		return result;
 	}
 	
-	void ast_stmt_stmts::apply(ast_stmt_mapper& m) const
+	void ast_stmt_stmts::map(ast_stmt_mapper& m) const
 	{
 		m.map(std::dynamic_pointer_cast<const ast_stmt_stmts>(shared_from_this()));
 	}
@@ -171,7 +171,7 @@ namespace splicpp
 		return r;
 	}
 	
-	void ast_stmt_if::apply(ast_stmt_mapper& m) const
+	void ast_stmt_if::map(ast_stmt_mapper& m) const
 	{
 		m.map(std::dynamic_pointer_cast<const ast_stmt_if>(shared_from_this()));
 	}
@@ -232,7 +232,7 @@ namespace splicpp
 		return r;
 	}
 	
-	void ast_stmt_while::apply(ast_stmt_mapper& m) const
+	void ast_stmt_while::map(ast_stmt_mapper& m) const
 	{
 		m.map(std::dynamic_pointer_cast<const ast_stmt_while>(shared_from_this()));
 	}
@@ -289,7 +289,7 @@ namespace splicpp
 		);
 	}
 	
-	void ast_stmt_assignment::apply(ast_stmt_mapper& m) const
+	void ast_stmt_assignment::map(ast_stmt_mapper& m) const
 	{
 		m.map(std::dynamic_pointer_cast<const ast_stmt_assignment>(shared_from_this()));
 	}
@@ -327,7 +327,7 @@ namespace splicpp
 		return f->translate(c.create_temporary(), c); //Use a fresh temporary, throw result away, if there even is a result
 	}
 	
-	void ast_stmt_fun_call::apply(ast_stmt_mapper& m) const
+	void ast_stmt_fun_call::map(ast_stmt_mapper& m) const
 	{
 		m.map(std::dynamic_pointer_cast<const ast_stmt_fun_call>(shared_from_this()));
 	}
@@ -388,7 +388,7 @@ namespace splicpp
 		return r;
 	}
 	
-	void ast_stmt_return::apply(ast_stmt_mapper& m) const
+	void ast_stmt_return::map(ast_stmt_mapper& m) const
 	{
 		m.map(std::dynamic_pointer_cast<const ast_stmt_return>(shared_from_this()));
 	}

@@ -24,6 +24,7 @@ namespace splicpp
 
 	class symboltable
 	{
+	public:
 		struct symbolref
 		{
 			enum symbolreftype
@@ -44,7 +45,8 @@ namespace splicpp
 			, i(i)
 			{}
 		};
-		
+	
+	private:
 		std::vector<symbolref> index;
 		std::vector<s_ptr<ast_fun_decl>> funs;
 		std::vector<s_ptr<ast_construct>> conss;
@@ -54,7 +56,6 @@ namespace splicpp
 		std::vector<s_ptr<ast_type_id>> types;
 	
 		sid create_entry(const symbolref::symbolreftype t, const size_t i);
-		std::vector<sid> select_all(const symbolref::symbolreftype t) const;
 		
 		void print_name(const sid i, std::ostream& s) const;
 	public:
@@ -67,6 +68,8 @@ namespace splicpp
 		, local_vars()
 		, types()
 		{}
+		
+		std::vector<sid> select_all(const symbolref::symbolreftype t) const;
 		
 		sid reg_fun(s_ptr<ast_fun_decl> f);
 		sid reg_cons(s_ptr<ast_construct> c);

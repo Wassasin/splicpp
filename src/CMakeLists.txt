@@ -67,6 +67,7 @@ add_executable(splicpp
 	ir/ir_stmt_move.cpp
 	ir/ir_stmt_seq.cpp
 	
+	mappers/ast_decl_analyser.cpp
 	mappers/ir_cf_analyser.cpp
 	mappers/ir_desequencer.cpp
 	mappers/ir_label_analyser.cpp

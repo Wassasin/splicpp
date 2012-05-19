@@ -55,7 +55,7 @@ namespace splicpp
 		
 		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const = 0;
 		
-		virtual void apply(ast_stmt_mapper& m) const = 0;
+		virtual void map(ast_stmt_mapper& m) const = 0;
 	};
 	#pragma GCC diagnostic pop
 	
@@ -79,16 +79,16 @@ namespace splicpp
 		
 		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const;
 		
-		virtual void apply(ast_stmt_mapper& m) const;
+		virtual void map(ast_stmt_mapper& m) const;
 	};
 	
 	class ast_stmt_if : public ast_stmt
 	{
-		s_ptr<ast_exp> exp;
-		s_ptr<ast_stmt> stmt_true;
-		boost::optional<s_ptr<ast_stmt>> stmt_false;
-	
 	public:
+		const s_ptr<ast_exp> exp;
+		const s_ptr<ast_stmt> stmt_true;
+		const boost::optional<s_ptr<ast_stmt>> stmt_false;
+	
 		ast_stmt_if(s_ptr<ast_exp> exp, s_ptr<ast_stmt> stmt_true, const sloc sl)
 		: ast_stmt(sl)
 		, exp(exp)
@@ -113,15 +113,15 @@ namespace splicpp
 		
 		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const;
 		
-		virtual void apply(ast_stmt_mapper& m) const;
+		virtual void map(ast_stmt_mapper& m) const;
 	};
 	
 	class ast_stmt_while : public ast_stmt
 	{
-		s_ptr<ast_exp> exp;
-		s_ptr<ast_stmt> stmt;
-	
 	public:
+		const s_ptr<ast_exp> exp;
+		const s_ptr<ast_stmt> stmt;
+	
 		ast_stmt_while(__decltype(exp) exp, __decltype(stmt) stmt, const sloc sl)
 		: ast_stmt(sl)
 		, exp(exp)
@@ -138,15 +138,15 @@ namespace splicpp
 		
 		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const;
 		
-		virtual void apply(ast_stmt_mapper& m) const;
+		virtual void map(ast_stmt_mapper& m) const;
 	};
 	
 	class ast_stmt_assignment : public ast_stmt
 	{
-		s_ptr<ast_id> id;
-		s_ptr<ast_exp> exp;
-		
 	public:
+		const s_ptr<ast_id> id;
+		const s_ptr<ast_exp> exp;
+	
 		ast_stmt_assignment(__decltype(id) id, __decltype(exp) exp, const sloc sl)
 		: ast_stmt(sl)
 		, id(id)
@@ -163,14 +163,14 @@ namespace splicpp
 		
 		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const;
 		
-		virtual void apply(ast_stmt_mapper& m) const;
+		virtual void map(ast_stmt_mapper& m) const;
 	};
 	
 	class ast_stmt_fun_call : public ast_stmt
 	{
-		s_ptr<ast_fun_call> f;
-		
 	public:
+		const s_ptr<ast_fun_call> f;
+	
 		ast_stmt_fun_call(__decltype(f) f, const sloc sl)
 		: ast_stmt(sl)
 		, f(f)
@@ -186,14 +186,14 @@ namespace splicpp
 		
 		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const;
 		
-		virtual void apply(ast_stmt_mapper& m) const;
+		virtual void map(ast_stmt_mapper& m) const;
 	};
 	
 	class ast_stmt_return : public ast_stmt
 	{
-		boost::optional<s_ptr<ast_exp>> exp;
-	
 	public:
+		const boost::optional<s_ptr<ast_exp>> exp;
+		
 		ast_stmt_return(const sloc sl)
 		: ast_stmt(sl)
 		, exp()
@@ -214,7 +214,7 @@ namespace splicpp
 		
 		virtual s_ptr<const ir_stmt> translate(const ircontext& c) const;
 		
-		virtual void apply(ast_stmt_mapper& m) const;
+		virtual void map(ast_stmt_mapper& m) const;
 	};
 }
 
