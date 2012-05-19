@@ -37,7 +37,7 @@ namespace splicpp
 		void register_globals(symboltable&, varcontext& c);
 		void register_locals(symboltable&, varcontext& c);
 		
-		s_ptr<const ir_stmt> translate(ircontext& c) const;
+		s_ptr<const ir_stmt> translate(ircontext& c, const symboltable& st) const;
 		
 		void pretty_print(std::ostream& s) const;
 		virtual void pretty_print(std::ostream& s, const uint tab) const;

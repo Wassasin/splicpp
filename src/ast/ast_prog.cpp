@@ -14,6 +14,8 @@
 #include "../ir/ir_stmt_label.hpp"
 #include "../ir/ir_stmt_move.hpp"
 
+#include "../mappers/ast_decl_analyser.hpp"
+
 namespace splicpp
 {
 	std::vector<s_ptr<ast_construct>> ast_prog::init_constrs()
@@ -69,7 +71,7 @@ namespace splicpp
 		throw std::logic_error("Program does not contain a function 'main'");
 	}
 	
-	s_ptr<const ir_stmt> ast_prog::translate(ircontext& c) const
+	s_ptr<const ir_stmt> ast_prog::translate(ircontext& c, const symboltable& st) const
 	{
 		const ir_label l_start = c.create_label();
 		const ir_label l_end = c.create_label();
@@ -102,10 +104,22 @@ namespace splicpp
 		ir_stmt::cat(r, make_s<ir_stmt_move>(make_s<ir_exp_temp>(c.frame_reg), make_s<ir_exp_name>(c.l_stack)));
 		
 		//Translate code for initializing and construction global variables
-		//TODO Variables might be dependant on each other: dependency graph, initialize in proper order
+		dgraph<sid> deps = ast_decl_analyser::analyse(decls, st);
+		for(const auto decl : decls)
+			if(decl->type() == ast_decl::t_fun_decl)
+				deps.remove_vertex_maintain_paths(std::dynamic_pointer_cast<ast_decl_fun>(decl)->f->fetch_id());
+		
 		for(const auto decl : decls)
 			if(decl->type() == ast_decl::t_var_decl)
-				ir_stmt::cat(r, std::dynamic_pointer_cast<ast_decl_var>(decl)->v->translate(c));
+			{
+				const s_ptr<ast_var_decl> vdecl = std::dynamic_pointer_cast<ast_decl_var>(decl)->v;
+				
+				if(!is_in<sid>(vdecl->fetch_id(), deps.leaves()))
+					throw std::runtime_error("Cannot translate declaration: depends on not yet declared variables");
+				
+				deps.remove_vertex(vdecl->fetch_id());
+				ir_stmt::cat(r, vdecl->translate(c));
+			}
 		
 		//Call main
 		ir_stmt::cat(r, make_s<ir_stmt_call>(c.fetch_memloc(fetch_main()->fetch_id())));
@@ -146,6 +160,4 @@ namespace splicpp
 			s << std::endl;
 		}
 	}
-	
-	
 }

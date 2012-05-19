@@ -124,7 +124,7 @@ int main(int argc, char **argv)
 			return 0;
 		
 		splicpp::ircontext c;
-		for(const auto stmt : splicpp::ir_desequencer::desequence(prog->translate(c)))
+		for(const auto stmt : splicpp::ir_desequencer::desequence(prog->translate(c, s)))
 		{
 			stmt->print(std::cout, 0);
 			std::cout << std::endl;

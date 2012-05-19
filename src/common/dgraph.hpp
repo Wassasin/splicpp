@@ -21,6 +21,12 @@ namespace splicpp
 		size_t capacity;
 		std::queue<size_t> empty_spots;
 	
+		void add_edge_internal(const size_t from, const size_t to)
+		{
+			out_edges.at(from).insert(to);
+			in_edges.at(to).insert(from);
+		}
+
 	public:
 		dgraph()
 		: vertices()
@@ -53,14 +59,13 @@ namespace splicpp
 			const size_t i = vertices.at(from);
 			const size_t j = vertices.at(to);
 			
-			out_edges.at(i).insert(j);
-			in_edges.at(j).insert(i);
+			add_edge_internal(i, j);
 		}
 		
 		void remove_vertex(const T x)
 		{
 			const size_t i = vertices.at(x);
-			
+		
 			vertices.erase(x);
 			empty_spots.push(i);
 			
@@ -72,6 +77,17 @@ namespace splicpp
 			
 			for(auto& edges : in_edges)
 				edges.erase(i);
+		}
+		
+		void remove_vertex_maintain_paths(const T x)
+		{
+			const size_t i = vertices.at(x);
+			
+			for(const size_t from : in_edges.at(i))
+				for(const size_t to : out_edges.at(i))
+					add_edge_internal(from, to);
+			
+			remove_vertex(x);
 		}
 		
 		size_t in_edges_count(const T x) const
@@ -86,12 +102,12 @@ namespace splicpp
 			return out_edges.at(i).size();
 		}
 		
-		std::unordered_set<const T> leaves() const
+		std::vector<T> leaves() const
 		{
-			std::unordered_set<const T> result;
+			std::vector<T> result;
 			
 			for(const std::pair<const T, const size_t> p : vertices)
-				if(out_edges.at(p.second).size == 0)
+				if(out_edges.at(p.second).size() == 0)
 					result.push_back(p.first);
 			
 			return result;
