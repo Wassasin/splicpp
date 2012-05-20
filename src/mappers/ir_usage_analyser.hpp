@@ -1,5 +1,5 @@
-#ifndef IR_TEMP_ANALYSER_H
-#define IR_TEMP_ANALYSER_H
+#ifndef IR_USAGE_ANALYSER_H
+#define IR_USAGE_ANALYSER_H
 
 #include <vector>
 #include <boost/optional.hpp>
