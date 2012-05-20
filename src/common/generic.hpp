@@ -2,6 +2,7 @@
 #define GENERIC_H
 
 #include <vector>
+#include <unordered_set>
 #include <boost/optional.hpp>
 
 namespace splicpp
@@ -14,6 +15,12 @@ namespace splicpp
 				return true;
 		
 		return false;
+	}
+	
+	template <typename T>
+	static bool is_in(const T x, const std::unordered_set<T>& xs)
+	{
+		return(xs.find(x) != xs.cend());
 	}
 	
 	template <typename T>

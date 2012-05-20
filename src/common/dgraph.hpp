@@ -102,41 +102,26 @@ namespace splicpp
 			return out_edges.at(i).size();
 		}
 		
-		std::vector<T> leaves() const
+		std::unordered_set<T> leaves() const
 		{
-			std::vector<T> result;
+			std::unordered_set<T> result;
 			
 			for(const std::pair<const T, const size_t> p : vertices)
 				if(out_edges.at(p.second).size() == 0)
-					result.push_back(p.first);
+					result.insert(p.first);
 			
 			return result;
 		}
 		
-		/*std::vector<node> succ(const node n) const
+		std::unordered_set<T> pred(const T x) const
 		{
-			std::queue<node> q;
-			std::vector<node> result;
-			
-			q.push(n);
-			
-			while(!q.empty())
-			{
-				const node t = q.front();
-				q.pop();
-				
-				for(const node c : data.at(t))
-				{
-					if(is_in<node>(t, result))
-						continue;
-					
-					result.push_back(c);
-					q.push(c);
-				}
-			}
-			
-			return result;
-		}*/
+			return in_edges.at(vertices.at(x));
+		}
+		
+		std::unordered_set<T> succ(const T x) const
+		{
+			return out_edges.at(vertices.at(x));
+		}
 	};
 }
 
