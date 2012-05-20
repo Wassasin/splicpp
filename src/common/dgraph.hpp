@@ -1,5 +1,5 @@
-#ifndef CFGRAPH_H
-#define CFGRAPH_H
+#ifndef DGRAPH_H
+#define DGRAPH_H
 
 #include <map>
 #include <vector>
@@ -38,6 +38,9 @@ namespace splicpp
 		
 		void add_vertex(const T x)
 		{
+			if(vertices.find(x) != vertices.end()) //Map already contains element
+				return;
+		
 			size_t i;
 			if(empty_spots.empty())
 			{

@@ -36,6 +36,9 @@ namespace splicpp
 		
 		void add_vertex(const T x)
 		{
+			if(vertices.find(x) != vertices.end()) //Map already contains element
+				return;
+		
 			size_t i;
 			if(empty_spots.empty())
 			{
