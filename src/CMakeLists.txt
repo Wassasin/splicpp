@@ -73,6 +73,7 @@ add_executable(splicpp
 	mappers/ir_liveness_analyser.cpp
 	mappers/ir_liveness_analyser.cpp
 	mappers/ir_label_analyser.cpp
+	mappers/ir_temp_saver.cpp
 	mappers/ir_usage_analyser.cpp
 )
 

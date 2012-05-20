@@ -18,7 +18,8 @@ namespace splicpp
 	
 	s_ptr<const ir_stmt> ir_stmt::push(const std::vector<s_ptr<const ir_exp>>& xs, const ircontext& c)
 	{
-		const s_ptr<const ir_exp> temp = make_s<ir_exp_temp>(c.create_temporary());
+		const ir_temp t = c.create_temporary();
+		const s_ptr<const ir_exp> temp = make_s<ir_exp_temp>(t);
 		const s_ptr<const ir_exp> stack = make_s<ir_exp_temp>(c.stack_reg);
 	
 		s_ptr<const ir_stmt> r(make_s<ir_stmt_move>(
@@ -37,11 +38,7 @@ namespace splicpp
 		
 		for(size_t i = 0; i < xs.size(); i++)
 			ir_stmt::cat(r, make_s<ir_stmt_move>(
-				make_s<ir_exp_mem>(make_s<ir_exp_binop>(
-						ir_exp_binop::op_minus,
-						temp,
-						make_s<ir_exp_const>((int)i)
-				)),
+				fetch_relative(i, t, ir_exp_binop::op_minus),
 				xs[i]
 			));
 		
@@ -60,5 +57,14 @@ namespace splicpp
 				make_s<ir_exp_const>((int)count)
 			)
 		);
+	}
+	
+	s_ptr<const ir_exp> ir_stmt::fetch_relative(const int i, const ir_temp t, const ir_exp_binop::binop op)
+	{
+		return make_s<ir_exp_mem>(make_s<ir_exp_binop>(
+				op,
+				make_s<ir_exp_temp>(t),
+				make_s<ir_exp_const>(i)
+		));
 	}
 }

@@ -9,6 +9,8 @@
 #include "ir_label_analyser.hpp"
 #include "ir_usage_analyser.hpp"
 
+#include <iostream>
+
 namespace splicpp
 {
 	std::vector<ir_liveness_analyser::liveness> ir_liveness_analyser::analyse(std::vector<s_ptr<const ir_stmt>> stmts)
@@ -50,18 +52,14 @@ namespace splicpp
 			//Rule 2: if v is live-in at n, then it is live-out at all pred (n)
 			for(const size_t m : cf.pred(n))
 				for(const ir_temp v : liveness[n].live_in)
-				{
-					liveness[m].live_out.insert(v);
-					to_check.insert(m);
-				}
+					if(liveness[m].live_out.insert(v).second)
+						to_check.insert(m);
 			
 			//Rule 3: if v is live-out at n and not in def (n), then it is live-in at n
 			for(const ir_temp v : liveness[n].live_out)
 				if(!usage[n].defined || usage[n].defined.get() != v)
-				{
-					liveness[n].live_in.insert(v);
-					to_check.insert(n);
-				}
+					if(liveness[n].live_in.insert(v).second)
+						to_check.insert(n);
 		}
 
 		return liveness;
