@@ -14,7 +14,7 @@ namespace splicpp
 	class ir_stmt;
 	class ir_exp;
 
-	class ir_temp_analyser : public ir_exp_mapper, public ir_stmt_mapper
+	class ir_usage_analyser : public ir_exp_mapper, public ir_stmt_mapper
 	{
 	public:
 		struct usage
@@ -31,7 +31,7 @@ namespace splicpp
 	private:
 		usage u;
 		
-		ir_temp_analyser()
+		ir_usage_analyser()
 		: u()
 		{}
 		
