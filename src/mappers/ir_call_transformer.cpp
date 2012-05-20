@@ -1,4 +1,4 @@
-#include "ir_temp_saver.hpp"
+#include "ir_call_transformer.hpp"
 
 #include <stdexcept>
 
@@ -18,14 +18,14 @@
 
 namespace splicpp
 {
-	void ir_temp_saver::standard(const s_ptr<const ir_stmt> x)
+	void ir_call_transformer::standard(const s_ptr<const ir_stmt> x)
 	{
 		result.push_back(x);
 	}
 	
-	std::vector<s_ptr<const ir_stmt>> ir_temp_saver::apply(const std::vector<s_ptr<const ir_stmt>>& stmts, const ircontext& c)
+	std::vector<s_ptr<const ir_stmt>> ir_call_transformer::apply(const std::vector<s_ptr<const ir_stmt>>& stmts, const ircontext& c)
 	{
-		ir_temp_saver s(c);
+		ir_call_transformer s(c);
 
 		std::vector<ir_liveness_analyser::liveness> liveness = ir_liveness_analyser::analyse(stmts);
 		
@@ -38,7 +38,7 @@ namespace splicpp
 		return s.result;
 	}
 
-	void ir_temp_saver::map(const s_ptr<const ir_stmt_call> x)
+	void ir_call_transformer::map(const s_ptr<const ir_stmt_call> x)
 	{
 		const ir_label l_return = c.create_label();
 		
@@ -85,27 +85,27 @@ namespace splicpp
 			result.push_back(stmt);
 	}
 
-	void ir_temp_saver::map(const s_ptr<const ir_stmt_cjump> x)
+	void ir_call_transformer::map(const s_ptr<const ir_stmt_cjump> x)
 	{
 		standard(x);
 	}
 	
-	void ir_temp_saver::map(const s_ptr<const ir_stmt_jump> x)
+	void ir_call_transformer::map(const s_ptr<const ir_stmt_jump> x)
 	{
 		standard(x);
 	}
 	
-	void ir_temp_saver::map(const s_ptr<const ir_stmt_label> x)
+	void ir_call_transformer::map(const s_ptr<const ir_stmt_label> x)
 	{
 		standard(x);
 	}
 	
-	void ir_temp_saver::map(const s_ptr<const ir_stmt_move> x)
+	void ir_call_transformer::map(const s_ptr<const ir_stmt_move> x)
 	{
 		standard(x);
 	}
 	
-	void ir_temp_saver::map(const s_ptr<const ir_stmt_seq>)
+	void ir_call_transformer::map(const s_ptr<const ir_stmt_seq>)
 	{
 		throw std::logic_error("ir_stmt_seq is not allowed in this stage; run the ir_desequencer first");
 	}

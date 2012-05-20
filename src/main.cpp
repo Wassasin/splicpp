@@ -10,7 +10,7 @@
 #include "ir/ir_stmt.hpp"
 
 #include "mappers/ir_desequencer.hpp"
-#include "mappers/ir_temp_saver.hpp"
+#include "mappers/ir_call_transformer.hpp"
 
 int main(int argc, char **argv)
 {
@@ -126,7 +126,7 @@ int main(int argc, char **argv)
 			return 0;
 		
 		splicpp::ircontext c;
-		for(const auto stmt : splicpp::ir_temp_saver::apply(splicpp::ir_desequencer::desequence(prog->translate(c, s)), c))
+		for(const auto stmt : splicpp::ir_call_transformer::apply(splicpp::ir_desequencer::desequence(prog->translate(c, s)), c))
 		{
 			stmt->print(std::cout, 0);
 			std::cout << std::endl;

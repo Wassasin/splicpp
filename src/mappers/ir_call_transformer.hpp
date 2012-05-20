@@ -1,5 +1,5 @@
-#ifndef IR_TEMP_SAVER_H
-#define IR_TEMP_SAVER_H
+#ifndef IR_CALL_TRANSFORMER_H
+#define IR_CALL_TRANSFORMER_H
 
 #include <vector>
 #include <unordered_set>
@@ -13,14 +13,14 @@ namespace splicpp
 {
 	class ir_stmt;
 	
-	class ir_temp_saver : public ir_stmt_mapper
+	class ir_call_transformer : public ir_stmt_mapper
 	{	
 		const ircontext c;
 		
 		std::unordered_set<ir_temp> active_temps;
 		std::vector<s_ptr<const ir_stmt>> result;
 	
-		ir_temp_saver(const ircontext& c)
+		ir_call_transformer(const ircontext& c)
 		: c(c)
 		, active_temps()
 		, result()
