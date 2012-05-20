@@ -77,6 +77,9 @@ namespace splicpp
 				temps[i],
 				ir_stmt::fetch_relative(temps.size() - i, c.stack_reg)
 			));
+		
+		//Pop temporaries from stack
+		ir_stmt::cat(r, ir_stmt::pop(temps.size(), c));
 			
 		for(const s_ptr<const ir_stmt> stmt : ir_desequencer::desequence(r))
 			result.push_back(stmt);
