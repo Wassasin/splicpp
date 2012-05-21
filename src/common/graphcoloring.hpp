@@ -17,6 +17,11 @@ namespace splicpp
 		{
 			std::map<T, size_t> map;
 			std::vector<T> spilled;
+			
+			selected()
+			: map()
+			, spilled()
+			{}
 		};
 		
 	private:
