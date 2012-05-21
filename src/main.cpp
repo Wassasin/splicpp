@@ -11,6 +11,8 @@
 
 #include "mappers/ir_desequencer.hpp"
 #include "mappers/ir_call_transformer.hpp"
+#include "mappers/ir_liveness_analyser.hpp"
+#include "mappers/ir_temp_allocator.hpp"
 
 int main(int argc, char **argv)
 {
@@ -126,9 +128,28 @@ int main(int argc, char **argv)
 			return 0;
 		
 		splicpp::ircontext c;
-		for(const auto stmt : splicpp::ir_call_transformer::apply(splicpp::ir_desequencer::desequence(prog->translate(c, s)), c))
+		
+		std::vector<std::shared_ptr<const splicpp::ir_stmt>> stmts = splicpp::ir_desequencer::desequence(prog->translate(c, s));
+		stmts = splicpp::ir_call_transformer::apply(stmts, c);
+		
+		std::map<splicpp::ir_temp, splicpp::ir_temp> reserved_temps;
+		reserved_temps[c.stack_reg] = 0x1;
+		reserved_temps[c.frame_reg] = 0x2;
+		reserved_temps[c.return_reg] = 0x3;
+		reserved_temps[c.heap_reg] = 0x4;
+		
+		std::vector<splicpp::ir_temp> scratch_temps;
+		scratch_temps.push_back(0x5);
+		scratch_temps.push_back(0x6);
+		scratch_temps.push_back(0x7);
+
+		stmts = splicpp::ir_temp_allocator::apply(stmts, reserved_temps, scratch_temps, c);
+		std::vector<splicpp::ir_liveness_analyser::liveness> liveness = splicpp::ir_liveness_analyser::analyse(stmts);
+		
+		for(size_t i = 0; i < stmts.size(); i++)
 		{
-			stmt->print(std::cout, 0);
+			std::cout << liveness[i].live_out.size() << ": ";
+			stmts[i]->print(std::cout, 0);
 			std::cout << std::endl;
 		}
 		

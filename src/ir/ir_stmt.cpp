@@ -6,6 +6,8 @@
 #include "ir_exp_const.hpp"
 #include "ir_exp_mem.hpp"
 #include "ir_exp_temp.hpp"
+
+#include "ir_stmt_label.hpp"
 #include "ir_stmt_move.hpp"
 #include "ir_stmt_seq.hpp"
 
@@ -18,6 +20,9 @@ namespace splicpp
 	
 	s_ptr<const ir_stmt> ir_stmt::push(const std::vector<s_ptr<const ir_exp>>& xs, const ircontext& c)
 	{
+		if(xs.size() == 0)
+			return nop(c);
+	
 		const ir_temp t = c.create_temporary();
 		const s_ptr<const ir_exp> temp = make_s<ir_exp_temp>(t);
 		const s_ptr<const ir_exp> stack = make_s<ir_exp_temp>(c.stack_reg);
@@ -49,6 +54,9 @@ namespace splicpp
 	{
 		const s_ptr<const ir_exp> stack = make_s<ir_exp_temp>(c.stack_reg);
 		
+		if(count == 0)
+			return nop(c);
+		
 		return make_s<ir_stmt_move>(
 			stack,
 			make_s<ir_exp_binop>(
@@ -59,8 +67,16 @@ namespace splicpp
 		);
 	}
 	
+	s_ptr<const ir_stmt> ir_stmt::nop(const ircontext& c)
+	{
+		return make_s<ir_stmt_label>(c.create_label());
+	}
+	
 	s_ptr<const ir_exp> ir_stmt::fetch_relative(const int i, const ir_temp t, const ir_exp_binop::binop op)
 	{
+		if(i == 0)
+			return make_s<ir_exp_mem>(make_s<ir_exp_temp>(t));
+	
 		return make_s<ir_exp_mem>(make_s<ir_exp_binop>(
 				op,
 				make_s<ir_exp_temp>(t),

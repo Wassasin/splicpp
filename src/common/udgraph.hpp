@@ -34,6 +34,16 @@ namespace splicpp
 		, empty_spots()
 		{}
 		
+		std::vector<T> fetch_vertices() const
+		{
+			std::vector<T> result;
+		
+			for(std::pair<const T, const size_t> p : vertices)
+				result.push_back(p.first);
+				
+			return result;
+		}
+		
 		void add_vertex(const T x)
 		{
 			if(vertices.find(x) != vertices.end()) //Map already contains element
@@ -73,6 +83,18 @@ namespace splicpp
 			
 			for(auto& e : edges)
 				e.erase(i);
+		}
+		
+		std::unordered_set<T> succ(const T x) const
+		{
+			std::unordered_set<T> result;
+			
+			for(const size_t i : edges.at(vertices.at(x)))
+				for(const std::pair<const T, const size_t> p : vertices)
+					if(i == p.second)
+						result.insert(p.first);
+			
+			return result;
 		}
 		
 		size_t edges_count(const T x) const

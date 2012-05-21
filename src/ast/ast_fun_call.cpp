@@ -40,17 +40,21 @@ namespace splicpp
 		return s;
 	}
 	
-	s_ptr<const ir_stmt> ast_fun_call::translate(const ir_temp return_reg, const ircontext& c) const
+	s_ptr<const ir_stmt> ast_fun_call::translate(const ircontext& c) const
 	{
-		const s_ptr<const ir_exp> r_return(make_s<ir_exp_temp>(return_reg));
-		const s_ptr<const ir_exp> r_tmp_return(make_s<ir_exp_temp>(c.return_reg));
-		
 		std::vector<s_ptr<const ir_exp>> items;
 		for(const auto arg : args)
 			items.push_back(arg->translate(c));
 		
 		s_ptr<const ir_stmt> r(make_s<ir_stmt_call>(c.fetch_memloc(id->fetch_id()), items));
-		ir_stmt::cat(r, make_s<ir_stmt_move>(r_return, r_tmp_return));
+		
+		return r;
+	}
+	
+	s_ptr<const ir_stmt> ast_fun_call::translate(const ir_temp return_reg, const ircontext& c) const
+	{
+		s_ptr<const ir_stmt> r(translate(c));
+		ir_stmt::cat(r, make_s<ir_stmt_move>(make_s<ir_exp_temp>(return_reg), make_s<ir_exp_temp>(c.return_reg)));
 		
 		return r;
 	}

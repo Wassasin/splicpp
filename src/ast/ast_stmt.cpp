@@ -324,7 +324,7 @@ namespace splicpp
 	
 	s_ptr<const ir_stmt> ast_stmt_fun_call::translate(const ircontext& c) const
 	{
-		return f->translate(c.create_temporary(), c); //Use a fresh temporary, throw result away, if there even is a result
+		return f->translate(c);
 	}
 	
 	void ast_stmt_fun_call::map(ast_stmt_mapper& m) const

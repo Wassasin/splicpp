@@ -118,12 +118,26 @@ namespace splicpp
 		
 		std::unordered_set<T> pred(const T x) const
 		{
-			return in_edges.at(vertices.at(x));
+			std::unordered_set<T> result;
+			
+			for(const size_t i : in_edges.at(vertices.at(x)))
+				for(const std::pair<const T, const size_t> p : vertices)
+					if(i == p.second)
+						result.insert(p.first);
+			
+			return result;
 		}
 		
 		std::unordered_set<T> succ(const T x) const
 		{
-			return out_edges.at(vertices.at(x));
+			std::unordered_set<T> result;
+			
+			for(const size_t i : out_edges.at(vertices.at(x)))
+				for(const std::pair<const T, const size_t> p : vertices)
+					if(i == p.second)
+						result.insert(p.first);
+			
+			return result;
 		}
 	};
 }
