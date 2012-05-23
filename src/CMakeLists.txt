@@ -7,6 +7,9 @@ include_directories("${PROJECT_BINARY_DIR}")
 add_executable(splicpp
 	main.cpp
 	
+	backends/ssm/ssm_translator.cpp
+	backends/ssm/ssm_tresult.cpp
+	
 	common/grammar.cpp
 	common/rule.cpp
 	common/symbols.cpp
@@ -71,6 +74,7 @@ add_executable(splicpp
 	mappers/ir_call_transformer.cpp
 	mappers/ir_cf_analyser.cpp
 	mappers/ir_desequencer.cpp
+	mappers/ir_frame_transformer.cpp
 	mappers/ir_liveness_analyser.cpp
 	mappers/ir_liveness_analyser.cpp
 	mappers/ir_label_analyser.cpp

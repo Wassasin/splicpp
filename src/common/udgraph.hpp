@@ -74,7 +74,11 @@ namespace splicpp
 		
 		void remove_vertex(const T x)
 		{
-			const size_t i = vertices.at(x);
+			const auto iterator = vertices.find(x);
+			if(iterator == vertices.cend())
+				return;
+			
+			const size_t i = iterator->second;
 		
 			vertices.erase(x);
 			empty_spots.push(i);

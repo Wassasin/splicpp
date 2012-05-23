@@ -1,6 +1,7 @@
 #ifndef GENERIC_H
 #define GENERIC_H
 
+#include <map>
 #include <vector>
 #include <unordered_set>
 #include <boost/optional.hpp>
@@ -114,6 +115,17 @@ namespace splicpp
 				return i;
 		
 		return boost::optional<size_t>();
+	}
+	
+	template <typename T, typename U>
+	static std::map<U, T> reverse(const std::map<T, U>& m)
+	{
+		std::map<U, T> result;
+		
+		for(const std::pair<T, U>& p : m)
+			result[p.second] = p.first;
+		
+		return result;
 	}
 }
 
